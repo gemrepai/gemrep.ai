@@ -108,7 +108,7 @@ textarea:disabled{opacity:.4}
 .mhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
 .mtitle{font-family:"Instrument Serif",serif;font-size:18px;font-weight:400;letter-spacing:1px}
 .overall{font-family:"Instrument Serif",serif;font-size:42px;line-height:1}
-.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.sgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
 .si{background:#111214;border:1px solid #2a2d35;border-radius:8px;padding:10px 11px}
 .silbl{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
 .sbar{height:3px;background:#3a3d47;border-radius:2px;margin-bottom:5px}
@@ -136,6 +136,7 @@ textarea:disabled{opacity:.4}
 .go-btn:hover{opacity:.9;transform:scale(1.02)}
 .hidden{display:none!important}
 </style>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='8' y1='4' x2='56' y2='34' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0%25' stop-color='%23ff4d1c'/%3E%3Cstop offset='100%25' stop-color='%23ff8c00'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='8' y1='30' x2='56' y2='60' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0%25' stop-color='%23cc3a10'/%3E%3Cstop offset='100%25' stop-color='%23cc7000'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='20,4 44,4 56,20 8,20' fill='url(%23g1)'/%3E%3Cpolygon points='8,20 56,20 32,60' fill='url(%23g2)'/%3E%3C/svg%3E">
 </head>
 <body>
 
@@ -510,7 +511,7 @@ async function scoreCall(){
   var a=getArch(state.archId);
   var transcript=state.history.map(function(m){return (m.role==="user"?"REP":"PROSPECT")+": "+m.content;}).join("\n");
   try{
-    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:600,system:'You are an expert sales coach. Respond ONLY with valid JSON, no markdown: {"overall":72,"categories":[{"label":"Opener","score":80},{"label":"Discovery","score":65},{"label":"Objections","score":70},{"label":"Tonality","score":75}],"feedback":"2-3 sentence coaching note."}',messages:[{role:"user",content:"Score this call. Prospect: "+a.name+" ("+a.label+"). Difficulty: "+a.difficulty+"/5.\n\n"+transcript}]})});
+    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:600,system:'You are an elite sales coach trained in NEPQ (Neuro-Emotional Persuasion Questioning) and the Sales Sniper methodology by Matt Ryder. Score calls honestly and specifically. Respond ONLY with valid JSON, no markdown, no extra text. Score each category 0-100. OPENER: pattern interrupt used? avoided leading with name/company? sounded calm and detached not eager? earned the right to continue? Penalize hard for generic openers. DISCOVERY: asked situational questions before pitching? surfaced existing pain? asked consequence questions about what happens if nothing changes? let prospect identify their own problem? Heavy penalty for pitching before discovering pain. OBJECTIONS: stayed calm and curious when objections came? used calm acknowledgment before redirecting? asked what is behind the objection rather than fighting it logically? avoided over-apologizing? Penalty for logic-battling. TONALITY: sounded calm, slightly detached, genuinely curious? did NOT sound like they needed the sale? led the conversation rather than following the prospect? avoided desperate eager or salesy energy? Penalty for chasing. COMMITMENT: got prospect to verbalize their own problem first? used commitment questions to confirm prospect wants change? closed based on prospect own words not features? Penalty for feature-pitching before emotional buy-in. Return exactly: {"overall":72,"categories":[{"label":"Opener","score":80},{"label":"Discovery","score":65},{"label":"Objections","score":70},{"label":"Tonality","score":75},{"label":"Commitment","score":60}],"feedback":"3-4 sentences referencing specific transcript moments. Name the mistake and give the exact NEPQ fix."}',messages:[{role:"user",content:"Score this call using NEPQ and Sales Sniper criteria. Prospect: "+a.name+" ("+a.label+"). Difficulty: "+a.difficulty+"/5.\n\nTRANSCRIPT:\n"+transcript}]})});
     var data=await res.json();
     var raw=(data.content&&data.content[0])?data.content[0].text:"{}";
     raw=raw.replace(/```json|```/g,"").trim();
@@ -519,6 +520,8 @@ async function scoreCall(){
     document.getElementById("overall").textContent=sc.overall+"/100";
     document.getElementById("overall").style.color=col;
     document.getElementById("scoreGrid").innerHTML=(sc.categories||[]).map(function(c){var cc=c.score>=75?"#00e676":c.score>=55?"#ffd600":"#ff1744";return "<div class='si'><div class='silbl'>"+c.label+"</div><div class='sbar'><div class='sbarfill' style='width:"+c.score+"%;background:"+cc+"'></div></div><div class='sival' style='color:"+cc+"'>"+c.score+"</div></div>";}).join("");
+// resize grid for 5 items
+document.getElementById("scoreGrid").style.gridTemplateColumns="repeat(3,1fr)";
     document.getElementById("scoreFeed").textContent=sc.feedback||"";
   }catch(e){document.getElementById("scoreFeed").textContent="Could not analyze — please try again.";}
 }
