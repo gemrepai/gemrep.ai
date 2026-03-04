@@ -592,10 +592,10 @@ footer{padding:48px 48px 40px;border-top:1px solid var(--border);display:flex;al
       <h2 class="section-title" style="text-align:center">Get in before<br><em>everyone else.</em></h2>
       <p style="font-size:16px;color:var(--dim);line-height:1.7;font-weight:300;margin-top:12px">First 100 signups get Pro free for 3 months. Leave your email and we will reach out when your spot is ready.</p>
     </div>
-    <div class="waitlist-form reveal">
-      <input class="waitlist-input" type="email" placeholder="your@email.com" id="emailInput">
-      <button class="waitlist-btn" onclick="submitWaitlist()">Reserve My Spot</button>
-    </div>
+    <form class="waitlist-form reveal" id="waitlistForm" action="https://formspree.io/f/xojngeqp" method="POST">
+      <input class="waitlist-input" type="email" name="email" placeholder="your@email.com" id="emailInput" required>
+      <button class="waitlist-btn" type="submit">Reserve My Spot</button>
+    </form>
     <p class="waitlist-note" id="waitlistMsg">No spam. Just your access link when we are ready.</p>
   </div>
 </section>
@@ -621,11 +621,11 @@ footer{padding:48px 48px 40px;border-top:1px solid var(--border);display:flex;al
   <div class="footer-links">
     <a href="#">Privacy</a>
     <a href="#">Terms</a>
-    <a href="mailto:hello@gemrep.ai">Contact</a>
+    <a href="/cdn-cgi/l/email-protection#e38b868f8f8ca384868e918693cd828a">Contact</a>
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // Nav scroll effect
 window.addEventListener('scroll', function() {
   document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40);
@@ -660,10 +660,4 @@ function submitWaitlist() {
     msg.style.color = '#ff4d1c';
     return;
   }
-  msg.textContent = 'You are on the list! We will be in touch soon.';
-  msg.style.color = '#00e676';
-  document.getElementById('emailInput').value = '';
-}
-</script>
-</body>
-</html>
+  msg.textContent = 'You are on th
