@@ -15,8 +15,8 @@ body{background:var(--black);color:var(--text);font-family:"DM Sans",sans-serif;
 a{text-decoration:none}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;transition:all .3s}
-nav.scrolled{background:rgba(8,8,9,.95);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;transition:all .3s}section{scroll-margin-top:64px}
+nav.scrolled{background:rgba(8,8,9,.95);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}nav{background:rgba(8,8,9,.7);backdrop-filter:blur(8px)}
 .nav-logo{display:flex;align-items:center;gap:10px}
 .nav-wordmark{font-family:"Instrument Serif",serif;font-size:22px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .nav-links{display:flex;align-items:center;gap:32px}
@@ -129,6 +129,17 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
   nav{padding:0 20px}
   .nav-links{display:none}
   footer{flex-direction:column;padding:28px 20px}
+  .pricing{grid-template-columns:1fr!important}
+  .price-card.featured{margin-top:16px}
+  .popular{font-size:9px;padding:3px 10px}
+  .hero-title{letter-spacing:-1px}
+  .stats{gap:24px}
+  .stat-num{font-size:28px}
+  section{padding:64px 20px}
+  .sgrid2{grid-template-columns:repeat(2,1fr)!important}
+  .arch-grid{grid-template-columns:repeat(2,1fr)}
+  .features{grid-template-columns:1fr}
+  .testis{grid-template-columns:1fr}
 }
 </style>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -246,65 +257,163 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
     <div class="sec-label">Pricing</div>
     <h2 class="sec-title">Simple pricing.<br><em>No surprises.</em></h2>
     <p class="sec-sub">Start free. Upgrade when you are ready to get serious.</p>
-    <div class="pricing">
+    <div class="pricing" style="max-width:960px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
       <div class="price-card">
         <div class="price-name">Starter</div>
         <div class="price-amt"><span>$</span>0</div>
-        <div class="price-period">Free forever</div>
+        <div class="price-period">No credit card needed</div>
         <ul class="price-feats">
           <li>5 practice calls per month</li>
           <li>3 prospect archetypes</li>
-          <li>Basic call scoring</li>
-          <li>Text-based sessions</li>
+          <li>Conversation-based scoring</li>
+          <li>Text sessions</li>
         </ul>
-        <a href="#waitlist" class="pbtn pbtn-secondary">Join Waitlist</a>
+        <a href="app.html" class="pbtn pbtn-secondary">Try It Free</a>
       </div>
       <div class="price-card featured">
         <div class="popular">MOST POPULAR</div>
-        <div class="price-name">Pro</div>
-        <div class="price-amt"><span>$</span>49</div>
+        <div class="price-name">Individual</div>
+        <div class="price-amt"><span>$</span>24</div>
         <div class="price-period">per month</div>
         <ul class="price-feats">
           <li>Unlimited practice calls</li>
           <li>All 17 archetypes</li>
-          <li>Full AI call scoring</li>
-          <li>Voice mode coming soon</li>
-          <li>Call history and analytics</li>
+          <li>Full conversation scoring</li>
+          <li>Text &amp; voice sessions</li>
+          <li>Call history &amp; analytics</li>
           <li>New archetypes monthly</li>
         </ul>
-        <a href="app.html" class="pbtn pbtn-primary">Try The Demo</a>
+        <a href="app.html" class="pbtn pbtn-primary">Get Started</a>
       </div>
       <div class="price-card">
         <div class="price-name">Team</div>
-        <div class="price-amt"><span>$</span>29</div>
-        <div class="price-period">per seat / month</div>
+        <div class="price-amt"><span>$</span>49</div>
+        <div class="price-period">per seat / month &mdash; min 5 seats</div>
         <ul class="price-feats">
-          <li>Everything in Pro</li>
+          <li>Everything in Individual</li>
+          <li>Up to 500 calls per seat</li>
           <li>Manager dashboard</li>
           <li>Team leaderboards</li>
           <li>Rep progress tracking</li>
           <li>Custom archetypes</li>
-          <li>Dedicated onboarding</li>
         </ul>
         <a href="#waitlist" class="pbtn pbtn-secondary">Contact Us</a>
       </div>
+      <div class="price-card">
+        <div class="price-name">Enterprise</div>
+        <div class="price-amt" style="font-size:32px;line-height:1.2">Custom</div>
+        <div class="price-period">tailored to your team</div>
+        <ul class="price-feats">
+          <li>Everything in Team</li>
+          <li>Unlimited seats</li>
+          <li>White-label option</li>
+          <li>Custom prospect builds</li>
+          <li>Dedicated onboarding</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="mailto:hello@gemrep.ai" class="pbtn pbtn-secondary">Get a Quote</a>
+      </div>
+    </div>
     </div>
   </div>
 </section>
 
 <div class="divider"></div>
 
-<!-- WAITLIST -->
+<!-- LEAD MAGNET + QUIZ -->
 <section id="waitlist" class="alt">
-  <div class="waitlist-wrap">
-    <div class="sec-label" style="text-align:center">Early Access</div>
-    <h2 class="sec-title" style="text-align:center">Get in before<br><em>everyone else.</em></h2>
-    <p style="font-size:16px;color:var(--dim);line-height:1.7;font-weight:300;margin-top:10px">First 100 signups get Pro free for 3 months.</p>
-    <form class="wform" id="wform" action="https://formspree.io/f/xojngeqp" method="POST">
-      <input class="winput" type="email" name="email" placeholder="your@email.com" required>
-      <button class="wbtn" type="submit">Reserve My Spot</button>
-    </form>
-    <p class="wnote" id="wnote">No spam. Just your access link when we are ready.</p>
+  <div style="max-width:680px;margin:0 auto;text-align:center;padding:0 20px">
+
+    <!-- STEP 1: Lead Magnet -->
+    <div id="step1">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,77,28,.08);border:1px solid rgba(255,77,28,.2);border-radius:50px;padding:6px 14px;font-size:11px;color:#ff8c00;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px;font-weight:500">
+        &#127381; Free Download
+      </div>
+      <h2 class="sec-title" style="text-align:center">The Bar Napkin<br><em>Sales Strategy.</em></h2>
+      <p style="font-size:16px;color:var(--dim);line-height:1.7;font-weight:300;margin:14px auto 32px;max-width:480px">You are at the airport bar and you bump into a $100k a month closer. He writes you his million dollar strategy on a napkin. This is that napkin. Free.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:480px;margin:0 auto 32px;text-align:left">
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px">
+          <div style="font-size:18px;margin-bottom:6px">&#128247;</div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:3px">&#9889; Pattern Interrupt Openers</div>
+          <div style="font-size:11px;color:var(--dim)">Pattern interrupt openers that actually get a response</div>
+        </div>
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px">
+          <div style="font-size:18px;margin-bottom:6px">&#129488;</div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:3px">&#9889; 5 Consequence Questions</div>
+          <div style="font-size:11px;color:var(--dim)">Make them feel the cost of doing nothing</div>
+        </div>
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px">
+          <div style="font-size:18px;margin-bottom:6px">&#128142;</div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:3px">&#128737;&#65039; Top 3 Objection Rebuttals</div>
+          <div style="font-size:11px;color:var(--dim)">Think about it, need to talk to my spouse, already have something</div>
+        </div>
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px">
+          <div style="font-size:18px;margin-bottom:6px">&#127919;</div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:3px">&#127919; The Commitment Close</div>
+          <div style="font-size:11px;color:var(--dim)">Get emotional buy-in before you ever talk price</div>
+        </div>
+      </div>
+
+      <form id="wform" action="https://formspree.io/f/xojngeqp" method="POST" style="display:flex;flex-direction:column;gap:10px;max-width:420px;margin:0 auto">
+        <input class="winput" type="text" name="name" placeholder="Your first name" required style="width:100%">
+        <input class="winput" type="email" name="email" placeholder="your@email.com" required style="width:100%">
+        <input type="hidden" name="source" value="bar-napkin-download">
+        <button class="wbtn" type="submit" style="width:100%;font-size:15px;padding:14px">&#128196; Send Me The Bar Napkin Strategy</button>
+      </form>
+      <p class="wnote" id="wnote">No spam. Just the guide and your GemRep access link.</p>
+    </div>
+
+    <!-- STEP 2: Onboarding Quiz -->
+    <div id="step2" style="display:none">
+      <div style="font-size:32px;margin-bottom:12px">&#127881;</div>
+      <h2 class="sec-title" style="text-align:center;margin-bottom:8px">It is on its way!</h2>
+      <p style="font-size:15px;color:var(--dim);margin-bottom:32px">One more thing — let us build your custom training plan.</p>
+
+      <div style="text-align:left;max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:20px">
+
+        <div>
+          <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:10px">What is your monthly income target?</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px" id="incomeQ">
+            <button class="qbtn" data-q="income" data-v="under5k">Under $5k</button>
+            <button class="qbtn" data-q="income" data-v="5to10k">$5k &ndash; $10k</button>
+            <button class="qbtn" data-q="income" data-v="10to20k">$10k &ndash; $20k</button>
+            <button class="qbtn" data-q="income" data-v="over20k">$20k+</button>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:10px">What is your experience level?</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px" id="expQ">
+            <button class="qbtn" data-q="exp" data-v="new">Brand new to sales</button>
+            <button class="qbtn" data-q="exp" data-v="some">Some experience</button>
+            <button class="qbtn" data-q="exp" data-v="vet">Experienced rep</button>
+            <button class="qbtn" data-q="exp" data-v="manager">Sales manager</button>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:10px">What is your primary vertical?</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px" id="vertQ">
+            <button class="qbtn" data-q="vert" data-v="insurance">Insurance</button>
+            <button class="qbtn" data-q="vert" data-v="b2b">B2B / SaaS</button>
+            <button class="qbtn" data-q="vert" data-v="cold">Cold Calling</button>
+            <button class="qbtn" data-q="vert" data-v="mixed">Mixed</button>
+          </div>
+        </div>
+
+        <button id="getPlanBtn" style="width:100%;background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;padding:14px;cursor:pointer;opacity:.4;transition:all .2s" disabled>Build My Training Plan &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Training Recommendation -->
+    <div id="step3" style="display:none">
+      <div style="font-size:40px;margin-bottom:14px">&#128142;</div>
+      <h2 class="sec-title" style="text-align:center;margin-bottom:8px">Your Training Plan</h2>
+      <div id="planOutput" style="text-align:left;max-width:520px;margin:20px auto 0;display:flex;flex-direction:column;gap:12px"></div>
+      <a href="app.html" style="display:inline-block;margin-top:28px;background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;padding:14px 36px;text-decoration:none">Start Training Now &rarr;</a>
+    </div>
+
   </div>
 </section>
 
@@ -321,7 +430,96 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><style>
+.qbtn{background:var(--panel);border:1px solid var(--border);border-radius:8px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:13px;padding:8px 16px;cursor:pointer;transition:all .15s}
+.qbtn:hover{border-color:#ff4d1c;color:var(--text)}
+.qbtn.selected{background:rgba(255,77,28,.1);border-color:#ff4d1c;color:var(--text)}
+</style>
+<script>
+var quizAnswers = {};
+
+// Quiz button selection
+document.querySelectorAll('.qbtn').forEach(function(b){
+  b.addEventListener('click', function(){
+    var q = this.getAttribute('data-q');
+    var v = this.getAttribute('data-v');
+    quizAnswers[q] = v;
+    document.querySelectorAll('[data-q="'+q+'"]').forEach(function(x){x.classList.remove('selected');});
+    this.classList.add('selected');
+    // Enable plan button when all 3 answered
+    if(quizAnswers.income && quizAnswers.exp && quizAnswers.vert){
+      document.getElementById('getPlanBtn').disabled = false;
+      document.getElementById('getPlanBtn').style.opacity = '1';
+    }
+  });
+});
+
+// Build training plan
+document.getElementById('getPlanBtn').addEventListener('click', function(){
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'block';
+
+  var exp = quizAnswers.exp;
+  var vert = quizAnswers.vert;
+  var income = quizAnswers.income;
+
+  var steps = [];
+
+  // Step 1 always bar napkin for new/some
+  if(exp === 'new' || exp === 'some'){
+    steps.push({icon:'&#128196;',title:'Week 1 &mdash; Master the Bar Napkin Strategy',desc:'Read the guide. Memorize the 5 consequence questions. Practice the money aside close out loud until it feels natural. Do not touch the AI trainer yet.'});
+  }
+
+  // Archetype recommendation based on vertical
+  if(vert === 'insurance'){
+    if(exp === 'new' || exp === 'some'){
+      steps.push({icon:'&#127752;',title:'Week 2 &mdash; Start with Hopeful Helen',desc:'She is the easiest insurance prospect. Warm, ready to buy, just needs guidance. Build your confidence here before moving to harder archetypes.'});
+      steps.push({icon:'&#128543;',title:'Week 3 &mdash; Fearful Frank',desc:'Now practice consequence questions. Ask: if something happened yesterday, what would that look like for your family? Get comfortable sitting in the silence after.'});
+      steps.push({icon:'&#128548;',title:'Week 4+ &mdash; Burned Bob',desc:'The hardest insurance prospect. Do not go here until you can handle Frank without flinching. Bob will test everything you have.'});
+    } else {
+      steps.push({icon:'&#128548;',title:'Start Here &mdash; Burned Bob',desc:'You already know the basics. Go straight to the hardest prospect. If you can handle Bob you can handle anyone on a real call.'});
+      steps.push({icon:'&#128117;',title:'Then &mdash; Confused Dorothy',desc:'Medicare objection handling. Practice the Medicare number refusal rebuttal and keeping your cool when she loops back to the same confusion.'});
+    }
+  } else if(vert === 'b2b'){
+    if(exp === 'new' || exp === 'some'){
+      steps.push({icon:'&#128161;',title:'Week 2 &mdash; Start with Innovator Irene',desc:'Easy B2B prospect, open-minded and excited. Practice your pattern interrupt opener and building vision together before moving to harder archetypes.'});
+      steps.push({icon:'&#128105;&#8205;&#128188;',title:'Week 3 &mdash; Decisive Danielle',desc:'Practice being direct and brief. Lead with outcomes, not process. Get comfortable with silence — she is testing whether you can keep up.'});
+      steps.push({icon:'&#129488;',title:'Week 4+ &mdash; Skeptical Steve',desc:'The hardest B2B prospect. Every claim gets challenged. Practice your consequence questions: what happens to your pipeline if this does not get resolved?'});
+    } else {
+      steps.push({icon:'&#129488;',title:'Start Here &mdash; Skeptical Steve',desc:'Go straight to the hardest. Practice leading with triggers, consequence questions, and never fighting skepticism — get curious about what is behind it.'});
+    }
+  } else if(vert === 'cold'){
+    if(exp === 'new' || exp === 'some'){
+      steps.push({icon:'&#129337;',title:'Week 2 &mdash; Start with Multitasking Mark',desc:'Polite but distracted. Practice pattern interrupt openers and getting his attention in 8 seconds. Low stakes, builds opener muscle memory.'});
+      steps.push({icon:'&#128548;',title:'Week 3 &mdash; Busy Mike',desc:'15 seconds of patience. No company name, no pitch — just a trigger and a question. Practice until your opener is under 10 words.'});
+      steps.push({icon:'&#129315;',title:'Week 4+ &mdash; Furious Frank',desc:'The composure test. Your only job is to stay calm and curious. Do not apologize more than once. This is where Disciplined Self beats Default Self.'});
+    } else {
+      steps.push({icon:'&#129315;',title:'Start Here &mdash; Furious Frank',desc:'Composure under fire. If you pass this test every other cold call feels easy.'});
+      steps.push({icon:'&#129399;',title:'Then &mdash; Ninja Nancy',desc:'The polite deflector. 15 years of brushing people off without being rude. Practice calling out the pattern with confidence and making her laugh.'});
+    }
+  } else {
+    steps.push({icon:'&#127775;',title:'Build a Custom Prospect',desc:'Use the Custom vertical in the trainer. Describe the exact person you are calling tomorrow and practice that specific call today.'});
+  }
+
+  // Income-based intensity
+  if(income === 'over20k' || income === '10to20k'){
+    steps.push({icon:'&#9889;',title:'Daily Minimum &mdash; 3 Practice Sessions Before You Dial',desc:'At your income target you need reps like an athlete needs practice. Run 3 AI sessions every morning before your first real call. Score every session. Track your improvement.'});
+  } else {
+    steps.push({icon:'&#128197;',title:'Weekly Cadence &mdash; 5 Sessions Per Week',desc:'One session per day before you start dialing. Review your score. Identify your weakest category. Focus your next session there.'});
+  }
+
+  // Manager path
+  if(exp === 'manager'){
+    steps.unshift({icon:'&#127970;',title:'Manager Path &mdash; Assign Archetypes to Your Reps',desc:'Send your team to GemRep before their first real call. Assign Hopeful Helen to new reps, Burned Bob to your veterans. Review their scores in the team dashboard (coming soon).'});
+  }
+
+  var html = steps.map(function(s,i){
+    return '<div style="background:var(--panel);border:1px solid var(--border);border-left:3px solid #ff4d1c;border-radius:10px;padding:16px 18px"><div style="display:flex;align-items:flex-start;gap:12px"><div style="font-size:22px;flex-shrink:0">'+s.icon+'</div><div><div style="font-size:14px;font-weight:600;margin-bottom:5px">'+s.title+'</div><div style="font-size:12px;color:var(--dim);line-height:1.6">'+s.desc+'</div></div></div></div>';
+  }).join('');
+
+  document.getElementById('planOutput').innerHTML = html;
+});
+
 window.addEventListener('scroll',function(){
   document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);
 });
