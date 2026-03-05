@@ -81,9 +81,9 @@ section{padding:96px 24px;position:relative}
 
 /* TESTIMONIALS */
 .testis{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px;margin-top:52px}
-.testi{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:26px}
+.testi{background:var(--panel);border:1px solid var(--border);border-left:3px solid #ff4d1c;border-radius:14px;padding:26px}
 .testi-q{font-size:15px;line-height:1.7;margin-bottom:18px;padding-top:4px}
-.testi-q::before{content:"C";font-family:"Instrument Serif",serif;font-size:38px;color:#ff4d1c;line-height:.4;display:block;margin-bottom:10px}
+.testi-q::before{display:none}
 .testi-author{display:flex;align-items:center;gap:11px}
 .testi-av{width:36px;height:36px;border-radius:9px;background:var(--muted);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px}
 .testi-name{font-size:13px;font-weight:600}
@@ -131,7 +131,7 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
   footer{flex-direction:column;padding:28px 20px}
 }
 </style>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='8' y1='4' x2='56' y2='34' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0%25' stop-color='%23ff4d1c'/%3E%3Cstop offset='100%25' stop-color='%23ff8c00'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='8' y1='30' x2='56' y2='60' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0%25' stop-color='%23cc3a10'/%3E%3Cstop offset='100%25' stop-color='%23cc7000'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='20,4 44,4 56,20 8,20' fill='url(%23g1)'/%3E%3Cpolygon points='8,20 56,20 32,60' fill='url(%23g2)'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 </head>
 <body>
 
@@ -231,9 +231,9 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
     <div class="sec-label">Early Feedback</div>
     <h2 class="sec-title">What reps are <em>saying.</em></h2>
     <div class="testis">
-      <div class="testi"><div class="testi-q"><span style="font-family:Georgia,serif;font-size:32px;color:#ff4d1c;line-height:0.5;display:block;margin-bottom:10px">&ldquo;</span>I ran 10 calls with Skeptical Steve before my actual meeting with a CTO. The real call felt easy. I closed it.</div><div class="testi-author"><div class="testi-av">&#128104;</div><div><div class="testi-name">Marcus T.</div><div class="testi-role">B2B SaaS AE</div></div></div></div>
-      <div class="testi"><div class="testi-q"><span style="font-family:Georgia,serif;font-size:32px;color:#ff4d1c;line-height:0.5;display:block;margin-bottom:10px">&ldquo;</span>My new agents used to practice on real Medicare leads and burn them. Now they run 20 Dorothy calls first. Night and day difference.</div><div class="testi-author"><div class="testi-av">&#128105;</div><div><div class="testi-name">Denise R.</div><div class="testi-role">Insurance Agency Owner</div></div></div></div>
-      <div class="testi"><div class="testi-q"><span style="font-family:Georgia,serif;font-size:32px;color:#ff4d1c;line-height:0.5;display:block;margin-bottom:10px">&ldquo;</span>Furious Frank broke me the first five times. Then I figured it out. Best composure training I have ever done.</div><div class="testi-author"><div class="testi-av">&#128104;</div><div><div class="testi-name">Devon K.</div><div class="testi-role">Cold Call SDR</div></div></div></div>
+      <div class="testi"><div class="testi-q">I ran 10 calls with Skeptical Steve before my actual meeting with a CTO. The real call felt easy. I closed it.</div><div class="testi-author"><div class="testi-av">&#128104;</div><div><div class="testi-name">Marcus T.</div><div class="testi-role">B2B SaaS AE</div></div></div></div>
+      <div class="testi"><div class="testi-q">My new agents used to practice on real Medicare leads and burn them. Now they run 20 Dorothy calls first. Night and day difference.</div><div class="testi-author"><div class="testi-av">&#128105;</div><div><div class="testi-name">Denise R.</div><div class="testi-role">Insurance Agency Owner</div></div></div></div>
+      <div class="testi"><div class="testi-q">Furious Frank broke me the first five times. Then I figured it out. Best composure training I have ever done.</div><div class="testi-author"><div class="testi-av">&#128104;</div><div><div class="testi-name">Devon K.</div><div class="testi-role">Cold Call SDR</div></div></div></div>
     </div>
   </div>
 </section>
