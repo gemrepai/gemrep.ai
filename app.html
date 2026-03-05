@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>GemRep &mdash; AI Sales Trainer</title>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--black:#0a0a0a;--dark:#111214;--panel:#16181c;--border:#2a2d35;--muted:#3a3d47;--text:#e8e9ec;--dim:#8a8d9a;--accent:#ff4d1c;--accent2:#ff8c00;--green:#00e676;--yellow:#ffd600;--red:#ff1744}
-body{background:var(--black);color:var(--text);font-family:"DM Sans",sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+body{background:var(--black);color:var(--text);font-family:"DM Sans",sans-serif;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 
 /* HEADER */
 header{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;border-bottom:1px solid var(--border);background:var(--dark);flex-shrink:0}
@@ -138,7 +138,10 @@ textarea:disabled{opacity:.4}
 @media(max-width:768px){
   .sidebar{position:fixed;left:0;top:52px;bottom:0;z-index:40;transform:translateX(-100%);transition:transform .25s ease;width:82vw;max-width:300px}
   .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,.7)}
-  .chat{width:100%}
+  .chat{width:100%;display:flex;flex-direction:column;min-height:0}
+  .main{flex:1;min-height:0;overflow:hidden}
+  .msgs{flex:1;min-height:0}
+  .iarea{flex-shrink:0;padding-bottom:max(12px,env(safe-area-inset-bottom))}
   .mbtn{display:flex!important;align-items:center;justify-content:center;width:34px;height:34px;background:none;border:1px solid var(--border);border-radius:7px;color:var(--dim);font-size:18px;cursor:pointer;flex-shrink:0}
   .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:39}
   .mob-overlay.open{display:block}
