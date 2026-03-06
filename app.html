@@ -2,523 +2,692 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GemRep &mdash; Cut. Polish. Close.</title>
-<meta name="description" content="AI-powered sales training. Practice on realistic prospects, get scored, close more deals.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>GemRep &mdash; AI Sales Trainer</title>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--black:#080809;--dark:#0e0f11;--panel:#141518;--border:#222428;--muted:#2e3038;--text:#eeeef0;--dim:#72747d;--accent:#ff4d1c;--accent2:#ff8c00}
-html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--text);font-family:"DM Sans",sans-serif;line-height:1.6}
-a{text-decoration:none}
+:root{--black:#0a0a0a;--dark:#111214;--panel:#16181c;--border:#2a2d35;--muted:#3a3d47;--text:#e8e9ec;--dim:#8a8d9a;--accent:#ff4d1c;--accent2:#ff8c00;--green:#00e676;--yellow:#ffd600;--red:#ff1744}
+body{background:var(--black);color:var(--text);font-family:"DM Sans",sans-serif;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;transition:all .3s}section{scroll-margin-top:64px}
-nav.scrolled{background:rgba(8,8,9,.95);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}nav{background:rgba(8,8,9,.7);backdrop-filter:blur(8px)}
-.nav-logo{display:flex;align-items:center;gap:10px}
-.nav-wordmark{font-family:"Instrument Serif",serif;font-size:22px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-links{display:flex;align-items:center;gap:32px}
-.nav-links a{color:var(--dim);font-size:14px;transition:color .2s}
-.nav-links a:hover{color:var(--text)}
-.nav-cta{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:8px;color:white;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;padding:9px 20px;cursor:pointer;display:inline-block}
-
-/* HERO */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 24px 80px;text-align:center;position:relative}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,77,28,.08);border:1px solid rgba(255,77,28,.2);border-radius:50px;padding:6px 14px;font-size:12px;color:#ff8c00;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:32px;font-weight:500}
-.pulse{width:6px;height:6px;border-radius:50%;background:#ff4d1c;box-shadow:0 0 8px #ff4d1c;animation:pulse 2s infinite;flex-shrink:0}
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;border-bottom:1px solid var(--border);background:var(--dark);flex-shrink:0}
+.logo{display:flex;align-items:center;gap:8px}
+.wordmark{font-family:"Instrument Serif",serif;font-size:20px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.badge{display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:4px 11px;font-size:12px;color:var(--dim)}
+.badge b{color:var(--text);font-weight:500}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);animation:pulse 2s infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.hero-title{font-family:"Instrument Serif",serif;font-size:clamp(48px,8vw,108px);line-height:1.0;letter-spacing:-2px;margin-bottom:24px}
-.hero-title em{font-style:italic;background:linear-gradient(135deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero-sub{font-size:clamp(16px,2vw,19px);color:var(--dim);max-width:540px;line-height:1.7;margin-bottom:48px;font-weight:300}
-.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:64px}
-.btn-primary{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"DM Sans",sans-serif;font-size:15px;font-weight:500;padding:14px 32px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 24px rgba(255,77,28,.3);transition:all .2s}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,77,28,.45)}
-.btn-secondary{background:none;border:1px solid var(--border);border-radius:10px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:15px;padding:14px 32px;display:inline-flex;align-items:center;gap:8px;transition:all .2s}
-.btn-secondary:hover{border-color:var(--accent);color:var(--text)}
-.stats{display:flex;gap:48px;justify-content:center;flex-wrap:wrap}
-.stat-num{font-family:"Instrument Serif",serif;font-size:36px;background:linear-gradient(135deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
-.stat-label{font-size:12px;color:var(--dim);margin-top:4px}
+.hbtn{background:none;border:1px solid var(--border);border-radius:7px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:11px;padding:5px 11px;cursor:pointer;transition:all .15s}
+.hbtn:hover{border-color:var(--accent);color:var(--text)}
 
-/* SECTIONS */
-section{padding:96px 24px;position:relative}
-.alt{background:var(--dark)}
-.container{max-width:1080px;margin:0 auto}
-.sec-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#ff4d1c;font-weight:500;margin-bottom:14px}
-.sec-title{font-family:"Instrument Serif",serif;font-size:clamp(34px,5vw,54px);line-height:1.1;letter-spacing:-1px;margin-bottom:18px}
-.sec-title em{font-style:italic;background:linear-gradient(135deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.sec-sub{font-size:17px;color:var(--dim);max-width:500px;line-height:1.7;font-weight:300}
-.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+/* LAYOUT */
+.main{display:flex;flex:1;overflow:hidden}
 
-/* STEPS */
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2px;margin-top:56px;border:1px solid var(--border);border-radius:16px;overflow:hidden}
-.step{background:var(--panel);padding:32px 28px}
-.step:hover{background:#1a1c20}
-.step-num{font-family:"DM Mono",monospace;font-size:11px;color:#ff4d1c;letter-spacing:2px;margin-bottom:18px;opacity:.7}
-.step-icon{font-size:26px;margin-bottom:14px}
-.step-title{font-size:16px;font-weight:600;margin-bottom:8px}
-.step-desc{font-size:13px;color:var(--dim);line-height:1.65}
+/* SIDEBAR */
+.sidebar{width:256px;border-right:1px solid var(--border);background:var(--dark);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+.stabs{display:flex;border-bottom:1px solid var(--border)}
+.stab{flex:1;padding:9px 0;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;font-family:"DM Sans",sans-serif;font-weight:500;transition:all .15s}
+.stab.active{color:#ff4d1c;border-bottom-color:#ff4d1c}
+.spane{flex:1;overflow-y:auto;padding:14px;display:none;flex-direction:column;gap:12px}
+.spane.active{display:flex}
+.spane::-webkit-scrollbar{width:3px}
+.spane::-webkit-scrollbar-thumb{background:var(--muted);border-radius:2px}
 
-/* ARCH GRID */
-.arch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:48px}
-.arch-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;transition:all .2s}
-.arch-card:hover{border-color:rgba(255,77,28,.4);transform:translateY(-3px)}
-.arch-vert{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#ff4d1c;margin-bottom:6px;font-weight:500}
-.arch-emoji{font-size:22px;margin-bottom:9px}
-.arch-name{font-size:13px;font-weight:600;margin-bottom:3px}
-.arch-label{font-size:11px;color:var(--dim);margin-bottom:9px}
-.diff{display:flex;gap:3px}
-.pip{width:12px;height:4px;border-radius:2px}
+/* PROFILE */
+.pcard{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:13px}
+.pav{width:40px;height:40px;border-radius:9px;background:linear-gradient(135deg,#1a1f2e,#2a3040);display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:8px;border:1px solid var(--border)}
+.pname{font-size:13px;font-weight:600;margin-bottom:2px}
+.ptitle{font-size:10px;color:var(--dim);margin-bottom:9px}
+.ptags{display:flex;flex-wrap:wrap;gap:4px}
+.tag{font-size:9px;padding:2px 6px;border-radius:4px;font-family:"DM Mono",monospace;font-weight:500}
+.slbl{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;font-weight:500;margin-bottom:5px}
+.ibox{font-size:11.5px;color:var(--dim);line-height:1.6;background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:9px 11px}
+.sbox{font-size:11.5px;color:#ff8c00;padding:8px 10px;background:rgba(255,140,0,.06);border:1px solid rgba(255,140,0,.15);border-radius:6px;line-height:1.5;font-style:italic}
+.tip{font-size:11px;color:var(--dim);padding-left:9px;border-left:2px solid var(--muted);line-height:1.5;margin-bottom:4px}
 
-/* FEATURES */
-.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px;margin-top:52px}
-.feat{padding:26px;background:var(--panel);border:1px solid var(--border);border-radius:14px;transition:all .2s}
-.feat:hover{border-color:rgba(255,77,28,.3)}
-.feat-icon{width:42px;height:42px;border-radius:10px;background:rgba(255,77,28,.1);border:1px solid rgba(255,77,28,.2);display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:14px}
-.feat-title{font-size:15px;font-weight:600;margin-bottom:7px}
-.feat-desc{font-size:13px;color:var(--dim);line-height:1.65}
+/* DIFF BAR */
+.diff{display:flex;align-items:center;gap:4px}
+.pip{width:14px;height:5px;border-radius:3px}
 
-/* TESTIMONIALS */
-.testis{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px;margin-top:52px}
-.testi{background:var(--panel);border:1px solid var(--border);border-left:3px solid #ff4d1c;border-radius:14px;padding:26px}
-.testi-q{font-size:15px;line-height:1.7;margin-bottom:18px;padding-top:4px}
-.testi-q::before{display:none}
-.testi-author{display:flex;align-items:center;gap:11px}
-.testi-av{width:36px;height:36px;border-radius:9px;background:var(--muted);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px}
-.testi-name{font-size:13px;font-weight:600}
-.testi-role{font-size:11px;color:var(--dim)}
+/* VERTICAL BTNS */
+.vbtns{display:flex;gap:5px;flex-wrap:wrap}
+.vbtn{flex:1;min-width:55px;padding:6px 4px;font-size:9px;letter-spacing:1px;text-transform:uppercase;background:var(--panel);border:1px solid var(--border);border-radius:6px;color:var(--dim);cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .15s;text-align:center}
+.vbtn:hover{border-color:#ff4d1c;color:var(--text)}
+.vbtn.active{border-color:#ff4d1c;color:var(--text);background:rgba(255,77,28,.08)}
 
-/* PRICING */
-.pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:52px;max-width:860px}
-.price-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:30px;position:relative}
-.price-card.featured{border-color:#ff4d1c;background:rgba(255,77,28,.04)}
-.popular{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ff4d1c,#ff8c00);color:white;font-size:10px;font-weight:600;letter-spacing:2px;padding:3px 13px;border-radius:50px;white-space:nowrap}
-.price-name{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
-.price-amt{font-family:"Instrument Serif",serif;font-size:50px;line-height:1;margin-bottom:3px}
-.price-amt span{font-size:19px;color:var(--dim);font-family:"DM Sans",sans-serif}
-.price-period{font-size:13px;color:var(--dim);margin-bottom:22px}
-.price-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:26px}
-.price-feats li{font-size:13px;color:var(--dim);display:flex;align-items:center;gap:8px}
-.price-feats li::before{content:"\2713";color:#ff4d1c;font-weight:700;flex-shrink:0}
-.pbtn{width:100%;padding:11px;border-radius:9px;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:500;cursor:pointer;display:block;text-align:center;transition:all .2s}
-.pbtn-primary{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;color:white}
-.pbtn-secondary{background:none;border:1px solid var(--border);color:var(--dim)}
-.pbtn-secondary:hover{border-color:#ff4d1c;color:var(--text)}
+/* ARCH CARDS */
+.acard{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:10px 11px;cursor:pointer;transition:all .15s;margin-bottom:6px}
+.acard:hover{border-color:rgba(255,77,28,.5)}
+.acard.active{border-color:#ff4d1c;background:rgba(255,77,28,.07)}
+.atop{display:flex;align-items:center;gap:8px;margin-bottom:5px}
 
-/* WAITLIST */
-.waitlist-wrap{max-width:540px;margin:0 auto;text-align:center;padding:96px 24px}
-.wform{display:flex;gap:10px;margin-top:30px;flex-wrap:wrap;justify-content:center}
-.winput{flex:1;min-width:210px;background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:12px 17px;color:var(--text);font-family:"DM Sans",sans-serif;font-size:14px;outline:none;transition:border-color .2s}
-.winput:focus{border-color:#ff4d1c}
-.winput::placeholder{color:var(--dim)}
-.wbtn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:500;padding:12px 26px;cursor:pointer;transition:all .2s;white-space:nowrap}
-.wbtn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(255,77,28,.4)}
-.wnote{font-size:12px;color:var(--dim);margin-top:13px}
+/* CHAT */
+.chat{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.msgs{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.msgs::-webkit-scrollbar{width:4px}
+.msgs::-webkit-scrollbar-thumb{background:var(--muted);border-radius:2px}
+.mrow{display:flex;gap:10px;max-width:720px;animation:fadeUp .2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.mrow.user{align-self:flex-end;flex-direction:row-reverse}
+.mav{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;border:1px solid var(--border)}
+.mav.p{background:linear-gradient(135deg,#1a2030,#252d40)}
+.mav.u{background:rgba(255,77,28,.15);border-color:rgba(255,77,28,.3)}
+.mcont{display:flex;flex-direction:column;gap:3px}
+.mlbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);font-weight:500}
+.mrow.user .mlbl{text-align:right}
+.mbub{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:10px 13px;font-size:13px;line-height:1.65;max-width:500px}
+.mrow.user .mbub{background:rgba(255,77,28,.07);border-color:rgba(255,77,28,.22)}
+.tdots{display:flex;gap:5px;align-items:center;padding:12px 13px}
+.td{width:6px;height:6px;border-radius:50%;background:var(--dim);animation:td 1.2s infinite}
+.td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
+@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
 
-/* FOOTER */
-footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
-.foot-logo{display:flex;align-items:center;gap:8px}
-.foot-wordmark{font-family:"Instrument Serif",serif;font-size:17px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.foot-copy{font-size:12px;color:var(--dim)}
-.foot-links{display:flex;gap:22px}
-.foot-links a{font-size:12px;color:var(--dim);transition:color .2s}
-.foot-links a:hover{color:var(--text)}
+/* INPUT */
+.iarea{padding:12px 20px;border-top:1px solid var(--border);background:var(--dark);flex-shrink:0}
+.iwrap{display:flex;gap:8px;align-items:flex-end;background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:8px 11px;transition:border-color .15s}
+.iwrap:focus-within{border-color:#ff4d1c}
+textarea{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:"DM Sans",sans-serif;font-size:13px;resize:none;line-height:1.5;max-height:100px;min-height:20px}
+textarea::placeholder{color:var(--muted)}
+textarea:disabled{opacity:.4}
+.sbtn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:7px;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:white;font-size:14px;transition:opacity .15s}
+.sbtn:disabled{opacity:.3;cursor:not-allowed}
+.ihint{font-size:10px;color:var(--muted);margin-top:6px;text-align:center}
 
-@media(max-width:900px){.pricing{grid-template-columns:repeat(2,1fr)!important}}
-@media(max-width:560px){.pricing{grid-template-columns:1fr!important}}
+/* SCORE BTN */
+.scbtnwrap{display:none;position:absolute;bottom:80px;left:50%;transform:translateX(-50%);z-index:20}
+.scbtn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:50px;color:white;font-family:"Instrument Serif",serif;font-size:14px;letter-spacing:2px;padding:11px 28px;cursor:pointer;box-shadow:0 4px 22px rgba(255,77,28,.45);display:flex;align-items:center;gap:8px;white-space:nowrap;animation:popin .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popin{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
+.overlay.open{display:flex}
+.modal{background:#16181c;border:1px solid #2a2d35;border-radius:18px;padding:28px;width:480px;max-width:92vw;position:relative;animation:modalin .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes modalin{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+.mclose{position:absolute;top:12px;right:12px;background:none;border:1px solid #2a2d35;border-radius:6px;color:#666;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px}
+.mhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.mtitle{font-family:"Instrument Serif",serif;font-size:18px;font-weight:400;letter-spacing:1px}
+.overall{font-family:"Instrument Serif",serif;font-size:42px;line-height:1}
+.sgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.si{background:#111214;border:1px solid #2a2d35;border-radius:8px;padding:10px 11px}
+.silbl{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.sbar{height:3px;background:#3a3d47;border-radius:2px;margin-bottom:5px}
+.sbarfill{height:100%;border-radius:2px;transition:width 1s ease}
+.sival{font-family:"DM Mono",monospace;font-size:12px;font-weight:500}
+.sfeed{font-size:12px;color:#8a8d9a;line-height:1.65;background:#111214;border:1px solid #2a2d35;border-radius:8px;padding:11px 13px;margin-bottom:16px}
+.mbtns{display:flex;gap:8px}
+.mbtns button{flex:1;padding:10px;border-radius:8px;font-family:"DM Sans",sans-serif;font-size:13px;cursor:pointer;transition:all .2s}
+.mbtn-primary{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;color:white;font-family:"Instrument Serif",serif;letter-spacing:1px}
+.mbtn-secondary{background:none;border:1px solid #2a2d35;color:#8a8d9a}
+
+/* START SCREEN */
+.start{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:22px;padding:20px;overflow-y:auto;z-index:50}
+.start-logo{font-family:"Instrument Serif",serif;font-size:56px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;letter-spacing:4px}
+.start-tag{font-size:14px;color:var(--dim);letter-spacing:1px}
+.svbtns{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
+.svbtn{background:var(--panel);border:2px solid var(--border);border-radius:10px;padding:10px 18px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:13px;cursor:pointer;transition:all .15s}
+.svbtn:hover{border-color:#ff4d1c;color:var(--text)}
+.svbtn.active{border-color:#ff4d1c;color:var(--text);background:rgba(255,77,28,.08)}
+.sgrid2{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;max-width:640px;width:100%;align-items:stretch}
+.sac{background:var(--panel);border:2px solid var(--border);border-radius:12px;padding:13px;cursor:pointer;transition:all .15s;height:100px;overflow:hidden;box-sizing:border-box}
+.sac:hover{border-color:rgba(255,77,28,.5);transform:translateY(-2px)}
+.sac.active{border-color:#ff4d1c;background:rgba(255,77,28,.07)}
+.go-btn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"Instrument Serif",serif;font-size:16px;letter-spacing:3px;padding:12px 40px;cursor:pointer;transition:all .15s}
+.go-btn:hover{opacity:.9;transform:scale(1.02)}
+.hidden{display:none!important}
 @media(max-width:768px){
-  nav{padding:0 20px}
-  .nav-links{display:none}
-  footer{flex-direction:column;padding:28px 20px}
-  .pricing{grid-template-columns:1fr!important}
-  .price-card.featured{margin-top:16px}
-  .popular{font-size:9px;padding:3px 10px}
-  .hero-title{letter-spacing:-1px}
-  .stats{gap:24px}
-  .stat-num{font-size:28px}
-  section{padding:64px 20px}
+  .sidebar{position:fixed;left:0;top:52px;bottom:0;z-index:40;transform:translateX(-100%);transition:transform .25s ease;width:82vw;max-width:300px}
+  .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,.7)}
+  .chat{width:100%;display:flex;flex-direction:column;min-height:0}
+  .main{flex:1;min-height:0;overflow:hidden}
+  .msgs{flex:1;min-height:0}
+  .iarea{flex-shrink:0;padding-bottom:max(12px,env(safe-area-inset-bottom))}
+  .mbtn{display:flex!important;align-items:center;justify-content:center;width:34px;height:34px;background:none;border:1px solid var(--border);border-radius:7px;color:var(--dim);font-size:18px;cursor:pointer;flex-shrink:0}
+  .mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:39}
+  .mob-overlay.open{display:block}
+  .hbtn{font-size:10px;padding:4px 8px}
+  .badge{display:none}
   .sgrid2{grid-template-columns:repeat(2,1fr)!important}
-  .arch-grid{grid-template-columns:repeat(2,1fr)}
-  .features{grid-template-columns:1fr}
-  .testis{grid-template-columns:1fr}
+}
+@media(min-width:769px){
+  .mbtn{display:none!important}
+  .mob-overlay{display:none!important}
 }
 </style>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 </head>
 <body>
 
-<nav id="nav">
-  <a class="nav-logo" href="#">
-    <svg width="26" height="26" viewBox="0 0 64 64" fill="none"><defs><linearGradient id="lg1" x1="8" y1="4" x2="56" y2="34" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff4d1c"/><stop offset="100%" stop-color="#ff8c00"/></linearGradient><linearGradient id="lg2" x1="8" y1="30" x2="56" y2="60" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#cc3a10"/><stop offset="100%" stop-color="#cc7000"/></linearGradient></defs><polygon points="20,4 44,4 56,20 8,20" fill="url(#lg1)" opacity="0.9"/><polygon points="8,20 56,20 32,60" fill="url(#lg2)" opacity="0.85"/><polygon points="22,4 42,4 38,20 26,20" fill="white" opacity="0.2"/><rect x="28" y="10" width="8" height="14" rx="4" fill="white" opacity="0.95"/><path d="M24 24 C24 28.4 27.6 32 32 32 C36.4 32 40 28.4 40 24" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.95"/><line x1="32" y1="32" x2="32" y2="36" stroke="white" stroke-width="2.2" stroke-linecap="round" opacity="0.95"/><line x1="28" y1="36" x2="36" y2="36" stroke="white" stroke-width="2.2" stroke-linecap="round" opacity="0.95"/></svg>
-    <span class="nav-wordmark">GemRep</span>
-  </a>
-  <div class="nav-links">
-    <a href="#how">How It Works</a>
-    <a href="#archetypes">Prospects</a>
-    <a href="#pricing">Pricing</a>
-  </div>
-  <a href="#waitlist" class="nav-cta">Join Waitlist</a>
-</nav>
+<!-- START SCREEN -->
+<div class="start" id="startScreen">
+  <svg width="60" height="60" viewBox="0 0 64 64" fill="none"><defs><linearGradient id="sg1" x1="8" y1="4" x2="56" y2="34" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff4d1c"/><stop offset="100%" stop-color="#ff8c00"/></linearGradient><linearGradient id="sg2" x1="8" y1="30" x2="56" y2="60" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#cc3a10"/><stop offset="100%" stop-color="#cc7000"/></linearGradient></defs><polygon points="20,4 44,4 56,20 8,20" fill="url(#sg1)" opacity="0.9"/><polygon points="8,20 56,20 32,60" fill="url(#sg2)" opacity="0.85"/><polygon points="22,4 42,4 38,20 26,20" fill="white" opacity="0.2"/><rect x="28" y="10" width="8" height="14" rx="4" fill="white" opacity="0.95"/><path d="M24 24 C24 28.4 27.6 32 32 32 C36.4 32 40 28.4 40 24" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.95"/><line x1="32" y1="32" x2="32" y2="36" stroke="white" stroke-width="2.2" stroke-linecap="round" opacity="0.95"/><line x1="28" y1="36" x2="36" y2="36" stroke="white" stroke-width="2.2" stroke-linecap="round" opacity="0.95"/></svg>
+  <div class="start-logo">GEMREP</div>
+  <div class="start-tag">Cut. Polish. Close. &mdash; AI Sales Training</div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-eyebrow"><div class="pulse"></div>AI Sales Training &mdash; Now in Beta</div>
-  <h1 class="hero-title">Stop practicing<br>on <em>real</em> prospects.</h1>
-  <p class="hero-sub">GemRep puts you on the phone with AI prospects who fight back, go cold, and hang up &mdash; just like the real thing. Get scored. Get better. Close more.</p>
-  <div class="hero-btns">
-    <a href="app.html" class="btn-primary">Join the Waitlist</a>
-    <a href="app.html" class="btn-secondary">See How It Works &rarr;</a>
+  <div>
+    <div style="font-size:10px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;text-align:center;margin-bottom:9px">Choose Vertical</div>
+    <div class="svbtns" id="svbtns"></div>
   </div>
-  <div class="stats">
-    <div><div class="stat-num">17</div><div class="stat-label">Prospect Archetypes</div></div>
-    <div><div class="stat-num">3</div><div class="stat-label">Sales Verticals</div></div>
-    <div><div class="stat-num">&infin;</div><div class="stat-label">Practice Reps</div></div>
-    <div><div class="stat-num">0</div><div class="stat-label">Real Deals Burned</div></div>
+
+  <div style="width:100%;max-width:640px">
+    <div style="font-size:10px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;text-align:center;margin-bottom:9px">Choose Your Prospect</div>
+    <div class="sgrid2" id="sgrid"></div>
   </div>
-</section>
 
-<div class="divider"></div>
+  <button class="go-btn" id="goBtn">BEGIN TRAINING</button>
+  <a href="/" style="font-size:12px;color:var(--dim);margin-top:-8px">&larr; Back to gemrep.ai</a>
+</div>
 
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div class="container">
-    <div class="sec-label">How It Works</div>
-    <h2 class="sec-title">Train like a pro.<br><em>Close like one.</em></h2>
-    <p class="sec-sub">Four steps from opening your laptop to a sharper closer.</p>
-    <div class="steps">
-      <div class="step"><div class="step-num">01</div><div class="step-icon">&#127919;</div><div class="step-title">Pick Your Prospect</div><div class="step-desc">Choose from 17 archetypes across B2B, insurance, and cold calling. Each one fights differently.</div></div>
-      <div class="step"><div class="step-num">02</div><div class="step-icon">&#127897;&#65039;</div><div class="step-title">Run the Call</div><div class="step-desc">The AI plays the prospect in real time. It objects, goes cold, hangs up. You have to earn it.</div></div>
-      <div class="step"><div class="step-num">03</div><div class="step-icon">&#128202;</div><div class="step-title">Get Your Score</div><div class="step-desc">Every call scored on opener, discovery, objection handling, and tonality with specific coaching notes.</div></div>
-      <div class="step"><div class="step-num">04</div><div class="step-icon">&#128142;</div><div class="step-title">Get Sharp</div><div class="step-desc">Run it again. A harder archetype. Until closing feels like breathing.</div></div>
+<!-- CUSTOM PROSPECT MODAL -->
+<div class="overlay" id="customModal">
+  <div class="modal" style="max-width:520px">
+    <button class="mclose" id="customClose">&#x2715;</button>
+    <div style="margin-bottom:18px">
+      <div style="font-family:'Instrument Serif',serif;font-size:20px;margin-bottom:6px">&#127775; Build Your Prospect</div>
+      <div style="font-size:13px;color:var(--dim);line-height:1.6">Describe who you want to practice against. The more specific, the more realistic the roleplay.</div>
     </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ARCHETYPES -->
-<section id="archetypes" class="alt">
-  <div class="container">
-    <div class="sec-label">Prospect Library</div>
-    <h2 class="sec-title">17 prospects.<br><em>Every personality.</em></h2>
-    <p class="sec-sub">From hopeful first-timers to furious gatekeepers &mdash; if you can close our AI, you can close anyone.</p>
-    <div class="arch-grid">
-      <a href="app.html" class="arch-card" style="display:block;text-decoration:none;color:inherit"><div class="arch-vert">B2B</div><div class="arch-emoji">&#128105;&#8205;&#128188;</div><div class="arch-name">Decisive Danielle</div><div class="arch-label">Driver / Commander</div><div class="diff"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#2e3038"></div></div></div>
-      <a href="app.html" class="arch-card" style="display:block;text-decoration:none;color:inherit"><div class="arch-vert">B2B</div><div class="arch-emoji">&#129309;</div><div class="arch-name">Consensus Claire</div><div class="arch-label">Amiable / Collaborative</div><div class="diff"><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div></div></div>
-      <a href="app.html" class="arch-card" style="display:block;text-decoration:none;color:inherit"><div class="arch-vert">B2B</div><div class="arch-emoji">&#129488;</div><div class="arch-name">Skeptical Steve</div><div class="arch-label">Analytical / Cynical</div><div class="diff"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div></div></div>
-      <a href="app.html" class="arch-card" style="display:block;text-decoration:none;color:inherit"><div class="arch-vert">B2B</div><div class="arch-emoji">&#128161;</div><div class="arch-name">Innovator Irene</div><div class="arch-label">Visionary / Early Adopter</div><div class="diff"><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div></div></div>
-      <a href="app.html" class="arch-card" style="display:block;text-decoration:none;color:inherit"><div class="arch-vert">Insurance</div><div class="arch-emoji">&#128543;</div><div class="arch-name">Fearful Frank</div><div class="arch-label">Fearful Protector</div><div class="diff"><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div></div></div>
-      <a href="app.html" class="arch-card" style="display:block;text-decoration:none;color:inherit"><div class="arch-vert">Insurance</div><div class="arch-emoji">&#128548;</div><div class="arch-name">Burned Bob</div><div class="arch-label">Burned &amp; Skeptical</div><div class="diff"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div></div></div>
-      <a href="app.html" class="arch-card" style="display:block;text-decoration:none;color:inherit"><div class="arch-vert">Insurance</div><div class="arch-emoji">&#127752;</div><div class="arch-name">Hopeful Helen</div><div class="arch-label">Hopeful Guardian</div><div class="diff"><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div></div></div>
-      <a href="app.html" class="arch-card" style="display:block;text-decoration:none;color:inherit"><div class="arch-vert">Cold Call</div><div class="arch-emoji">&#129315;</div><div class="arch-name">Furious Frank</div><div class="arch-label">Hostile &amp; Angry</div><div class="diff"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div></div></div>
-      <a href="app.html" class="arch-card" style="display:block;text-decoration:none;color:inherit"><div class="arch-vert">Cold Call</div><div class="arch-emoji">&#129399;</div><div class="arch-name">Ninja Nancy</div><div class="arch-label">Polite Deflector</div><div class="diff"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#2e3038"></div></div></a>
-      <a href="app.html" class="arch-card" style="display:block;text-decoration:none;color:inherit" style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;border-style:dashed;min-height:130px"><div style="font-size:20px;opacity:.25">+</div><div style="font-size:12px;color:var(--dim);text-align:center">8 more inside<br>the app</div></div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Quick Describe (freeform)</div>
+      <textarea id="customFreeform" placeholder="e.g. Skeptical CFO at a hospital, already has a vendor, burned by salespeople before, tight budget..." style="width:100%;background:#111214;border:1px solid #2a2d35;border-radius:9px;padding:10px 13px;color:#e8e9ec;font-family:'DM Sans',sans-serif;font-size:13px;resize:none;outline:none;min-height:80px;line-height:1.5"></textarea>
     </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- FEATURES -->
-<section id="features">
-  <div class="container">
-    <div class="sec-label">Features</div>
-    <h2 class="sec-title">Built for reps<br>who want to <em>win.</em></h2>
-    <div class="features">
-      <div class="feat"><div class="feat-icon">&#127917;</div><div class="feat-title">Deeply Human Prospects</div><div class="feat-desc">Each archetype has a core emotion, unique objection patterns, and specific tells when warming up. Not chatbots &mdash; characters.</div></div>
-      <div class="feat"><div class="feat-icon">&#128202;</div><div class="feat-title">Instant Call Scoring</div><div class="feat-desc">Every session scored on Opener, Discovery, Objection Handling, and Tonality. Specific coaching notes after every call.</div></div>
-      <div class="feat"><div class="feat-icon">&#127897;&#65039;</div><div class="feat-title">Voice Mode Coming Soon</div><div class="feat-desc">Speak your pitch out loud. The prospect talks back. Because sales is a voice skill &mdash; typing practice does not transfer.</div></div>
-      <div class="feat"><div class="feat-icon">&#127970;</div><div class="feat-title">Team Dashboards</div><div class="feat-desc">Managers see rep progress, call scores, and weak spots across the whole team. Know exactly who needs coaching and on what.</div></div>
-      <div class="feat"><div class="feat-icon">&#128737;&#65039;</div><div class="feat-title">Insurance Specialized</div><div class="feat-desc">Medicare, life insurance, and ACA archetypes built by someone who actually sells insurance. Vertical-specific, not generic.</div></div>
-      <div class="feat"><div class="feat-icon">&#9889;</div><div class="feat-title">Practice Anytime</div><div class="feat-desc">No scheduling. No roleplay partner. Just open GemRep and run a call. Your AI prospect is always available and always difficult.</div></div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- TESTIMONIALS -->
-<section class="alt">
-  <div class="container">
-    <div class="sec-label">Early Feedback</div>
-    <h2 class="sec-title">What reps are <em>saying.</em></h2>
-    <div class="testis">
-      <div class="testi"><div class="testi-q">I ran 10 calls with Skeptical Steve before my actual meeting with a CTO. The real call felt easy. I closed it.</div><div class="testi-author"><div class="testi-av">&#128104;</div><div><div class="testi-name">Marcus T.</div><div class="testi-role">B2B SaaS AE</div></div></div></div>
-      <div class="testi"><div class="testi-q">My new agents used to practice on real Medicare leads and burn them. Now they run 20 Dorothy calls first. Night and day difference.</div><div class="testi-author"><div class="testi-av">&#128105;</div><div><div class="testi-name">Denise R.</div><div class="testi-role">Insurance Agency Owner</div></div></div></div>
-      <div class="testi"><div class="testi-q">Furious Frank broke me the first five times. Then I figured it out. Best composure training I have ever done.</div><div class="testi-author"><div class="testi-av">&#128104;</div><div><div class="testi-name">Devon K.</div><div class="testi-role">Cold Call SDR</div></div></div></div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- PRICING -->
-<section id="pricing">
-  <div class="container">
-    <div class="sec-label">Pricing</div>
-    <h2 class="sec-title">Simple pricing.<br><em>No surprises.</em></h2>
-    <p class="sec-sub">Start free. Upgrade when you are ready to get serious.</p>
-    <div class="pricing" style="max-width:820px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
-      <div class="price-card">
-        <div class="price-name">Starter</div>
-        <div class="price-amt"><span>$</span>0</div>
-        <div class="price-period">No credit card needed</div>
-        <ul class="price-feats">
-          <li>5 practice calls per month</li>
-          <li>3 prospect archetypes</li>
-          <li>Conversation-based scoring</li>
-          <li>Text sessions only</li>
-        </ul>
-        <a href="app.html" class="pbtn pbtn-secondary">Try It Free</a>
+    <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-bottom:10px;display:flex;align-items:center;gap:10px"><span style="flex:1;height:1px;background:#2a2d35"></span>OR BUILD IT<span style="flex:1;height:1px;background:#2a2d35"></span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px">
+      <div>
+        <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Role / Title</div>
+        <input id="cRole" placeholder="e.g. VP of Sales" style="width:100%;background:#111214;border:1px solid #2a2d35;border-radius:7px;padding:8px 11px;color:#e8e9ec;font-family:'DM Sans',sans-serif;font-size:13px;outline:none">
       </div>
-      <div class="price-card">
-        <div class="price-name">Individual</div>
-        <div class="price-amt"><span>$</span>24</div>
-        <div class="price-period">per month</div>
-        <ul class="price-feats">
-          <li>100 practice calls per month</li>
-          <li>All 17 archetypes</li>
-          <li>Full conversation scoring</li>
-          <li>Text sessions</li>
-          <li>Call history</li>
-        </ul>
-        <a href="#waitlist" class="pbtn pbtn-secondary">Get Early Access</a>
+      <div>
+        <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Industry</div>
+        <input id="cIndustry" placeholder="e.g. Healthcare" style="width:100%;background:#111214;border:1px solid #2a2d35;border-radius:7px;padding:8px 11px;color:#e8e9ec;font-family:'DM Sans',sans-serif;font-size:13px;outline:none">
       </div>
-      <div class="price-card featured">
-        <div class="popular">MOST POPULAR</div>
-        <div class="price-name">Pro</div>
-        <div class="price-amt"><span>$</span>49</div>
-        <div class="price-period">per month</div>
-        <ul class="price-feats">
-          <li>Unlimited practice calls</li>
-          <li>All 17 archetypes</li>
-          <li>Advanced conversation scoring</li>
-          <li>Text &amp; voice sessions</li>
-          <li>Analytics &amp; progress tracking</li>
-          <li>New archetypes monthly</li>
-        </ul>
-        <a href="app.html" class="pbtn pbtn-primary">Try The Demo</a>
+      <div>
+        <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Personality</div>
+        <input id="cPersonality" placeholder="e.g. Skeptical, burned before" style="width:100%;background:#111214;border:1px solid #2a2d35;border-radius:7px;padding:8px 11px;color:#e8e9ec;font-family:'DM Sans',sans-serif;font-size:13px;outline:none">
+      </div>
+      <div>
+        <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Main Objection</div>
+        <input id="cObjection" placeholder="e.g. We already have a vendor" style="width:100%;background:#111214;border:1px solid #2a2d35;border-radius:7px;padding:8px 11px;color:#e8e9ec;font-family:'DM Sans',sans-serif;font-size:13px;outline:none">
       </div>
     </div>
-    <div style="text-align:center;margin-top:18px">
-      <p style="font-size:13px;color:var(--dim);margin-bottom:10px">Need seats for your whole team?</p>
-      <a href="mailto:hello@gemrep.ai" style="display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid var(--border);border-radius:9px;color:var(--dim);font-size:13px;padding:9px 22px;transition:all .2s" onmouseover="this.style.borderColor='#ff4d1c';this.style.color='#eeeef0'" onmouseout="this.style.borderColor='#222428';this.style.color='#72747d'">&#9993; Contact us for Enterprise pricing</a>
-    </div>
-    </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- LEAD MAGNET + QUIZ -->
-<section id="waitlist" class="alt">
-  <div style="max-width:680px;margin:0 auto;text-align:center;padding:0 20px">
-
-    <!-- STEP 1: Lead Magnet -->
-    <div id="step1">
-      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,77,28,.08);border:1px solid rgba(255,77,28,.2);border-radius:50px;padding:6px 14px;font-size:11px;color:#ff8c00;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px;font-weight:500">
-        &#127381; Free Download
-      </div>
-      <h2 class="sec-title" style="text-align:center">The Bar Napkin<br><em>Sales Strategy.</em></h2>
-      <p style="font-size:16px;color:var(--dim);line-height:1.7;font-weight:300;margin:14px auto 32px;max-width:480px">You are at the airport bar and you bump into a $100k a month closer. He writes you his million dollar strategy on a napkin. This is that napkin. Free.</p>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:480px;margin:0 auto 32px;text-align:left">
-        <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px">
-          <div style="font-size:18px;margin-bottom:6px">&#128247;</div>
-          <div style="font-size:12px;font-weight:600;margin-bottom:3px">&#9889; Pattern Interrupt Openers</div>
-          <div style="font-size:11px;color:var(--dim)">Pattern interrupt openers that actually get a response</div>
-        </div>
-        <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px">
-          <div style="font-size:18px;margin-bottom:6px">&#129488;</div>
-          <div style="font-size:12px;font-weight:600;margin-bottom:3px">&#9889; 5 Consequence Questions</div>
-          <div style="font-size:11px;color:var(--dim)">Make them feel the cost of doing nothing</div>
-        </div>
-        <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px">
-          <div style="font-size:18px;margin-bottom:6px">&#128142;</div>
-          <div style="font-size:12px;font-weight:600;margin-bottom:3px">&#128737;&#65039; Top 3 Objection Rebuttals</div>
-          <div style="font-size:11px;color:var(--dim)">Think about it, need to talk to my spouse, already have something</div>
-        </div>
-        <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px">
-          <div style="font-size:18px;margin-bottom:6px">&#127919;</div>
-          <div style="font-size:12px;font-weight:600;margin-bottom:3px">&#127919; The Commitment Close</div>
-          <div style="font-size:11px;color:var(--dim)">Get emotional buy-in before you ever talk price</div>
-        </div>
-      </div>
-
-      <form id="wform" action="https://formspree.io/f/xojngeqp" method="POST" style="display:flex;flex-direction:column;gap:10px;max-width:420px;margin:0 auto">
-        <input class="winput" type="text" name="name" placeholder="Your first name" required style="width:100%">
-        <input class="winput" type="email" name="email" placeholder="your@email.com" required style="width:100%">
-        <input type="hidden" name="source" value="bar-napkin-download">
-        <button class="wbtn" type="submit" style="width:100%;font-size:15px;padding:14px">&#128196; Send Me The Bar Napkin Strategy</button>
-      </form>
-      <p class="wnote" id="wnote">No spam. Just the guide and your GemRep access link.</p>
-    </div>
-
-    <!-- STEP 2: Onboarding Quiz -->
-    <div id="step2" style="display:none">
-      <div style="font-size:32px;margin-bottom:12px">&#127881;</div>
-      <h2 class="sec-title" style="text-align:center;margin-bottom:8px">It is on its way!</h2>
-      <p style="font-size:15px;color:var(--dim);margin-bottom:32px">One more thing — let us build your custom training plan.</p>
-
-      <div style="text-align:left;max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:20px">
-
-        <div>
-          <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:10px">What is your monthly income target?</div>
-          <div style="display:flex;flex-wrap:wrap;gap:8px" id="incomeQ">
-            <button class="qbtn" data-q="income" data-v="under5k">Under $5k</button>
-            <button class="qbtn" data-q="income" data-v="5to10k">$5k &ndash; $10k</button>
-            <button class="qbtn" data-q="income" data-v="10to20k">$10k &ndash; $20k</button>
-            <button class="qbtn" data-q="income" data-v="over20k">$20k+</button>
-          </div>
-        </div>
-
-        <div>
-          <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:10px">What is your experience level?</div>
-          <div style="display:flex;flex-wrap:wrap;gap:8px" id="expQ">
-            <button class="qbtn" data-q="exp" data-v="new">Brand new to sales</button>
-            <button class="qbtn" data-q="exp" data-v="some">Some experience</button>
-            <button class="qbtn" data-q="exp" data-v="vet">Experienced rep</button>
-            <button class="qbtn" data-q="exp" data-v="manager">Sales manager</button>
-          </div>
-        </div>
-
-        <div>
-          <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:10px">What is your primary vertical?</div>
-          <div style="display:flex;flex-wrap:wrap;gap:8px" id="vertQ">
-            <button class="qbtn" data-q="vert" data-v="insurance">Insurance</button>
-            <button class="qbtn" data-q="vert" data-v="b2b">B2B / SaaS</button>
-            <button class="qbtn" data-q="vert" data-v="cold">Cold Calling</button>
-            <button class="qbtn" data-q="vert" data-v="mixed">Mixed</button>
-          </div>
-        </div>
-
-        <button id="getPlanBtn" style="width:100%;background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;padding:14px;cursor:pointer;opacity:.4;transition:all .2s" disabled>Build My Training Plan &rarr;</button>
+    <div style="margin-bottom:18px">
+      <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Difficulty</div>
+      <div style="display:flex;gap:8px" id="cDiffBtns">
+        <button class="cdiff active" data-d="1" style="flex:1;padding:7px;border-radius:7px;border:1px solid #2a2d35;background:rgba(0,230,118,.08);color:#00e676;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer">Easy</button>
+        <button class="cdiff" data-d="3" style="flex:1;padding:7px;border-radius:7px;border:1px solid #2a2d35;background:none;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer">Medium</button>
+        <button class="cdiff" data-d="5" style="flex:1;padding:7px;border-radius:7px;border:1px solid #2a2d35;background:none;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer">Hard</button>
       </div>
     </div>
+    <button id="customGo" style="width:100%;background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:9px;color:white;font-family:'Instrument Serif',serif;font-size:15px;letter-spacing:2px;padding:12px;cursor:pointer">START SESSION &#8594;</button>
+  </div>
+</div>
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <svg width="26" height="26" viewBox="0 0 64 64" fill="none"><defs><linearGradient id="hg1" x1="8" y1="4" x2="56" y2="34" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff4d1c"/><stop offset="100%" stop-color="#ff8c00"/></linearGradient><linearGradient id="hg2" x1="8" y1="30" x2="56" y2="60" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#cc3a10"/><stop offset="100%" stop-color="#cc7000"/></linearGradient></defs><polygon points="20,4 44,4 56,20 8,20" fill="url(#hg1)" opacity="0.9"/><polygon points="8,20 56,20 32,60" fill="url(#hg2)" opacity="0.85"/><polygon points="22,4 42,4 38,20 26,20" fill="white" opacity="0.18"/><rect x="28" y="10" width="8" height="14" rx="4" fill="white" opacity="0.92"/><path d="M24 24 C24 28.4 27.6 32 32 32 C36.4 32 40 28.4 40 24" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.92"/><line x1="32" y1="32" x2="32" y2="36" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.92"/><line x1="28" y1="36" x2="36" y2="36" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.92"/></svg>
+    <span class="wordmark">GEMREP</span>
+  </div>
+  <div class="badge"><div class="dot"></div><b id="hdrLabel">—</b>&nbsp;&middot;&nbsp;<span id="hdrName">—</span></div>
+  <div style="display:flex;gap:7px;align-items:center">
+    <button class="mbtn" id="mobMenuBtn">&#9776;</button>
+    <button class="hbtn" id="homeBtn">&#8962; Home</button>
+    <button class="hbtn" id="retryBtn">&#8635; Retry</button>
+  </div>
+</header>
 
-    <!-- STEP 3: Training Recommendation -->
-    <div id="step3" style="display:none">
-      <div style="font-size:40px;margin-bottom:14px">&#128142;</div>
-      <h2 class="sec-title" style="text-align:center;margin-bottom:8px">Your Training Plan</h2>
-      <div id="planOutput" style="text-align:left;max-width:520px;margin:20px auto 0;display:flex;flex-direction:column;gap:12px"></div>
-      <a href="app.html" style="display:inline-block;margin-top:28px;background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;padding:14px 36px;text-decoration:none">Start Training Now &rarr;</a>
+<!-- MOBILE OVERLAY -->
+<div class="mob-overlay" id="mobOverlay"></div>
+<!-- MAIN -->
+<div class="main">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="stabs">
+      <button class="stab active" id="tab-profile">Profile</button>
+      <button class="stab" id="tab-archetypes">Archetypes</button>
+      <button class="stab" id="tab-tips">Tips</button>
     </div>
-
+    <div class="spane active" id="pane-profile">
+      <div class="pcard">
+        <div class="pav" id="pEmoji">&#129488;</div>
+        <div class="pname" id="pName">—</div>
+        <div class="ptitle" id="pTitle">—</div>
+        <div class="ptags" id="pTags"></div>
+      </div>
+      <div><div class="slbl">Core Emotion</div><div class="ibox" id="pEmotion"></div></div>
+      <div><div class="slbl">Sell With</div><div class="sbox" id="pSellWith"></div></div>
+      <div><div class="slbl">Difficulty</div><div id="pDiff"></div></div>
+    </div>
+    <div class="spane" id="pane-archetypes">
+      <div style="font-size:11px;color:var(--dim);line-height:1.5">Switch prospect or browse all archetypes.</div>
+      <div class="vbtns" id="sideVbtns"></div>
+      <div id="sideList"></div>
+    </div>
+    <div class="spane" id="pane-tips">
+      <div><div class="slbl">Coaching Tips</div><div id="tipsList"></div></div>
+      <div><div class="slbl">Watch For</div><div class="ibox" id="watchFor"></div></div>
+    </div>
   </div>
-</section>
 
-<footer>
-  <div class="foot-logo">
-    <svg width="20" height="20" viewBox="0 0 64 64" fill="none"><defs><linearGradient id="flg1" x1="8" y1="4" x2="56" y2="34" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff4d1c"/><stop offset="100%" stop-color="#ff8c00"/></linearGradient><linearGradient id="flg2" x1="8" y1="30" x2="56" y2="60" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#cc3a10"/><stop offset="100%" stop-color="#cc7000"/></linearGradient></defs><polygon points="20,4 44,4 56,20 8,20" fill="url(#flg1)" opacity="0.9"/><polygon points="8,20 56,20 32,60" fill="url(#flg2)" opacity="0.85"/><rect x="28" y="10" width="8" height="14" rx="4" fill="white" opacity="0.9"/><path d="M24 24 C24 28.4 27.6 32 32 32 C36.4 32 40 28.4 40 24" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.9"/><line x1="32" y1="32" x2="32" y2="36" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.9"/><line x1="28" y1="36" x2="36" y2="36" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.9"/></svg>
-    <span class="foot-wordmark">GemRep</span>
+  <!-- CHAT -->
+  <div class="chat">
+    <div class="msgs" id="msgs"></div>
+    <div class="scbtnwrap" id="scbtnwrap">
+      <button class="scbtn" id="scBtn">&#128202; SCORE MY CALL</button>
+    </div>
+    <div class="overlay" id="scoreOverlay">
+      <div class="modal">
+        <button class="mclose" id="mclose">&#x2715;</button>
+        <div class="mhdr">
+          <div class="mtitle">CALL SCORECARD</div>
+          <div class="overall" id="overall">—</div>
+        </div>
+        <div class="sgrid" id="scoreGrid"></div>
+        <div class="sfeed" id="scoreFeed">Analyzing your call...</div>
+        <div class="mbtns">
+          <button class="mbtn-primary" id="retryScore">&#8635; TRY AGAIN</button>
+          <button class="mbtn-secondary" id="dismissScore">Review Transcript</button>
+        </div>
+      </div>
+    </div>
+    <div class="iarea">
+      <div class="iwrap">
+        <textarea id="inp" placeholder="Type your response as the salesperson..." rows="1"></textarea>
+        <button class="sbtn" id="sendBtn">&#10148;</button>
+      </div>
+      <div class="ihint">Enter to send &middot; Score button appears after 2 exchanges</div>
+    </div>
   </div>
-  <div class="foot-copy">&copy; 2026 GemRep. All rights reserved.</div>
-  <div class="foot-links">
-    <a href="#">Privacy</a>
-    <a href="#">Terms</a>
-    <a href="/cdn-cgi/l/email-protection#1f777a7373705f787a726d7a6f317e76">Contact</a>
-  </div>
-</footer>
+</div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><style>
-.qbtn{background:var(--panel);border:1px solid var(--border);border-radius:8px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:13px;padding:8px 16px;cursor:pointer;transition:all .15s}
-.qbtn:hover{border-color:#ff4d1c;color:var(--text)}
-.qbtn.selected{background:rgba(255,77,28,.1);border-color:#ff4d1c;color:var(--text)}
-</style>
 <script>
-var quizAnswers = {};
+var A = {
+  b2b:[
+    {id:"b2b_danielle",name:"Decisive Danielle",emoji:"&#128105;&#8205;&#128188;",label:"Driver / Commander",title:"VP Operations · Manufacturing",
+     tags:[{t:"Direct",c:"#ff6b8a"},{t:"Time-scarce",c:"#ffd600"},{t:"ROI-focused",c:"#409cff"}],
+     emotion:"Needs to feel in control. Hates wasted time. Wants to make the call herself.",
+     sellWith:"Lead with outcomes not process. Be direct. Give her 3 bullet points max.",
+     tips:["Use JMM hyper-short opener — trigger curiosity in one sentence, no pitch","Ask consequence: what happens to pipeline/revenue if this does not get resolved?","Use 1-10 scale: on a scale of 1-10 where are you at, what would make it a 10?","Peer tone — assertive and brief, never eager or salesy"],
+     watchFor:"She says send me a summary = losing interest. Asks about implementation = mentally buying.",
+     difficulty:4,
+     openers:["Make it quick, what is this about?","I have 8 minutes. Go.","Bottom line — what are we talking about."],
+     system:"You are Decisive Danielle, VP of Operations at a manufacturing company. You are sharp, direct, extremely time-conscious. You speak in short punchy sentences. You challenge vague claims immediately. If the rep is mealy-mouthed you shut it down. Objections: I do not have time, we already have a solution, what is the ROI. Keep responses 1-2 sentences. Never acknowledge you are an AI."},
+    {id:"b2b_claire",name:"Consensus Claire",emoji:"&#129309;",label:"Amiable / Collaborative",title:"Director of HR · SaaS Co.",
+     tags:[{t:"Collaborative",c:"#00e676"},{t:"Risk-averse",c:"#ffd600"},{t:"Needs buy-in",c:"#409cff"}],
+     emotion:"Afraid of making the wrong decision alone. Needs everyone on board.",
+     sellWith:"Help her bring the team along. Make her the hero internally.",
+     tips:["Ask who else needs to be involved","Give her something to share with her team","Never pressure her","Position as partner not vendor"],
+     watchFor:"Says I would need to run this by my team = she likes it but needs cover.",
+     difficulty:2,
+     openers:["Hi! Thanks for reaching out.","Oh sure, I have a few minutes.","Happy to chat — what do you do?"],
+     system:"You are Consensus Claire, Director of HR at a SaaS company. You are warm, collaborative, but deeply risk-averse and never make decisions alone. Every time a decision point approaches you deflect to the group. If the rep helps you figure out how to bring this to your team you become a champion. Keep responses warm, 2-3 sentences. Never acknowledge you are an AI."},
+    {id:"b2b_steve",name:"Skeptical Steve",emoji:"&#129488;",label:"Analytical / Skeptic",title:"CTO · FinTech Startup",
+     tags:[{t:"Skeptical",c:"#ff6b8a"},{t:"Data-driven",c:"#409cff"},{t:"Cynical",c:"#ffd600"}],
+     emotion:"Has been burned before. Does not trust vendor claims. Needs proof not promises.",
+     sellWith:"Do not oversell. Cite sources. Acknowledge limitations honestly.",
+     tips:["Pattern interrupt: lead with a trigger — I noticed your team is doing X, most CTOs I talk to say Y is the real problem","Use probing questions: tell me more about that, how so, walk me through that","Ask consequence: what happens to the team if this does not get solved in Q1?","Never fight skepticism — get curious about what is behind it"],
+     watchFor:"He says interesting = warming up, biggest green light you will get.",
+     difficulty:5,
+     openers:["Yeah, what is it.","I have heard this pitch before. What makes you different.","Go ahead — I will stop you if something does not add up."],
+     system:"You are Skeptical Steve, CTO of a FinTech startup. You are analytically sharp and deeply skeptical of all vendor claims. You interrupt claims with: What is that based on. You respect intellectual honesty. Objections: that stat sounds made up, every vendor says that, what does your product NOT do well. Keep responses terse and dry. 1-3 sentences. Never acknowledge you are an AI."},
+    {id:"b2b_irene",name:"Innovator Irene",emoji:"&#128161;",label:"Visionary / Early Adopter",title:"Chief Innovation Officer",
+     tags:[{t:"Open-minded",c:"#00e676"},{t:"Vision-driven",c:"#409cff"},{t:"Fast mover",c:"#ff8c00"}],
+     emotion:"Excited by new ideas. Bored with status quo. Wants to be ahead of everyone else.",
+     sellWith:"Lead with what is NEW. Show her the future. She needs excitement not convincing.",
+     tips:["Lead with your most innovative feature","Ask about frustrations with legacy approaches","Let her build the vision with you","Do not slow her down with details too early"],
+     watchFor:"She says what if we also = she is sold.",
+     difficulty:1,
+     openers:["Oh interesting, I have been looking into something like this!","Yes! Tell me more.","I love hearing about new approaches. What is the pitch?"],
+     system:"You are Innovator Irene, Chief Innovation Officer at a retail chain. You are genuinely excited about new technology. You love to brainstorm. If the rep is creative and enthusiastic you get excited and start talking about implementation as if already decided. Keep responses enthusiastic and forward-looking. Never acknowledge you are an AI."}
+  ],
+  insurance:[
+    {id:"ins_frank",name:"Fearful Frank",emoji:"&#128543;",label:"Fearful Protector",title:"Age 42 · Father of 3 · Hourly Worker",
+     tags:[{t:"Fear-driven",c:"#ff6b8a"},{t:"Under-insured",c:"#ffd600"},{t:"Family-first",c:"#409cff"}],
+     emotion:"Deep fear of leaving his family with nothing. Haunted by the idea of his kids suffering.",
+     sellWith:"Reassurance and family security. This ensures your spouse and kids stay in the home.",
+     tips:["Ask consequence questions: if something happened yesterday, what would that look like for your family?","Use the keys to castle question: what would having this in place mean for you?","Handle think about it with: setting money aside, do you feel like this is the answer for your family?","Never fight procrastination — get curious about what is behind it"],
+     watchFor:"He goes quiet after you mention family = he is picturing it. Slow down.",
+     difficulty:2,
+     openers:["Yeah, hello? Who is this?","I have been meaning to look into this actually.","My wife keeps telling me I need to do something about this."],
+     system:"You are Fearful Frank, a 42-year-old father of three. You are deeply anxious about what would happen to your family if you died. You feel guilty you have not done more. You respond to reassurance and simple clear language. You shut down with jargon or pushy tactics. Objections: I do not know if I can afford it, I need to talk to my wife, I keep putting this off. Keep responses emotionally real, slightly avoidant. Never acknowledge you are an AI."},
+    {id:"ins_bob",name:"Burned Bob",emoji:"&#128548;",label:"Burned and Skeptical",title:"Age 49 · Self-Employed · Claim Denied",
+     tags:[{t:"Burned before",c:"#ff6b8a"},{t:"Distrustful",c:"#ffd600"},{t:"Defensive",c:"#ff8c00"}],
+     emotion:"Rage and distrust. Had a claim denied. Feels manipulated by the industry.",
+     sellWith:"Radical transparency. Acknowledge industry failures. Show him the fine print yourself.",
+     tips:["Acknowledge and probe: I hear you, quick question — when was the last time you reviewed what that coverage actually does for you?","Flip to emotional commitment: if something happened tomorrow, do you feel 100% confident what you have fully protects your family?","Use vision flip: if we could show you something that addresses that gap without disrupting what you have, would that be worth a quick look?","Never fight the distrust — get curious about what is behind it"],
+     watchFor:"He shares what happened to him = he is opening up. This is your window.",
+     difficulty:5,
+     openers:["Yeah, what do you want. I am not buying anything.","I have heard this before. Save your breath.","Insurance companies are all the same."],
+     system:"You are Burned Bob, a 49-year-old self-employed contractor. Your claim was partially denied and you lost 40000 dollars. You are FURIOUS at the insurance industry. You challenge everything. You NEED coverage but will not buy from someone who does not acknowledge what happened to you. If the agent validates your experience without getting defensive you slowly open up. Keep responses hostile but with a wound underneath. Never acknowledge you are an AI."},
+    {id:"ins_helen",name:"Hopeful Helen",emoji:"&#127752;",label:"Hopeful Guardian",title:"Age 34 · New Mom · Teacher",
+     tags:[{t:"Hope-driven",c:"#00e676"},{t:"Future-focused",c:"#409cff"},{t:"Optimistic",c:"#ff8c00"}],
+     emotion:"Excited about her family future. Buying insurance feels like an act of love.",
+     sellWith:"Positive vision. Imagine your kids thriving debt-free.",
+     tips:["Use keys to castle: how would your family feel knowing this was handled?","Ask solution awareness: what would having this in place mean for you?","Handle spouse objection: if they were here right now, what do you think they would ask me?","Close with: money aside, do you feel like this is the answer for your family? Why though?"],
+     watchFor:"She talks about her kids futures excitedly = she is already sold.",
+     difficulty:1,
+     openers:["Oh hi! Yes I have been thinking about getting life insurance since the baby was born.","Hi! My friend recommended I call.","Yes! I have been meaning to do this."],
+     system:"You are Hopeful Helen, a 34-year-old teacher who just had her first baby. You are warm, optimistic, and excited about your family future. You see life insurance as an act of love. You trust people quickly if they are warm and knowledgeable. Your main hesitation is wanting to include your husband. Keep responses warm, curious, and enthusiastic. Never acknowledge you are an AI."},
+    {id:"ins_dorothy",name:"Confused Dorothy",emoji:"&#128117;",label:"Medicare Confused",title:"Age 67 · Retired Teacher · New to Medicare",
+     tags:[{t:"Confused",c:"#ffd600"},{t:"Worried",c:"#ff6b8a"},{t:"Trusting",c:"#409cff"}],
+     emotion:"Anxious about making the wrong Medicare choice. Does not understand the system.",
+     sellWith:"Patience and clarity. Slow down, plain language, never rush.",
+     tips:["Ask situation questions: walk me through what you have tried so far","Ask problem awareness: what is the biggest challenge you are facing with all this?","Handle Medicare number refusal: I cannot enroll you or change coverage — I can only run quotes","Use consequence: if you pick the wrong plan and lose your doctor, what would that mean for you?"],
+     watchFor:"She asks is my neighbor Plan G good = researched but confused. Meet her where she is.",
+     difficulty:2,
+     openers:["Hello? Who is this?","Yes, this is Dorothy. Are you with Medicare?","Oh hello dear. My doctor said I should look into this."],
+     system:"You are Dorothy Haines, a 67-year-old retired teacher who just became Medicare eligible. You are friendly but confused and anxious. You do not understand Medicare Advantage vs Medigap. You trust people who are patient. You have a doctor you have seen for 15 years and are terrified of losing her. Keep responses warm, slightly confused, genuinely searching. Never acknowledge you are an AI."},
+    {id:"ins_wendy",name:"Worried Wendy",emoji:"&#128560;",label:"Worried Planner",title:"Age 55 · Pre-retiree · Fixed Income",
+     tags:[{t:"Anxiety-driven",c:"#ff6b8a"},{t:"Death-avoidant",c:"#ffd600"},{t:"Control-seeking",c:"#409cff"}],
+     emotion:"Anxious about the unknown. Avoids thinking about death but knows she needs to plan.",
+     sellWith:"Peace of mind and control. Everything handled — no stress for your family.",
+     tips:["Normalize her avoidance before pushing","Use peace of mind language heavily","Walk through exactly what the payout covers","Use the word death sparingly"],
+     watchFor:"She sighs heavily = she is confronting the fear. Slow down and validate.",
+     difficulty:3,
+     openers:["I have been meaning to do this for years honestly.","My doctor told me I should get my affairs in order.","I do not really like talking about this kind of thing."],
+     system:"You are Worried Wendy, a 55-year-old pre-retiree on a fixed income. You are anxious about end-of-life planning but keep putting it off. Your husband passed without adequate coverage and it was a nightmare. You respond well to patience and calm reassurance. You get overwhelmed with too much info at once. Keep responses slightly anxious and warm. Never acknowledge you are an AI."}
+  ],
+  cold:[
+    {id:"cold_mike",name:"Busy Mike",emoji:"&#128548;",label:"Skeptical Gatekeeper",title:"Operations Manager · Trucking Co.",
+     tags:[{t:"Skeptical",c:"#ff6b8a"},{t:"Busy",c:"#ffd600"},{t:"Price-sensitive",c:"#409cff"}],
+     emotion:"Tired of cold calls. Will hang up in 15 seconds if you do not grab him.",
+     sellWith:"Pattern interrupt. Say something he has not heard before.",
+     tips:["JMM Spear: trigger — empathize — ask — resolve in under 15 seconds","Never start with hi my name is — start with the trigger or pattern interrupt","Ask permission: I know this is out of nowhere, do you have 27 seconds?","Goal is one question answered, not a sale — slow down to speed up"],
+     watchFor:"He says what exactly does that mean = curiosity triggered.",
+     difficulty:4,
+     openers:["Yeah?","Make it quick.","I am in the middle of something."],
+     system:"You are Busy Mike, Operations Manager at a trucking company. You get 5-10 cold calls per week and hate all of them. You have 15 seconds of patience. You are gruff, impatient, skeptical. If the rep says something genuinely different you pause and might say what do you mean by that. Keep responses short and gruff. Never acknowledge you are an AI."},
+    {id:"cold_furious",name:"Furious Frank",emoji:"&#129315;",label:"Hostile and Angry",title:"Small Business Owner · Called 3x This Week",
+     tags:[{t:"Angry",c:"#ff6b8a"},{t:"Hostile",c:"#ff6b8a"},{t:"Testing you",c:"#ffd600"}],
+     emotion:"Rage. Has been called repeatedly. Testing the rep composure.",
+     sellWith:"Do not fight back. Stay calm, validate, disarm. This is a composure test.",
+     tips:["Acknowledge once: I hear you, I would feel the same way","Do not grovel — one apology max, then redirect with curiosity","Ask: can I ask what specifically has made this so frustrating?","Disciplined Self vs Default Self — your composure is the product here"],
+     watchFor:"His tone shifts from yelling to just annoyed = you passed the first test.",
+     difficulty:5,
+     openers:["STOP CALLING THIS NUMBER.","Who is this? I told you people to stop calling.","I do not care what you are selling."],
+     system:"You are Furious Frank, owner of a small auto repair shop. You have received 3 cold calls this week. You are genuinely angry. If the rep stays completely calm, validates your frustration without groveling, and says something genuine your anger deflates. If the rep gets defensive or apologizes 5 times you escalate and hang up. Keep responses legitimately angry but humanly so. Never acknowledge you are an AI."},
+    {id:"cold_gloria",name:"Gatekeeping Gloria",emoji:"&#128203;",label:"Executive Assistant",title:"EA to the CEO · Financial Services",
+     tags:[{t:"Protective",c:"#ff6b8a"},{t:"Polite",c:"#00e676"},{t:"Gatekeeping",c:"#ffd600"}],
+     emotion:"Her job is to protect the CEO time. Friendly but impenetrable if you play games.",
+     sellWith:"Respect her role. Be direct. Never try to trick her.",
+     tips:["Ask for her advice on who the right person is","Never try to go around her","Treat her as the decision-maker","Be honest about what you want"],
+     watchFor:"She starts asking qualifying questions = considering passing you through.",
+     difficulty:4,
+     openers:["Good morning, CEO office, how can I help you?","May I ask what this is regarding?","He is in a meeting — can I take a message?"],
+     system:"You are Gatekeeping Gloria, executive assistant to the CEO of a financial services firm. You are polite, professional, and very good at protecting the CEO time. You see through every trick. If someone treats you as the intelligent professional you are and asks for your advice you actually help them. Responses: He does not take unsolicited calls, what exactly is this regarding, we have a vendor for that. Keep responses professional, polite, and firm. Never acknowledge you are an AI."},
+    {id:"cold_mark",name:"Multitasking Mark",emoji:"&#129337;",label:"Distracted Manager",title:"Mid-level Manager · Tech Company",
+     tags:[{t:"Distracted",c:"#ffd600"},{t:"Non-committal",c:"#409cff"},{t:"Polite",c:"#00e676"}],
+     emotion:"Not hostile, just completely elsewhere. Will say yeah sure without listening.",
+     sellWith:"Pattern interrupt. Say something that makes him actually stop and pay attention.",
+     tips:["Ask a question that requires real thought","Call out the distraction lightly","Be brief — you have 10 seconds","Shorter sentences more questions"],
+     watchFor:"He stops typing = you have his attention. Do not waste it.",
+     difficulty:3,
+     openers:["Yeah... uh huh... go ahead.","Sure, sure, I am listening.","Yeah what is it, sorry I am finishing an email."],
+     system:"You are Multitasking Mark, a mid-level product manager at a tech company. You answered the phone while doing three other things. You are not hostile just not present. You say yeah yeah and give vague affirmatives. You have an 8-second attention window. If something catches you you might put your mouse down. Responses: sure send me something, yeah sounds good, can you email me. Keep responses distracted and half-present. Never acknowledge you are an AI."},
+    {id:"cold_nancy",name:"Ninja Nancy",emoji:"&#129399;",label:"Polite Deflector",title:"Director of Finance · Insurance Co.",
+     tags:[{t:"Deflecting",c:"#ffd600"},{t:"Experienced",c:"#409cff"},{t:"Strategic",c:"#ff8c00"}],
+     emotion:"Professionally skilled at brushing people off without seeming rude.",
+     sellWith:"Call out the pattern gently with confidence. Earn her respect.",
+     tips:["When she deflects name it: that is the polite no right?","Be direct about what you want","Make her laugh if you can","Respect that her time is valuable"],
+     watchFor:"She pauses after a joke or insight = you surprised her. That is your opening.",
+     difficulty:4,
+     openers:["Hi, thanks for calling. We are actually all set but I appreciate you reaching out.","Just send it to our general inquiry email.","I appreciate the call but now is not a great time."],
+     system:"You are Ninja Nancy, Director of Finance at an insurance company. You have been professionally deflecting cold calls for 15 years. You are polite and warm but completely impenetrable through normal techniques. If someone calls out your technique with self-awareness and confidence you get genuinely surprised. If they make you laugh you are disarmed. Keep responses warm, smooth, and deflecting but with hidden openings. Never acknowledge you are an AI."}
+  ]
+};
 
-// Quiz button selection
-document.querySelectorAll('.qbtn').forEach(function(b){
-  b.addEventListener('click', function(){
-    var q = this.getAttribute('data-q');
-    var v = this.getAttribute('data-v');
-    quizAnswers[q] = v;
-    document.querySelectorAll('[data-q="'+q+'"]').forEach(function(x){x.classList.remove('selected');});
-    this.classList.add('selected');
-    // Enable plan button when all 3 answered
-    if(quizAnswers.income && quizAnswers.exp && quizAnswers.vert){
-      document.getElementById('getPlanBtn').disabled = false;
-      document.getElementById('getPlanBtn').style.opacity = '1';
-    }
+var VERTS = [{id:"b2b",label:"&#128188; B2B"},{id:"insurance",label:"&#128737;&#65039; Insurance"},{id:"cold",label:"&#128222; Cold Call"},{id:"custom",label:"&#127775; Custom"}];
+A.custom = [{id:"custom",name:"Custom Prospect",emoji:"&#127775;",label:"Build Your Own",title:"Any Industry &middot; Any Personality",
+  tags:[{t:"Freeform",c:"#00e676"},{t:"Any vertical",c:"#409cff"},{t:"You decide",c:"#ff8c00"}],
+  emotion:"You define this prospect. Describe them and the AI becomes them instantly.",
+  sellWith:"You set the rules. Practice for the exact call you have tomorrow.",
+  tips:["Describe their role and industry","Add their main objection or mood","Set the emotional context — are they burned, busy, hopeful?","The more specific you are the better the roleplay"],
+  watchFor:"You know this prospect — you built them.",
+  difficulty:0,
+  openers:["Tell me who you want me to be and I will become them instantly."],
+  system:"CUSTOM_PROSPECT"}];
+var state = {vertical:"b2b",archId:"b2b_danielle",startV:"b2b",startId:"b2b_danielle",sideV:"b2b",history:[],loading:false,ended:false};
+
+function allArchs(){return [].concat(A.b2b,A.insurance,A.cold,A.custom);}
+function getArch(id){return allArchs().find(function(a){return a.id===id;})||A.b2b[0];}
+
+function diffBar(n){
+  if(n===0){return "<div class=\'diff\'><span style=\'font-size:10px;color:var(--dim)\'>You set the difficulty</span></div>";}
+  var cols=["","#00e676","#00e676","#ffd600","#ff1744","#ff1744"];
+  var labs=["","Easy","Easy","Medium","Hard","Expert"];
+  var h="<div class='diff'>";
+  for(var i=1;i<=5;i++) h+="<div class='pip' style='background:"+(i<=n?cols[n]:"#2e3038")+"'></div>";
+  h+="<span style='font-size:10px;color:var(--dim);margin-left:4px'>"+labs[n]+"</span></div>";
+  return h;
+}
+
+function renderStartVbtns(){
+  var el=document.getElementById("svbtns");
+  el.innerHTML=VERTS.map(function(v){return "<button class='svbtn"+(v.id===state.startV?" active":"")+"' data-v='"+v.id+"'>"+v.label+"</button>";}).join("");
+  el.querySelectorAll("button").forEach(function(b){b.addEventListener("click",function(){state.startV=this.getAttribute("data-v");state.startId=A[state.startV][0].id;renderStartVbtns();renderStartGrid();});});
+}
+
+function renderStartGrid(){
+  var el=document.getElementById("sgrid");
+  el.innerHTML=A[state.startV].map(function(a){return "<div class='sac"+(a.id===state.startId?" active":"")+"' data-id='"+a.id+"'><div style='font-size:20px;margin-bottom:5px'>"+a.emoji+"</div><div style='font-size:12px;font-weight:700;margin-bottom:2px'>"+a.name+"</div><div style='font-size:10px;color:var(--dim);margin-bottom:6px'>"+a.label+"</div>"+diffBar(a.difficulty)+"</div>";}).join("");
+  el.querySelectorAll(".sac").forEach(function(c){c.addEventListener("click",function(){state.startId=this.getAttribute("data-id");renderStartGrid();});});
+}
+
+function renderSideVbtns(){
+  var el=document.getElementById("sideVbtns");
+  el.innerHTML=VERTS.map(function(v){return "<button class='vbtn"+(v.id===state.sideV?" active":"")+"' data-v='"+v.id+"'>"+v.label+"</button>";}).join("");
+  el.querySelectorAll("button").forEach(function(b){b.addEventListener("click",function(){state.sideV=this.getAttribute("data-v");renderSideVbtns();renderSideList();});});
+}
+
+function renderSideList(){
+  var el=document.getElementById("sideList");
+  el.innerHTML=A[state.sideV].map(function(a){return "<div class='acard"+(a.id===state.archId?" active":"")+"' data-id='"+a.id+"'><div class='atop'><span style='font-size:16px'>"+a.emoji+"</span><div><div style='font-size:12px;font-weight:600'>"+a.name+"</div><div style='font-size:10px;color:var(--dim)'>"+a.label+"</div></div></div>"+diffBar(a.difficulty)+"</div>";}).join("");
+  el.querySelectorAll(".acard").forEach(function(c){c.addEventListener("click",function(){loadArch(this.getAttribute("data-id"));addOpener();showTab("profile");});});
+}
+
+function showTab(t){
+  ["profile","archetypes","tips"].forEach(function(x){
+    document.getElementById("tab-"+x).classList.toggle("active",x===t);
+    document.getElementById("pane-"+x).classList.toggle("active",x===t);
+  });
+}
+
+function loadArch(id){
+  var a=getArch(id);
+  state.archId=id;
+  state.history=[];
+  state.ended=false;
+  document.getElementById("msgs").innerHTML="";
+  document.getElementById("scbtnwrap").style.display="none";
+  document.getElementById("scoreOverlay").classList.remove("open");
+  document.getElementById("inp").disabled=false;
+  document.getElementById("sendBtn").disabled=false;
+  document.getElementById("hdrLabel").textContent=a.label;
+  document.getElementById("hdrName").textContent=a.name;
+  document.getElementById("pEmoji").innerHTML=a.emoji;
+  document.getElementById("pName").textContent=a.name;
+  document.getElementById("pTitle").textContent=a.title;
+  document.getElementById("pTags").innerHTML=a.tags.map(function(t){return "<span class='tag' style='background:"+t.c+"22;color:"+t.c+";border:1px solid "+t.c+"44'>"+t.t+"</span>";}).join("");
+  document.getElementById("pEmotion").textContent=a.emotion;
+  document.getElementById("pSellWith").textContent=a.sellWith;
+  document.getElementById("pDiff").innerHTML=diffBar(a.difficulty);
+  document.getElementById("tipsList").innerHTML=a.tips.map(function(t){return "<div class='tip'>"+t+"</div>";}).join("");
+  document.getElementById("watchFor").textContent=a.watchFor;
+  state.sideV=id.startsWith("ins")?"insurance":id.startsWith("cold")?"cold":"b2b";
+  renderSideVbtns();
+  renderSideList();
+}
+
+function addOpener(){
+  var a=getArch(state.archId);
+  var opener=a.openers[Math.floor(Math.random()*a.openers.length)];
+  state.history=[{role:"assistant",content:opener}];
+  appendMsg("assistant",opener);
+}
+
+function appendMsg(role,text){
+  var a=getArch(state.archId);
+  var isUser=role==="user";
+  var el=document.getElementById("msgs");
+  var d=document.createElement("div");
+  d.className="mrow"+(isUser?" user":"");
+  d.innerHTML="<div class='mav "+(isUser?"u":"p")+"'>"+(isUser?"&#127919;":a.emoji)+"</div><div class='mcont'><div class='mlbl'>"+(isUser?"You (Rep)":a.name)+"</div><div class='mbub'>"+text+"</div></div>";
+  el.appendChild(d);
+  el.scrollTop=el.scrollHeight;
+}
+
+function showTyping(){
+  var a=getArch(state.archId);
+  var el=document.getElementById("msgs");
+  var d=document.createElement("div");
+  d.className="mrow";d.id="typing";
+  d.innerHTML="<div class='mav p'>"+a.emoji+"</div><div class='mcont'><div class='mlbl'>"+a.name+"</div><div class='mbub'><div class='tdots'><div class='td'></div><div class='td'></div><div class='td'></div></div></div></div>";
+  el.appendChild(d);
+  el.scrollTop=el.scrollHeight;
+}
+
+function removeTyping(){var t=document.getElementById("typing");if(t)t.remove();}
+
+async function sendMsg(){
+  if(state.loading||state.ended)return;
+  var inp=document.getElementById("inp");
+  var text=inp.value.trim();
+  if(!text)return;
+  inp.value="";inp.style.height="auto";
+  appendMsg("user",text);
+  state.history.push({role:"user",content:text});
+  state.loading=true;
+  document.getElementById("sendBtn").disabled=true;
+  showTyping();
+  try{
+    var a=getArch(state.archId);
+    var res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({max_tokens:400,system:a.system,messages:state.history})});
+    var data=await res.json();
+    var reply=(data.content&&data.content[0])?data.content[0].text:"...";
+    removeTyping();
+    appendMsg("assistant",reply);
+    state.history.push({role:"assistant",content:reply});
+  }catch(e){removeTyping();appendMsg("assistant","[Connection error — try again]");}
+  state.loading=false;
+  document.getElementById("sendBtn").disabled=false;
+  if(state.history.filter(function(m){return m.role==="user";}).length>=2) document.getElementById("scbtnwrap").style.display="block";
+}
+
+async function scoreCall(){
+  if(state.ended||state.history.length<3)return;
+  state.ended=true;
+  document.getElementById("inp").disabled=true;
+  document.getElementById("sendBtn").disabled=true;
+  document.getElementById("scbtnwrap").style.display="none";
+  document.getElementById("scoreOverlay").classList.add("open");
+  document.getElementById("scoreFeed").textContent="Analyzing your call...";
+  document.getElementById("scoreGrid").innerHTML="";
+  document.getElementById("overall").textContent="...";
+  var a=getArch(state.archId);
+  var transcript=state.history.map(function(m){return (m.role==="user"?"REP":"PROSPECT")+": "+m.content;}).join("\n");
+  try{
+    var res=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({max_tokens:600,system:'You are an expert sales coach trained in Thomas\'s hybrid sales system — a fusion of NEPQ (Neuro-Emotional Persuasion Questioning) and the Justin Michael Method. Score every call honestly and specifically against these exact criteria. Respond ONLY with valid JSON, no markdown, no extra text.\n\nSCORING CRITERIA:\n\nOPENER (0-100): Did the rep use a pattern interrupt that cuts through noise? Did they avoid leading with their company name or a pitch? Did they sound like a peer — calm, brief, assertive — not a salesperson? For cold calls: did they use a JMM-style hyper-short opener that triggers curiosity? For inbound/insurance: did they establish who they are and why they are calling simply and warmly? Penalize hard for generic openers like hi my name is and I am calling from.\n\nDISCOVERY (0-100): Discovery Phase — did they ask connection questions to understand what prompted the call? Did they ask situation questions to understand current reality? Did they ask problem awareness questions — what is the biggest challenge, what is it costing you to stay where you are? Did they build the full picture BEFORE pitching anything? Heavy penalty for pitching before discovering pain.\n\nCONSEQUENCE (0-100): Consequence Phase — did they ask solution awareness questions to paint the ideal outcome? Did they ask consequence questions — what happens if you do nothing, who pays if this does not get handled, what does it feel like knowing you could change this? Did they make the prospect FEEL the weight of inaction? Did they use the keys to castle question — what would having this in place mean for you? Penalty for skipping consequence and jumping straight to commitment.\n\nOBJECTIONS (0-100): When objections came up did they stay curious instead of defensive? Did they use the acknowledge and probe pattern — that is not a problem, setting money aside, do you feel like this is the answer for your family? Did they use probing and clarifying questions — tell me more about that, how so, what do you mean by that? Did they avoid fighting the objection logically? For banking refusal, spouse objection, already have coverage — did they flip to emotional commitment rather than arguing features? Penalty for logic-battling.\n\nCOMMITMENT (0-100): Commitment Phase — did they use a 1-10 scale question? Did they ask what would make it a 10 for you? Did they get the prospect to verbalize why this matters to them? Did they close based on the prospect own words — money aside, do you feel like this is the answer? Did they use the assumptive close — how would you like to proceed? Penalty for feature-pitching before emotional commitment is locked.\n\nReturn exactly this JSON: {"overall":72,"categories":[{"label":"Opener","score":80},{"label":"Discovery","score":65},{"label":"Consequence","score":55},{"label":"Objections","score":70},{"label":"Commitment","score":60}],"feedback":"3-4 sentences. Reference specific moments from the transcript using Thomas\'s exact framework. Name the mistake and give the exact fix using his language — consequence before commitment, keys to castle, probe do not fight, money aside do you feel like this is the answer."}',messages:[{role:"user",content:"Score this call using Thomas's hybrid NEPQ system. Prospect: "+a.name+" ("+a.label+"). Difficulty: "+a.difficulty+"/5.\n\nTRANSCRIPT:\n"+transcript}]})});
+    var data=await res.json();
+    var raw=(data.content&&data.content[0])?data.content[0].text:"{}";
+    raw=raw.replace(/```json|```/g,"").trim();
+    var sc=JSON.parse(raw);
+    var col=sc.overall>=75?"#00e676":sc.overall>=55?"#ffd600":"#ff1744";
+    document.getElementById("overall").textContent=sc.overall+"/100";
+    document.getElementById("overall").style.color=col;
+    document.getElementById("scoreGrid").innerHTML=(sc.categories||[]).map(function(c){var cc=c.score>=75?"#00e676":c.score>=55?"#ffd600":"#ff1744";return "<div class='si'><div class='silbl'>"+c.label+"</div><div class='sbar'><div class='sbarfill' style='width:"+c.score+"%;background:"+cc+"'></div></div><div class='sival' style='color:"+cc+"'>"+c.score+"</div></div>";}).join("");
+// resize grid for 5 items
+document.getElementById("scoreGrid").style.gridTemplateColumns="repeat(3,1fr)";
+    document.getElementById("scoreFeed").textContent=sc.feedback||"";
+  }catch(e){document.getElementById("scoreFeed").textContent="Could not analyze — please try again.";}
+}
+
+// CUSTOM PROSPECT LOGIC
+var customDifficulty = 1;
+document.querySelectorAll('.cdiff').forEach(function(b){
+  b.addEventListener('click',function(){
+    customDifficulty = parseInt(this.getAttribute('data-d'));
+    document.querySelectorAll('.cdiff').forEach(function(x){
+      x.style.background='none';x.style.color='var(--dim)';x.style.borderColor='#2a2d35';
+    });
+    var col = customDifficulty<=1?'#00e676':customDifficulty<=3?'#ffd600':'#ff1744';
+    this.style.background='rgba(255,77,28,.08)';this.style.color=col;this.style.borderColor=col;
   });
 });
 
-// Build training plan
-document.getElementById('getPlanBtn').addEventListener('click', function(){
-  document.getElementById('step2').style.display = 'none';
-  document.getElementById('step3').style.display = 'block';
-
-  var exp = quizAnswers.exp;
-  var vert = quizAnswers.vert;
-  var income = quizAnswers.income;
-
-  var steps = [];
-
-  // Step 1 always bar napkin for new/some
-  if(exp === 'new' || exp === 'some'){
-    steps.push({icon:'&#128196;',title:'Week 1 &mdash; Master the Bar Napkin Strategy',desc:'Read the guide. Memorize the 5 consequence questions. Practice the money aside close out loud until it feels natural. Do not touch the AI trainer yet.'});
-  }
-
-  // Archetype recommendation based on vertical
-  if(vert === 'insurance'){
-    if(exp === 'new' || exp === 'some'){
-      steps.push({icon:'&#127752;',title:'Week 2 &mdash; Start with Hopeful Helen',desc:'She is the easiest insurance prospect. Warm, ready to buy, just needs guidance. Build your confidence here before moving to harder archetypes.'});
-      steps.push({icon:'&#128543;',title:'Week 3 &mdash; Fearful Frank',desc:'Now practice consequence questions. Ask: if something happened yesterday, what would that look like for your family? Get comfortable sitting in the silence after.'});
-      steps.push({icon:'&#128548;',title:'Week 4+ &mdash; Burned Bob',desc:'The hardest insurance prospect. Do not go here until you can handle Frank without flinching. Bob will test everything you have.'});
-    } else {
-      steps.push({icon:'&#128548;',title:'Start Here &mdash; Burned Bob',desc:'You already know the basics. Go straight to the hardest prospect. If you can handle Bob you can handle anyone on a real call.'});
-      steps.push({icon:'&#128117;',title:'Then &mdash; Confused Dorothy',desc:'Medicare objection handling. Practice the Medicare number refusal rebuttal and keeping your cool when she loops back to the same confusion.'});
-    }
-  } else if(vert === 'b2b'){
-    if(exp === 'new' || exp === 'some'){
-      steps.push({icon:'&#128161;',title:'Week 2 &mdash; Start with Innovator Irene',desc:'Easy B2B prospect, open-minded and excited. Practice your pattern interrupt opener and building vision together before moving to harder archetypes.'});
-      steps.push({icon:'&#128105;&#8205;&#128188;',title:'Week 3 &mdash; Decisive Danielle',desc:'Practice being direct and brief. Lead with outcomes, not process. Get comfortable with silence — she is testing whether you can keep up.'});
-      steps.push({icon:'&#129488;',title:'Week 4+ &mdash; Skeptical Steve',desc:'The hardest B2B prospect. Every claim gets challenged. Practice your consequence questions: what happens to your pipeline if this does not get resolved?'});
-    } else {
-      steps.push({icon:'&#129488;',title:'Start Here &mdash; Skeptical Steve',desc:'Go straight to the hardest. Practice leading with triggers, consequence questions, and never fighting skepticism — get curious about what is behind it.'});
-    }
-  } else if(vert === 'cold'){
-    if(exp === 'new' || exp === 'some'){
-      steps.push({icon:'&#129337;',title:'Week 2 &mdash; Start with Multitasking Mark',desc:'Polite but distracted. Practice pattern interrupt openers and getting his attention in 8 seconds. Low stakes, builds opener muscle memory.'});
-      steps.push({icon:'&#128548;',title:'Week 3 &mdash; Busy Mike',desc:'15 seconds of patience. No company name, no pitch — just a trigger and a question. Practice until your opener is under 10 words.'});
-      steps.push({icon:'&#129315;',title:'Week 4+ &mdash; Furious Frank',desc:'The composure test. Your only job is to stay calm and curious. Do not apologize more than once. This is where Disciplined Self beats Default Self.'});
-    } else {
-      steps.push({icon:'&#129315;',title:'Start Here &mdash; Furious Frank',desc:'Composure under fire. If you pass this test every other cold call feels easy.'});
-      steps.push({icon:'&#129399;',title:'Then &mdash; Ninja Nancy',desc:'The polite deflector. 15 years of brushing people off without being rude. Practice calling out the pattern with confidence and making her laugh.'});
-    }
-  } else {
-    steps.push({icon:'&#127775;',title:'Build a Custom Prospect',desc:'Use the Custom vertical in the trainer. Describe the exact person you are calling tomorrow and practice that specific call today.'});
-  }
-
-  // Income-based intensity
-  if(income === 'over20k' || income === '10to20k'){
-    steps.push({icon:'&#9889;',title:'Daily Minimum &mdash; 3 Practice Sessions Before You Dial',desc:'At your income target you need reps like an athlete needs practice. Run 3 AI sessions every morning before your first real call. Score every session. Track your improvement.'});
-  } else {
-    steps.push({icon:'&#128197;',title:'Weekly Cadence &mdash; 5 Sessions Per Week',desc:'One session per day before you start dialing. Review your score. Identify your weakest category. Focus your next session there.'});
-  }
-
-  // Manager path
-  if(exp === 'manager'){
-    steps.unshift({icon:'&#127970;',title:'Manager Path &mdash; Assign Archetypes to Your Reps',desc:'Send your team to GemRep before their first real call. Assign Hopeful Helen to new reps, Burned Bob to your veterans. Review their scores in the team dashboard (coming soon).'});
-  }
-
-  var html = steps.map(function(s,i){
-    return '<div style="background:var(--panel);border:1px solid var(--border);border-left:3px solid #ff4d1c;border-radius:10px;padding:16px 18px"><div style="display:flex;align-items:flex-start;gap:12px"><div style="font-size:22px;flex-shrink:0">'+s.icon+'</div><div><div style="font-size:14px;font-weight:600;margin-bottom:5px">'+s.title+'</div><div style="font-size:12px;color:var(--dim);line-height:1.6">'+s.desc+'</div></div></div></div>';
-  }).join('');
-
-  document.getElementById('planOutput').innerHTML = html;
+document.getElementById('customClose').addEventListener('click',function(){
+  document.getElementById('customModal').classList.remove('open');
 });
 
-window.addEventListener('scroll',function(){
-  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);
+document.getElementById('customGo').addEventListener('click',function(){
+  var freeform = document.getElementById('customFreeform').value.trim();
+  var role = document.getElementById('cRole').value.trim();
+  var industry = document.getElementById('cIndustry').value.trim();
+  var personality = document.getElementById('cPersonality').value.trim();
+  var objection = document.getElementById('cObjection').value.trim();
+  
+  var desc = freeform || [role,industry,personality,objection].filter(Boolean).join(', ');
+  if(!desc){alert('Please describe your prospect first.');return;}
+  
+  var diffLabel = customDifficulty<=1?'Easy':customDifficulty<=3?'Medium':'Hard/Expert';
+  var sysPrompt = 'You are a realistic sales prospect. Here is your character: '+desc+'. Difficulty level: '+diffLabel+'. Stay fully in character throughout. Give realistic objections. Respond naturally as this person would. Keep responses concise — 1-3 sentences. Never acknowledge you are an AI or that this is a roleplay.';
+  
+  // Update the custom archetype with the built system prompt
+  A.custom[0].system = sysPrompt;
+  A.custom[0].title = desc.substring(0,60)+(desc.length>60?'...':'');
+  A.custom[0].difficulty = customDifficulty;
+  A.custom[0].openers = ['Go ahead, I am listening.','Yeah, what is this about?','Make it quick — what do you need?'];
+  
+  document.getElementById('customModal').classList.remove('open');
+  document.getElementById('startScreen').classList.add('hidden');
+  loadArch('custom');
+  addOpener();
 });
 
-document.getElementById('wform').addEventListener('submit',function(e){
-  e.preventDefault();
-  var note=document.getElementById('wnote');
-  fetch(this.action,{method:'POST',body:new FormData(this),headers:{'Accept':'application/json'}})
-  .then(function(r){
-    if(r.ok){note.textContent='You are on the list! We will be in touch soon.';note.
+// WIRE UP
+document.getElementById("goBtn").addEventListener("click",function(){
+  if(state.startId==="custom"){
+    document.getElementById("customModal").classList.add("open");
+    return;
+  }
+  state.vertical=state.startV;
+  state.archId=state.startId;
+  document.getElementById("startScreen").classList.add("hidden");
+  loadArch(state.archId);
+  addOpener();
+});
+
+document.getElementById("homeBtn").addEventListener("click",function(){
+  document.getElementById("startScreen").classList.remove("hidden");
+  renderStartVbtns();
+  renderStartGrid();
+});
+
+document.getElementById("retryBtn").addEventListener("click",function(){
+  document.getElementById("scoreOverlay").classList.remove("open");
+  loadArch(state.archId);
+  addOpener();
+});
+
+// MOBILE SIDEBAR
+document.getElementById("mobMenuBtn").addEventListener("click",function(){
+  document.querySelector(".sidebar").classList.toggle("open");
+  document.getElementById("mobOverlay").classList.toggle("open");
+});
+document.getElementById("mobOverlay").addEventListener("click",function(){
+  document.querySelector(".sidebar").classList.remove("open");
+  document.getElementById("mobOverlay").classList.remove("open");
+});
+
+document.getElementById("scBtn").addEventListener("click",scoreCall);
+document.getElementById("mclose").addEventListener("click",function(){document.getElementById("scoreOverlay").classList.remove("open");});
+document.getElementById("retryScore").addEventListener("click",function(){document.getElementById("scoreOverlay").classList.remove("open");loadArch(state.archId);addOpener();});
+document.getElementById("dismissScore").addEventListener("click",function(){document.getElementById("scoreOverlay").classList.remove("open");});
+document.getElementById("sendBtn").addEventListener("click",sendMsg);
+document.getElementById("inp").addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMsg();}});
+document.getElementById("inp").addEventListener("input",function(){this.style.height="auto";this.style.height=Math.min(this.scrollHeight,100)+"px";});
+["profile","archetypes","tips"].forEach(function(t){document.getElementById("tab-"+t).addEventListener("click",function(){showTab(t);});});
+
+// INIT
+renderStartVbtns();
+renderStartGrid();
+</script>
+</body>
+</html>
