@@ -61,7 +61,7 @@ section{padding:96px 24px;position:relative}
 .step-desc{font-size:13px;color:var(--dim);line-height:1.65}
 
 /* ARCH GRID */
-.arch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:48px}
+.arch-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:48px}
 .arch-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;transition:all .2s}
 .arch-card:hover{border-color:rgba(255,77,28,.4);transform:translateY(-3px)}
 .arch-vert{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#ff4d1c;margin-bottom:6px;font-weight:500}
@@ -90,7 +90,7 @@ section{padding:96px 24px;position:relative}
 .testi-role{font-size:11px;color:var(--dim)}
 
 /* PRICING */
-.pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:52px;max-width:860px}
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:52px;max-width:860px;width:100%;padding-top:16px}
 .price-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:30px;position:relative}
 .price-card.featured{border-color:#ff4d1c;background:rgba(255,77,28,.04)}
 .popular{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ff4d1c,#ff8c00);color:white;font-size:10px;font-weight:600;letter-spacing:2px;padding:3px 13px;border-radius:50px;white-space:nowrap}
@@ -125,19 +125,21 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
 .foot-links a{font-size:12px;color:var(--dim);transition:color .2s}
 .foot-links a:hover{color:var(--text)}
 
+@media(max-width:900px){.pricing{grid-template-columns:repeat(2,1fr)!important}}
+@media(max-width:560px){.pricing{grid-template-columns:1fr!important}}
 @media(max-width:768px){
   nav{padding:0 20px}
   .nav-links{display:none}
   footer{flex-direction:column;padding:28px 20px}
   .pricing{grid-template-columns:1fr!important}
-  .price-card.featured{margin-top:16px}
+  .price-card.featured{margin-top:0}
   .popular{font-size:9px;padding:3px 10px}
   .hero-title{letter-spacing:-1px}
   .stats{gap:24px}
   .stat-num{font-size:28px}
   section{padding:64px 20px}
   .sgrid2{grid-template-columns:repeat(2,1fr)!important}
-  .arch-grid{grid-template-columns:repeat(2,1fr)}
+  .arch-grid{grid-template-columns:repeat(2,1fr)!important}
   .features{grid-template-columns:1fr}
   .testis{grid-template-columns:1fr}
 }
@@ -257,7 +259,7 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
     <div class="sec-label">Pricing</div>
     <h2 class="sec-title">Simple pricing.<br><em>No surprises.</em></h2>
     <p class="sec-sub">Start free. Upgrade when you are ready to get serious.</p>
-    <div class="pricing" style="max-width:960px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+    <div class="pricing">
       <div class="price-card">
         <div class="price-name">Starter</div>
         <div class="price-amt"><span>$</span>0</div>
@@ -266,54 +268,42 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
           <li>5 practice calls per month</li>
           <li>3 prospect archetypes</li>
           <li>Conversation-based scoring</li>
-          <li>Text sessions</li>
+          <li>Text sessions only</li>
         </ul>
         <a href="app.html" class="pbtn pbtn-secondary">Try It Free</a>
       </div>
-      <div class="price-card featured">
-        <div class="popular">MOST POPULAR</div>
+      <div class="price-card">
         <div class="price-name">Individual</div>
         <div class="price-amt"><span>$</span>24</div>
         <div class="price-period">per month</div>
         <ul class="price-feats">
-          <li>Unlimited practice calls</li>
+          <li>100 practice calls per month</li>
           <li>All 17 archetypes</li>
           <li>Full conversation scoring</li>
+          <li>Text sessions</li>
+          <li>Call history</li>
+        </ul>
+        <a href="#waitlist" class="pbtn pbtn-secondary">Get Early Access</a>
+      </div>
+      <div class="price-card featured">
+        <div class="popular">MOST POPULAR</div>
+        <div class="price-name">Pro</div>
+        <div class="price-amt"><span>$</span>49</div>
+        <div class="price-period">per month</div>
+        <ul class="price-feats">
+          <li>Unlimited practice calls</li>
+          <li>All 17 archetypes</li>
+          <li>Advanced conversation scoring</li>
           <li>Text &amp; voice sessions</li>
-          <li>Call history &amp; analytics</li>
+          <li>Analytics &amp; progress tracking</li>
           <li>New archetypes monthly</li>
         </ul>
-        <a href="app.html" class="pbtn pbtn-primary">Get Started</a>
-      </div>
-      <div class="price-card">
-        <div class="price-name">Team</div>
-        <div class="price-amt"><span>$</span>49</div>
-        <div class="price-period">per seat / month &mdash; min 5 seats</div>
-        <ul class="price-feats">
-          <li>Everything in Individual</li>
-          <li>Up to 500 calls per seat</li>
-          <li>Manager dashboard</li>
-          <li>Team leaderboards</li>
-          <li>Rep progress tracking</li>
-          <li>Custom archetypes</li>
-        </ul>
-        <a href="#waitlist" class="pbtn pbtn-secondary">Contact Us</a>
-      </div>
-      <div class="price-card">
-        <div class="price-name">Enterprise</div>
-        <div class="price-amt" style="font-size:32px;line-height:1.2">Custom</div>
-        <div class="price-period">tailored to your team</div>
-        <ul class="price-feats">
-          <li>Everything in Team</li>
-          <li>Unlimited seats</li>
-          <li>White-label option</li>
-          <li>Custom prospect builds</li>
-          <li>Dedicated onboarding</li>
-          <li>Priority support</li>
-        </ul>
-        <a href="mailto:hello@gemrep.ai" class="pbtn pbtn-secondary">Get a Quote</a>
+        <a href="app.html" class="pbtn pbtn-primary">Try The Demo</a>
       </div>
     </div>
+    <div style="text-align:center;margin-top:18px">
+      <p style="font-size:13px;color:var(--dim);margin-bottom:10px">Need seats for your whole team?</p>
+      <a href="/cdn-cgi/l/email-protection#b0d8d5dcdcdff0d7d5ddc2d5c09ed1d9" style="display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid var(--border);border-radius:9px;color:var(--dim);font-size:13px;padding:9px 22px;transition:all .2s" onmouseover="this.style.borderColor='#ff4d1c';this.style.color='#eeeef0'" onmouseout="this.style.borderColor='#222428';this.style.color='#72747d'">&#9993; Contact us for Enterprise pricing</a>
     </div>
   </div>
 </section>
@@ -357,11 +347,20 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
 
       <form id="wform" action="https://formspree.io/f/xojngeqp" method="POST" style="display:flex;flex-direction:column;gap:10px;max-width:420px;margin:0 auto">
         <input class="winput" type="text" name="name" placeholder="Your first name" required style="width:100%">
+        <select name="industry" required style="width:100%;background:var(--panel);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 16px;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer">
+          <option value="" disabled selected style="color:var(--dim)">What industry do you sell in?</option>
+          <option value="Insurance">Insurance (Final Expense, Medicare, IUL)</option>
+          <option value="B2B">B2B / SaaS</option>
+          <option value="Real Estate">Real Estate</option>
+          <option value="High Ticket">High Ticket (Coaching / Consulting)</option>
+          <option value="Auto Sales">Auto Sales</option>
+          <option value="Other">Other</option>
+        </select>
         <input class="winput" type="email" name="email" placeholder="your@email.com" required style="width:100%">
         <input type="hidden" name="source" value="bar-napkin-download">
         <button class="wbtn" type="submit" style="width:100%;font-size:15px;padding:14px">&#128196; Send Me The Bar Napkin Strategy</button>
       </form>
-      <p class="wnote" id="wnote">No spam. Just the guide and your GemRep access link.</p>
+      <p class="wnote" id="wnote">No spam. Just the guide — straight to your inbox.</p>
     </div>
 
     <!-- STEP 2: Onboarding Quiz -->
@@ -430,7 +429,7 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><style>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><style>
 .qbtn{background:var(--panel);border:1px solid var(--border);border-radius:8px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:13px;padding:8px 16px;cursor:pointer;transition:all .15s}
 .qbtn:hover{border-color:#ff4d1c;color:var(--text)}
 .qbtn.selected{background:rgba(255,77,28,.1);border-color:#ff4d1c;color:var(--text)}
@@ -527,8 +526,4 @@ window.addEventListener('scroll',function(){
 document.getElementById('wform').addEventListener('submit',function(e){
   e.preventDefault();
   var note=document.getElementById('wnote');
-  fetch(this.action,{method:'POST',body:new FormData(this),headers:{'Accept':'application/json'}})
-  .then(function(r){
-    if(r.ok){note.textContent='You are on the list! We will be in touch soon.';note.style.color='#00e676';}
-    else{note.textContent='Something went wrong, try again.';note.style.color='#ff4d1c';}
-  }).catch(function(){note.textC
+  fetch(this.action,{method:'POST',body:new FormData(this)
