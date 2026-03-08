@@ -569,8 +569,8 @@ function addOpener(){
     var rd=document.getElementById("ringRow");
     if(rd) rd.remove();
     appendMsg("assistant",opener);
+    if(typeof voice !== 'undefined' && voice.enabled) speakText(opener);
   }, 2200);
-  // Note: appendMsg is hooked to auto-speak when voice is on
 }
 
 function appendMsg(role,text){
@@ -616,6 +616,7 @@ async function sendMsg(){
     removeTyping();
     appendMsg("assistant",reply);
     state.history.push({role:"assistant",content:reply});
+    if(typeof voice !== 'undefined' && voice.enabled) speakText(reply);
   }catch(e){removeTyping();appendMsg("assistant","[Connection error — try again]");}
   state.loading=false;
   document.getElementById("sendBtn").disabled=false;
@@ -930,15 +931,7 @@ sendMsg = async function() {
   await _origSendMsg();
 };
 
-// Hook into appendMsg to auto-speak prospect replies
-var _origAppendMsg = appendMsg;
-appendMsg = function(role, text) {
-  _origAppendMsg(role, text);
-  if (role === 'assistant' && voice.enabled) {
-    // Small delay so typing animation clears first
-    setTimeout(function(){ speakText(text); }, 100);
-  }
-};
+// Speak is called directly in sendMsg and addOpener
 
 // Stop speaking when session ends
 var _origScoreCall = scoreCall;
