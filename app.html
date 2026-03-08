@@ -415,11 +415,12 @@ var EL_VOICES = {
 
 function buildSystem(base, mode) {
   var modeInstructions = {
-    easy: 'Difficulty: EASY. Be somewhat cooperative. Give mild objections. Answer questions directly. Be slightly warm. Respond in 2-3 sentences.',
-    medium: 'Difficulty: MEDIUM. Push back on weak questions. Give real objections that need handling. Do not just agree. Respond in 1-2 sentences.',
-    hard: 'Difficulty: HARD. Maximum resistance. Short clipped responses (1 sentence). Give tough objections immediately. Challenge everything. Do not volunteer information.',
+    easy: 'Difficulty: EASY. Be cooperative but DO NOT volunteer information unprompted. Answer only what is asked. Give one mild objection at a time when pressed. Keep responses to 1-2 short sentences maximum.',
+    medium: 'Difficulty: MEDIUM. Push back on weak or vague questions. Give real objections but ONLY when directly asked or when it fits naturally. Do NOT dump your whole situation in one response. 1 sentence preferred, 2 max.',
+    hard: 'Difficulty: HARD. Maximum resistance. 1 sentence only. Never volunteer anything. Make the rep work for every piece of information. Cold, clipped, skeptical.',
   };
-  return base + ' ' + modeInstructions[mode] + ' This is a phone call. Never acknowledge you are an AI.';
+  var universal = 'CRITICAL RULES: Never volunteer your objections, concerns, or internal situation unprompted — make the rep draw it out with questions. React only to what was just said. Never deliver a monologue. If the rep says something vague or generic, respond with brief skepticism or a short neutral reply like "okay..." or "right..." — do not fill the silence for them. This is a phone call. Never acknowledge you are an AI.';
+  return base + ' ' + modeInstructions[mode] + ' ' + universal;
 }
 
 var ARCHETYPES = {
