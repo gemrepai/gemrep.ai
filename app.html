@@ -943,19 +943,23 @@ async function el_speak(text, archId) {
     var blob = await res.blob();
     var url = URL.createObjectURL(blob);
     el_audio = new Audio(url);
+    el_audio.preload = 'auto';
     el_speaking = true;
-    el_audio.onended = function() {
+    var _doneOnce = false;
+    function onAudioDone() {
+      if (_doneOnce) return;
+      _doneOnce = true;
       el_speaking = false;
       URL.revokeObjectURL(url);
       setCallBarState('listening', null);
-      // Auto-start mic after prospect finishes
-      if (!state.ended && !state.loading) {
-        setTimeout(startListening, 300);
-      }
-    };
-    el_audio.onerror = function() {
-      el_speaking = false;
-      setCallBarState('listening', null);
+      if (!state.ended && !state.loading) setTimeout(startListening, 300);
+    }
+    el_audio.onended = onAudioDone;
+    el_audio.onerror = onAudioDone;
+    // iOS Safari fallback — onended sometimes never fires
+    el_audio.onloadedmetadata = function() {
+      var dur = el_audio.duration;
+      if (dur && isFinite(dur)) setTimeout(onAudioDone, (dur * 1000) + 1500);
     };
     await el_audio.play();
   } catch(e) {
