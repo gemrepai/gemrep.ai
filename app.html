@@ -79,6 +79,9 @@ header{display:flex;align-items:center;justify-content:space-between;padding:0 2
 .mbub{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:10px 13px;font-size:13px;line-height:1.65;max-width:500px}
 .mrow.user .mbub{background:rgba(255,77,28,.07);border-color:rgba(255,77,28,.22)}
 .tdots{display:flex;gap:5px;align-items:center;padding:12px 13px}
+.ring-row{display:flex;align-items:center;justify-content:center;gap:10px;padding:18px;color:var(--dim);font-size:13px;font-style:italic}
+@keyframes ringPulse{0%,100%{transform:scale(1) rotate(-15deg);opacity:.4}50%{transform:scale(1.35) rotate(15deg);opacity:1}}
+.ring-icon{display:inline-block;animation:ringPulse 0.5s ease-in-out 4;font-size:22px}
 .td{width:6px;height:6px;border-radius:50%;background:var(--dim);animation:td 1.2s infinite}
 .td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
 @keyframes td{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
@@ -128,8 +131,8 @@ textarea:disabled{opacity:.4}
 .svbtn{background:var(--panel);border:2px solid var(--border);border-radius:10px;padding:10px 18px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:13px;cursor:pointer;transition:all .15s}
 .svbtn:hover{border-color:#ff4d1c;color:var(--text)}
 .svbtn.active{border-color:#ff4d1c;color:var(--text);background:rgba(255,77,28,.08)}
-.sgrid2{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;max-width:640px;width:100%;align-items:stretch}
-.sac{background:var(--panel);border:2px solid var(--border);border-radius:12px;padding:13px;cursor:pointer;transition:all .15s;height:100px;overflow:hidden;box-sizing:border-box}
+.sgrid2{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;max-width:640px;width:100%;align-items:start}
+.sac{background:var(--panel);border:2px solid var(--border);border-radius:12px;padding:13px;cursor:pointer;transition:all .15s;box-sizing:border-box}
 .sac:hover{border-color:rgba(255,77,28,.5);transform:translateY(-2px)}
 .sac.active{border-color:#ff4d1c;background:rgba(255,77,28,.07)}
 .go-btn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"Instrument Serif",serif;font-size:16px;letter-spacing:3px;padding:12px 40px;cursor:pointer;transition:all .15s}
@@ -185,6 +188,10 @@ textarea:disabled{opacity:.4}
     <div style="margin-bottom:18px">
       <div style="font-family:'Instrument Serif',serif;font-size:20px;margin-bottom:6px">&#127775; Build Your Prospect</div>
       <div style="font-size:13px;color:var(--dim);line-height:1.6">Describe who you want to practice against. The more specific, the more realistic the roleplay.</div>
+    </div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Prospect Name</div>
+      <input id="cProspectName" placeholder="e.g. Brian, Sarah, Dave..." style="width:100%;background:#111214;border:1px solid #2a2d35;border-radius:7px;padding:8px 11px;color:#e8e9ec;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;margin-bottom:14px">
     </div>
     <div style="margin-bottom:14px">
       <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Quick Describe (freeform)</div>
@@ -308,8 +315,8 @@ var A = {
      tips:["Use JMM hyper-short opener — trigger curiosity in one sentence, no pitch","Ask consequence: what happens to pipeline/revenue if this does not get resolved?","Use 1-10 scale: on a scale of 1-10 where are you at, what would make it a 10?","Peer tone — assertive and brief, never eager or salesy"],
      watchFor:"She says send me a summary = losing interest. Asks about implementation = mentally buying.",
      difficulty:4,
-     openers:["Make it quick, what is this about?","I have 8 minutes. Go.","Bottom line — what are we talking about."],
-     system:"You are Decisive Danielle, VP of Operations at a manufacturing company. You are sharp, direct, extremely time-conscious. You speak in short punchy sentences. You challenge vague claims immediately. If the rep is mealy-mouthed you shut it down. Objections: I do not have time, we already have a solution, what is the ROI. Keep responses 1-2 sentences. Never acknowledge you are an AI."},
+     openers:["Hello?"],
+     system:"You are Decisive Danielle, VP of Operations at a manufacturing company. This is a phone call. You are sharp, direct, extremely time-conscious. You speak in short punchy sentences. You challenge vague claims immediately. If the rep is mealy-mouthed you shut it down. Objections: I do not have time, we already have a solution, what is the ROI. Keep responses 1-2 sentences. Never acknowledge you are an AI."},
     {id:"b2b_claire",name:"Consensus Claire",emoji:"&#129309;",label:"Amiable / Collaborative",title:"Director of HR · SaaS Co.",
      tags:[{t:"Collaborative",c:"#00e676"},{t:"Risk-averse",c:"#ffd600"},{t:"Needs buy-in",c:"#409cff"}],
      emotion:"Afraid of making the wrong decision alone. Needs everyone on board.",
@@ -317,8 +324,8 @@ var A = {
      tips:["Ask who else needs to be involved","Give her something to share with her team","Never pressure her","Position as partner not vendor"],
      watchFor:"Says I would need to run this by my team = she likes it but needs cover.",
      difficulty:2,
-     openers:["Hi! Thanks for reaching out.","Oh sure, I have a few minutes.","Happy to chat — what do you do?"],
-     system:"You are Consensus Claire, Director of HR at a SaaS company. You are warm, collaborative, but deeply risk-averse and never make decisions alone. Every time a decision point approaches you deflect to the group. If the rep helps you figure out how to bring this to your team you become a champion. Keep responses warm, 2-3 sentences. Never acknowledge you are an AI."},
+     openers:["Hello?"],
+     system:"You are Consensus Claire, Director of HR at a SaaS company. This is a phone call. You are warm, collaborative, but deeply risk-averse and never make decisions alone. Every time a decision point approaches you deflect to the group. If the rep helps you figure out how to bring this to your team you become a champion. Keep responses warm, 2-3 sentences. Never acknowledge you are an AI."},
     {id:"b2b_steve",name:"Skeptical Steve",emoji:"&#129488;",label:"Analytical / Skeptic",title:"CTO · FinTech Startup",
      tags:[{t:"Skeptical",c:"#ff6b8a"},{t:"Data-driven",c:"#409cff"},{t:"Cynical",c:"#ffd600"}],
      emotion:"Has been burned before. Does not trust vendor claims. Needs proof not promises.",
@@ -326,8 +333,8 @@ var A = {
      tips:["Pattern interrupt: lead with a trigger — I noticed your team is doing X, most CTOs I talk to say Y is the real problem","Use probing questions: tell me more about that, how so, walk me through that","Ask consequence: what happens to the team if this does not get solved in Q1?","Never fight skepticism — get curious about what is behind it"],
      watchFor:"He says interesting = warming up, biggest green light you will get.",
      difficulty:5,
-     openers:["Yeah, what is it.","I have heard this pitch before. What makes you different.","Go ahead — I will stop you if something does not add up."],
-     system:"You are Skeptical Steve, CTO of a FinTech startup. You are analytically sharp and deeply skeptical of all vendor claims. You interrupt claims with: What is that based on. You respect intellectual honesty. Objections: that stat sounds made up, every vendor says that, what does your product NOT do well. Keep responses terse and dry. 1-3 sentences. Never acknowledge you are an AI."},
+     openers:["Hello?"],
+     system:"You are Skeptical Steve, CTO of a FinTech startup. This is a phone call. You are analytically sharp and deeply skeptical of all vendor claims. You interrupt claims with: What is that based on. You respect intellectual honesty. Objections: that stat sounds made up, every vendor says that, what does your product NOT do well. Keep responses terse and dry. 1-3 sentences. Never acknowledge you are an AI."},
     {id:"b2b_irene",name:"Innovator Irene",emoji:"&#128161;",label:"Visionary / Early Adopter",title:"Chief Innovation Officer",
      tags:[{t:"Open-minded",c:"#00e676"},{t:"Vision-driven",c:"#409cff"},{t:"Fast mover",c:"#ff8c00"}],
      emotion:"Excited by new ideas. Bored with status quo. Wants to be ahead of everyone else.",
@@ -335,8 +342,8 @@ var A = {
      tips:["Lead with your most innovative feature","Ask about frustrations with legacy approaches","Let her build the vision with you","Do not slow her down with details too early"],
      watchFor:"She says what if we also = she is sold.",
      difficulty:1,
-     openers:["Oh interesting, I have been looking into something like this!","Yes! Tell me more.","I love hearing about new approaches. What is the pitch?"],
-     system:"You are Innovator Irene, Chief Innovation Officer at a retail chain. You are genuinely excited about new technology. You love to brainstorm. If the rep is creative and enthusiastic you get excited and start talking about implementation as if already decided. Keep responses enthusiastic and forward-looking. Never acknowledge you are an AI."}
+     openers:["Hello?"],
+     system:"You are Innovator Irene, Chief Innovation Officer at a retail chain. This is a phone call. You are genuinely excited about new technology. You love to brainstorm. If the rep is creative and enthusiastic you get excited and start talking about implementation as if already decided. Keep responses enthusiastic and forward-looking. Never acknowledge you are an AI."}
   ],
   insurance:[
     {id:"ins_frank",name:"Fearful Frank",emoji:"&#128543;",label:"Fearful Protector",title:"Age 42 · Father of 3 · Hourly Worker",
@@ -346,8 +353,8 @@ var A = {
      tips:["Ask consequence questions: if something happened yesterday, what would that look like for your family?","Use the keys to castle question: what would having this in place mean for you?","Handle think about it with: setting money aside, do you feel like this is the answer for your family?","Never fight procrastination — get curious about what is behind it"],
      watchFor:"He goes quiet after you mention family = he is picturing it. Slow down.",
      difficulty:2,
-     openers:["Yeah, hello? Who is this?","I have been meaning to look into this actually.","My wife keeps telling me I need to do something about this."],
-     system:"You are Fearful Frank, a 42-year-old father of three. You are deeply anxious about what would happen to your family if you died. You feel guilty you have not done more. You respond to reassurance and simple clear language. You shut down with jargon or pushy tactics. Objections: I do not know if I can afford it, I need to talk to my wife, I keep putting this off. Keep responses emotionally real, slightly avoidant. Never acknowledge you are an AI."},
+     openers:["Hello?"],
+     system:"You are Fearful Frank, a 42-year-old father of three. This is a phone call. You are deeply anxious about what would happen to your family if you died. You feel guilty you have not done more. You respond to reassurance and simple clear language. You shut down with jargon or pushy tactics. Objections: I do not know if I can afford it, I need to talk to my wife, I keep putting this off. Keep responses emotionally real, slightly avoidant. Never acknowledge you are an AI."},
     {id:"ins_bob",name:"Burned Bob",emoji:"&#128548;",label:"Burned and Skeptical",title:"Age 49 · Self-Employed · Claim Denied",
      tags:[{t:"Burned before",c:"#ff6b8a"},{t:"Distrustful",c:"#ffd600"},{t:"Defensive",c:"#ff8c00"}],
      emotion:"Rage and distrust. Had a claim denied. Feels manipulated by the industry.",
@@ -355,8 +362,8 @@ var A = {
      tips:["Acknowledge and probe: I hear you, quick question — when was the last time you reviewed what that coverage actually does for you?","Flip to emotional commitment: if something happened tomorrow, do you feel 100% confident what you have fully protects your family?","Use vision flip: if we could show you something that addresses that gap without disrupting what you have, would that be worth a quick look?","Never fight the distrust — get curious about what is behind it"],
      watchFor:"He shares what happened to him = he is opening up. This is your window.",
      difficulty:5,
-     openers:["Yeah, what do you want. I am not buying anything.","I have heard this before. Save your breath.","Insurance companies are all the same."],
-     system:"You are Burned Bob, a 49-year-old self-employed contractor. Your claim was partially denied and you lost 40000 dollars. You are FURIOUS at the insurance industry. You challenge everything. You NEED coverage but will not buy from someone who does not acknowledge what happened to you. If the agent validates your experience without getting defensive you slowly open up. Keep responses hostile but with a wound underneath. Never acknowledge you are an AI."},
+     openers:["Hello?"],
+     system:"You are Burned Bob, a 49-year-old self-employed contractor. This is a phone call. Your claim was partially denied and you lost 40000 dollars. You are FURIOUS at the insurance industry. You challenge everything. You NEED coverage but will not buy from someone who does not acknowledge what happened to you. If the agent validates your experience without getting defensive you slowly open up. Keep responses hostile but with a wound underneath. Never acknowledge you are an AI."},
     {id:"ins_helen",name:"Hopeful Helen",emoji:"&#127752;",label:"Hopeful Guardian",title:"Age 34 · New Mom · Teacher",
      tags:[{t:"Hope-driven",c:"#00e676"},{t:"Future-focused",c:"#409cff"},{t:"Optimistic",c:"#ff8c00"}],
      emotion:"Excited about her family future. Buying insurance feels like an act of love.",
@@ -364,8 +371,8 @@ var A = {
      tips:["Use keys to castle: how would your family feel knowing this was handled?","Ask solution awareness: what would having this in place mean for you?","Handle spouse objection: if they were here right now, what do you think they would ask me?","Close with: money aside, do you feel like this is the answer for your family? Why though?"],
      watchFor:"She talks about her kids futures excitedly = she is already sold.",
      difficulty:1,
-     openers:["Oh hi! Yes I have been thinking about getting life insurance since the baby was born.","Hi! My friend recommended I call.","Yes! I have been meaning to do this."],
-     system:"You are Hopeful Helen, a 34-year-old teacher who just had her first baby. You are warm, optimistic, and excited about your family future. You see life insurance as an act of love. You trust people quickly if they are warm and knowledgeable. Your main hesitation is wanting to include your husband. Keep responses warm, curious, and enthusiastic. Never acknowledge you are an AI."},
+     openers:["Hello?"],
+     system:"You are Hopeful Helen, a 34-year-old teacher who just had her first baby. This is a phone call. You are warm, optimistic, and excited about your family future. You see life insurance as an act of love. You trust people quickly if they are warm and knowledgeable. Your main hesitation is wanting to include your husband. Keep responses warm, curious, and enthusiastic. Never acknowledge you are an AI."},
     {id:"ins_dorothy",name:"Confused Dorothy",emoji:"&#128117;",label:"Medicare Confused",title:"Age 67 · Retired Teacher · New to Medicare",
      tags:[{t:"Confused",c:"#ffd600"},{t:"Worried",c:"#ff6b8a"},{t:"Trusting",c:"#409cff"}],
      emotion:"Anxious about making the wrong Medicare choice. Does not understand the system.",
@@ -373,8 +380,8 @@ var A = {
      tips:["Ask situation questions: walk me through what you have tried so far","Ask problem awareness: what is the biggest challenge you are facing with all this?","Handle Medicare number refusal: I cannot enroll you or change coverage — I can only run quotes","Use consequence: if you pick the wrong plan and lose your doctor, what would that mean for you?"],
      watchFor:"She asks is my neighbor Plan G good = researched but confused. Meet her where she is.",
      difficulty:2,
-     openers:["Hello? Who is this?","Yes, this is Dorothy. Are you with Medicare?","Oh hello dear. My doctor said I should look into this."],
-     system:"You are Dorothy Haines, a 67-year-old retired teacher who just became Medicare eligible. You are friendly but confused and anxious. You do not understand Medicare Advantage vs Medigap. You trust people who are patient. You have a doctor you have seen for 15 years and are terrified of losing her. Keep responses warm, slightly confused, genuinely searching. Never acknowledge you are an AI."},
+     openers:["Hello?"],
+     system:"You are Dorothy Haines, a 67-year-old retired teacher who just became Medicare eligible. This is a phone call. You are friendly but confused and anxious. You do not understand Medicare Advantage vs Medigap. You trust people who are patient. You have a doctor you have seen for 15 years and are terrified of losing her. Keep responses warm, slightly confused, genuinely searching. Never acknowledge you are an AI."},
     {id:"ins_wendy",name:"Worried Wendy",emoji:"&#128560;",label:"Worried Planner",title:"Age 55 · Pre-retiree · Fixed Income",
      tags:[{t:"Anxiety-driven",c:"#ff6b8a"},{t:"Death-avoidant",c:"#ffd600"},{t:"Control-seeking",c:"#409cff"}],
      emotion:"Anxious about the unknown. Avoids thinking about death but knows she needs to plan.",
@@ -382,8 +389,8 @@ var A = {
      tips:["Normalize her avoidance before pushing","Use peace of mind language heavily","Walk through exactly what the payout covers","Use the word death sparingly"],
      watchFor:"She sighs heavily = she is confronting the fear. Slow down and validate.",
      difficulty:3,
-     openers:["I have been meaning to do this for years honestly.","My doctor told me I should get my affairs in order.","I do not really like talking about this kind of thing."],
-     system:"You are Worried Wendy, a 55-year-old pre-retiree on a fixed income. You are anxious about end-of-life planning but keep putting it off. Your husband passed without adequate coverage and it was a nightmare. You respond well to patience and calm reassurance. You get overwhelmed with too much info at once. Keep responses slightly anxious and warm. Never acknowledge you are an AI."}
+     openers:["Hello?"],
+     system:"You are Worried Wendy, a 55-year-old pre-retiree on a fixed income. This is a phone call. You are anxious about end-of-life planning but keep putting it off. Your husband passed without adequate coverage and it was a nightmare. You respond well to patience and calm reassurance. You get overwhelmed with too much info at once. Keep responses slightly anxious and warm. Never acknowledge you are an AI."}
   ],
   cold:[
     {id:"cold_mike",name:"Busy Mike",emoji:"&#128548;",label:"Skeptical Gatekeeper",title:"Operations Manager · Trucking Co.",
@@ -393,8 +400,8 @@ var A = {
      tips:["JMM Spear: trigger — empathize — ask — resolve in under 15 seconds","Never start with hi my name is — start with the trigger or pattern interrupt","Ask permission: I know this is out of nowhere, do you have 27 seconds?","Goal is one question answered, not a sale — slow down to speed up"],
      watchFor:"He says what exactly does that mean = curiosity triggered.",
      difficulty:4,
-     openers:["Yeah?","Make it quick.","I am in the middle of something."],
-     system:"You are Busy Mike, Operations Manager at a trucking company. You get 5-10 cold calls per week and hate all of them. You have 15 seconds of patience. You are gruff, impatient, skeptical. If the rep says something genuinely different you pause and might say what do you mean by that. Keep responses short and gruff. Never acknowledge you are an AI."},
+     openers:["Hello?"],
+     system:"You are Busy Mike, Operations Manager at a trucking company. This is a phone call. You get 5-10 cold calls per week and hate all of them. You have 15 seconds of patience. You are gruff, impatient, skeptical. If the rep says something genuinely different you pause and might say what do you mean by that. Keep responses short and gruff. Never acknowledge you are an AI."},
     {id:"cold_furious",name:"Furious Frank",emoji:"&#129315;",label:"Hostile and Angry",title:"Small Business Owner · Called 3x This Week",
      tags:[{t:"Angry",c:"#ff6b8a"},{t:"Hostile",c:"#ff6b8a"},{t:"Testing you",c:"#ffd600"}],
      emotion:"Rage. Has been called repeatedly. Testing the rep composure.",
@@ -402,8 +409,8 @@ var A = {
      tips:["Acknowledge once: I hear you, I would feel the same way","Do not grovel — one apology max, then redirect with curiosity","Ask: can I ask what specifically has made this so frustrating?","Disciplined Self vs Default Self — your composure is the product here"],
      watchFor:"His tone shifts from yelling to just annoyed = you passed the first test.",
      difficulty:5,
-     openers:["STOP CALLING THIS NUMBER.","Who is this? I told you people to stop calling.","I do not care what you are selling."],
-     system:"You are Furious Frank, owner of a small auto repair shop. You have received 3 cold calls this week. You are genuinely angry. If the rep stays completely calm, validates your frustration without groveling, and says something genuine your anger deflates. If the rep gets defensive or apologizes 5 times you escalate and hang up. Keep responses legitimately angry but humanly so. Never acknowledge you are an AI."},
+     openers:["Hello?"],
+     system:"You are Furious Frank, owner of a small auto repair shop. This is a phone call. You have received 3 cold calls this week. You are genuinely angry. If the rep stays completely calm, validates your frustration without groveling, and says something genuine your anger deflates. If the rep gets defensive or apologizes 5 times you escalate and hang up. Keep responses legitimately angry but humanly so. Never acknowledge you are an AI."},
     {id:"cold_gloria",name:"Gatekeeping Gloria",emoji:"&#128203;",label:"Executive Assistant",title:"EA to the CEO · Financial Services",
      tags:[{t:"Protective",c:"#ff6b8a"},{t:"Polite",c:"#00e676"},{t:"Gatekeeping",c:"#ffd600"}],
      emotion:"Her job is to protect the CEO time. Friendly but impenetrable if you play games.",
@@ -411,8 +418,8 @@ var A = {
      tips:["Ask for her advice on who the right person is","Never try to go around her","Treat her as the decision-maker","Be honest about what you want"],
      watchFor:"She starts asking qualifying questions = considering passing you through.",
      difficulty:4,
-     openers:["Good morning, CEO office, how can I help you?","May I ask what this is regarding?","He is in a meeting — can I take a message?"],
-     system:"You are Gatekeeping Gloria, executive assistant to the CEO of a financial services firm. You are polite, professional, and very good at protecting the CEO time. You see through every trick. If someone treats you as the intelligent professional you are and asks for your advice you actually help them. Responses: He does not take unsolicited calls, what exactly is this regarding, we have a vendor for that. Keep responses professional, polite, and firm. Never acknowledge you are an AI."},
+     openers:["Hello?"],
+     system:"You are Gatekeeping Gloria, executive assistant to the CEO of a financial services firm. This is a phone call. You are polite, professional, and very good at protecting the CEO time. You see through every trick. If someone treats you as the intelligent professional you are and asks for your advice you actually help them. Responses: He does not take unsolicited calls, what exactly is this regarding, we have a vendor for that. Keep responses professional, polite, and firm. Never acknowledge you are an AI."},
     {id:"cold_mark",name:"Multitasking Mark",emoji:"&#129337;",label:"Distracted Manager",title:"Mid-level Manager · Tech Company",
      tags:[{t:"Distracted",c:"#ffd600"},{t:"Non-committal",c:"#409cff"},{t:"Polite",c:"#00e676"}],
      emotion:"Not hostile, just completely elsewhere. Will say yeah sure without listening.",
@@ -420,7 +427,7 @@ var A = {
      tips:["Ask a question that requires real thought","Call out the distraction lightly","Be brief — you have 10 seconds","Shorter sentences more questions"],
      watchFor:"He stops typing = you have his attention. Do not waste it.",
      difficulty:3,
-     openers:["Yeah... uh huh... go ahead.","Sure, sure, I am listening.","Yeah what is it, sorry I am finishing an email."],
+     openers:["Hello?"],
      system:"You are Multitasking Mark, a mid-level product manager at a tech company. You answered the phone while doing three other things. You are not hostile just not present. You say yeah yeah and give vague affirmatives. You have an 8-second attention window. If something catches you you might put your mouse down. Responses: sure send me something, yeah sounds good, can you email me. Keep responses distracted and half-present. Never acknowledge you are an AI."},
     {id:"cold_nancy",name:"Ninja Nancy",emoji:"&#129399;",label:"Polite Deflector",title:"Director of Finance · Insurance Co.",
      tags:[{t:"Deflecting",c:"#ffd600"},{t:"Experienced",c:"#409cff"},{t:"Strategic",c:"#ff8c00"}],
@@ -429,8 +436,8 @@ var A = {
      tips:["When she deflects name it: that is the polite no right?","Be direct about what you want","Make her laugh if you can","Respect that her time is valuable"],
      watchFor:"She pauses after a joke or insight = you surprised her. That is your opening.",
      difficulty:4,
-     openers:["Hi, thanks for calling. We are actually all set but I appreciate you reaching out.","Just send it to our general inquiry email.","I appreciate the call but now is not a great time."],
-     system:"You are Ninja Nancy, Director of Finance at an insurance company. You have been professionally deflecting cold calls for 15 years. You are polite and warm but completely impenetrable through normal techniques. If someone calls out your technique with self-awareness and confidence you get genuinely surprised. If they make you laugh you are disarmed. Keep responses warm, smooth, and deflecting but with hidden openings. Never acknowledge you are an AI."}
+     openers:["Hello?"],
+     system:"You are Ninja Nancy, Director of Finance at an insurance company. This is a phone call. You have been professionally deflecting cold calls for 15 years. You are polite and warm but completely impenetrable through normal techniques. If someone calls out your technique with self-awareness and confidence you get genuinely surprised. If they make you laugh you are disarmed. Keep responses warm, smooth, and deflecting but with hidden openings. Never acknowledge you are an AI."}
   ]
 };
 
@@ -442,7 +449,7 @@ A.custom = [{id:"custom",name:"Custom Prospect",emoji:"&#127775;",label:"Build Y
   tips:["Describe their role and industry","Add their main objection or mood","Set the emotional context — are they burned, busy, hopeful?","The more specific you are the better the roleplay"],
   watchFor:"You know this prospect — you built them.",
   difficulty:0,
-  openers:["Tell me who you want me to be and I will become them instantly."],
+  openers:["Hello?"],
   system:"CUSTOM_PROSPECT"}];
 var state = {vertical:"b2b",archId:"b2b_danielle",startV:"b2b",startId:"b2b_danielle",sideV:"b2b",history:[],loading:false,ended:false};
 
@@ -520,7 +527,18 @@ function addOpener(){
   var a=getArch(state.archId);
   var opener=a.openers[Math.floor(Math.random()*a.openers.length)];
   state.history=[{role:"assistant",content:opener}];
-  appendMsg("assistant",opener);
+  var el=document.getElementById("msgs");
+  var ringDiv=document.createElement("div");
+  ringDiv.className="ring-row";
+  ringDiv.id="ringRow";
+  ringDiv.innerHTML="<span class='ring-icon'>&#128222;</span><span>Calling "+a.name+"...</span>";
+  el.appendChild(ringDiv);
+  el.scrollTop=el.scrollHeight;
+  setTimeout(function(){
+    var rd=document.getElementById("ringRow");
+    if(rd) rd.remove();
+    appendMsg("assistant",opener);
+  }, 2200);
 }
 
 function appendMsg(role,text){
@@ -617,6 +635,7 @@ document.getElementById('customClose').addEventListener('click',function(){
 });
 
 document.getElementById('customGo').addEventListener('click',function(){
+  var prospectName = document.getElementById('cProspectName').value.trim() || 'the prospect';
   var freeform = document.getElementById('customFreeform').value.trim();
   var role = document.getElementById('cRole').value.trim();
   var industry = document.getElementById('cIndustry').value.trim();
@@ -627,13 +646,15 @@ document.getElementById('customGo').addEventListener('click',function(){
   if(!desc){alert('Please describe your prospect first.');return;}
   
   var diffLabel = customDifficulty<=1?'Easy':customDifficulty<=3?'Medium':'Hard/Expert';
+  var namePrefix = prospectName !== 'the prospect' ? 'You are playing a character named '+prospectName+'. ' : '';
   var sysPrompt = 'You are a realistic sales prospect. Here is your character: '+desc+'. Difficulty level: '+diffLabel+'. Stay fully in character throughout. Give realistic objections. Respond naturally as this person would. Keep responses concise — 1-3 sentences. Never acknowledge you are an AI or that this is a roleplay.';
   
   // Update the custom archetype with the built system prompt
-  A.custom[0].system = sysPrompt;
+  A.custom[0].system = sysPrompt + ' Your name is ' + prospectName + '. This is a phone call — you just answered the phone.';
+  A.custom[0].name = prospectName;
   A.custom[0].title = desc.substring(0,60)+(desc.length>60?'...':'');
   A.custom[0].difficulty = customDifficulty;
-  A.custom[0].openers = ['Go ahead, I am listening.','Yeah, what is this about?','Make it quick — what do you need?'];
+  A.custom[0].openers = ["Hello?"];
   
   document.getElementById('customModal').classList.remove('open');
   document.getElementById('startScreen').classList.add('hidden');
