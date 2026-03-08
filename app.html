@@ -94,8 +94,29 @@ textarea{flex:1;background:none;border:none;outline:none;color:var(--text);font-
 textarea::placeholder{color:var(--muted)}
 textarea:disabled{opacity:.4}
 .sbtn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:7px;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:white;font-size:14px;transition:opacity .15s}
+
 .sbtn:disabled{opacity:.3;cursor:not-allowed}
 .ihint{font-size:10px;color:var(--muted);margin-top:6px;text-align:center}
+.micBtn{background:var(--panel);border:1px solid var(--border);border-radius:7px;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--dim);font-size:16px;transition:all .2s;position:relative}
+.micBtn:hover{border-color:var(--accent);color:var(--text)}
+.micBtn.listening{background:rgba(255,77,28,.15);border-color:var(--accent);color:var(--accent);animation:micPulse 1s ease-in-out infinite}
+.micBtn.listening::after{content:'';position:absolute;inset:-4px;border-radius:11px;border:2px solid var(--accent);opacity:.4;animation:micRing 1s ease-in-out infinite}
+@keyframes micPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes micRing{0%{transform:scale(1);opacity:.4}100%{transform:scale(1.5);opacity:0}}
+.voiceToggle{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--dim);cursor:pointer;padding:3px 8px;border-radius:6px;border:1px solid transparent;transition:all .15s;user-select:none}
+.voiceToggle:hover{border-color:var(--border);color:var(--text)}
+.voiceToggle.on{color:var(--accent);border-color:rgba(255,77,28,.3)}
+.vtdot{width:6px;height:6px;border-radius:50%;background:currentColor;transition:background .2s}
+.speaking-indicator{display:none;align-items:center;gap:6px;font-size:11px;color:var(--accent);padding:4px 10px;background:rgba(255,77,28,.08);border-radius:6px;border:1px solid rgba(255,77,28,.2)}
+.speaking-indicator.show{display:flex}
+.speak-bars{display:flex;gap:2px;align-items:center;height:14px}
+.speak-bar{width:3px;background:var(--accent);border-radius:2px;animation:speakBar .6s ease-in-out infinite}
+.speak-bar:nth-child(2){animation-delay:.1s;height:8px}
+.speak-bar:nth-child(3){animation-delay:.2s;height:12px}
+.speak-bar:nth-child(4){animation-delay:.3s;height:6px}
+.speak-bar:nth-child(5){animation-delay:.4s;height:10px}
+@keyframes speakBar{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+.ihint-row{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
 
 /* SCORE BTN */
 .scbtnwrap{display:none;position:absolute;bottom:80px;left:50%;transform:translateX(-50%);z-index:20}
@@ -296,11 +317,21 @@ textarea:disabled{opacity:.4}
       </div>
     </div>
     <div class="iarea">
+      <div class="speaking-indicator" id="speakingIndicator">
+        <div class="speak-bars"><div class="speak-bar" style="height:6px"></div><div class="speak-bar"></div><div class="speak-bar"></div><div class="speak-bar"></div><div class="speak-bar" style="height:7px"></div></div>
+        <span id="speakingName">Prospect</span> is speaking...
+      </div>
       <div class="iwrap">
-        <textarea id="inp" placeholder="Type your response as the salesperson..." rows="1"></textarea>
+        <button class="micBtn" id="micBtn" title="Hold to speak">&#127908;</button>
+        <textarea id="inp" placeholder="Type your response... or tap mic to speak" rows="1"></textarea>
         <button class="sbtn" id="sendBtn">&#10148;</button>
       </div>
-      <div class="ihint">Enter to send &middot; Score button appears after 2 exchanges</div>
+      <div class="ihint-row">
+        <div class="ihint">Enter to send &middot; Score after 2 exchanges</div>
+        <div class="voiceToggle" id="voiceToggle" title="Toggle voice mode">
+          <div class="vtdot"></div><span id="voiceToggleLabel">Voice Off</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -539,6 +570,7 @@ function addOpener(){
     if(rd) rd.remove();
     appendMsg("assistant",opener);
   }, 2200);
+  // Note: appendMsg is hooked to auto-speak when voice is on
 }
 
 function appendMsg(role,text){
@@ -574,6 +606,7 @@ async function sendMsg(){
   state.history.push({role:"user",content:text});
   state.loading=true;
   document.getElementById("sendBtn").disabled=true;
+  document.getElementById("micBtn").disabled=true;
   showTyping();
   try{
     var a=getArch(state.archId);
@@ -586,6 +619,7 @@ async function sendMsg(){
   }catch(e){removeTyping();appendMsg("assistant","[Connection error — try again]");}
   state.loading=false;
   document.getElementById("sendBtn").disabled=false;
+  document.getElementById("micBtn").disabled=false;
   if(state.history.filter(function(m){return m.role==="user";}).length>=2) document.getElementById("scbtnwrap").style.display="block";
 }
 
@@ -701,6 +735,228 @@ document.getElementById("scBtn").addEventListener("click",scoreCall);
 document.getElementById("mclose").addEventListener("click",function(){document.getElementById("scoreOverlay").classList.remove("open");});
 document.getElementById("retryScore").addEventListener("click",function(){document.getElementById("scoreOverlay").classList.remove("open");loadArch(state.archId);addOpener();});
 document.getElementById("dismissScore").addEventListener("click",function(){document.getElementById("scoreOverlay").classList.remove("open");});
+
+// ═══════════════════════════════════════════
+// VOICE MODE ENGINE
+// ═══════════════════════════════════════════
+var voice = {
+  enabled: false,
+  listening: false,
+  speaking: false,
+  recognition: null,
+  synth: window.speechSynthesis,
+  supported: ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window),
+};
+
+// Voice profiles per archetype type — maps to Web Speech pitch/rate
+var VOICE_PROFILES = {
+  b2b_danielle:  { pitch: 1.1, rate: 1.15, voice: 'female' },
+  b2b_claire:    { pitch: 1.05, rate: 1.0, voice: 'female' },
+  b2b_steve:     { pitch: 0.9, rate: 0.95, voice: 'male' },
+  b2b_irene:     { pitch: 1.15, rate: 1.1, voice: 'female' },
+  ins_frank:     { pitch: 0.9, rate: 0.9, voice: 'male' },
+  ins_bob:       { pitch: 0.85, rate: 1.05, voice: 'male' },
+  ins_helen:     { pitch: 1.1, rate: 1.05, voice: 'female' },
+  ins_dorothy:   { pitch: 1.05, rate: 0.82, voice: 'female' },
+  ins_wendy:     { pitch: 1.0, rate: 0.88, voice: 'female' },
+  cold_mike:     { pitch: 0.88, rate: 1.1, voice: 'male' },
+  cold_furious:  { pitch: 0.82, rate: 1.2, voice: 'male' },
+  cold_gloria:   { pitch: 1.1, rate: 1.0, voice: 'female' },
+  cold_mark:     { pitch: 0.95, rate: 0.9, voice: 'male' },
+  cold_nancy:    { pitch: 1.08, rate: 1.0, voice: 'female' },
+  custom:        { pitch: 1.0, rate: 1.0, voice: 'neutral' },
+};
+
+function getVoiceProfile() {
+  return VOICE_PROFILES[state.archId] || { pitch: 1.0, rate: 1.0, voice: 'neutral' };
+}
+
+function getBestVoice(gender) {
+  var voices = voice.synth.getVoices();
+  if (!voices.length) return null;
+  // Prefer natural-sounding voices
+  var preferred = ['Samantha','Karen','Moira','Fiona','Alex','Daniel','Tom','Google US English','Google UK English Female','Google UK English Male'];
+  for (var p of preferred) {
+    var v = voices.find(function(vv){ return vv.name.includes(p); });
+    if (v) {
+      if (gender === 'female' && (v.name.toLowerCase().includes('female') || ['Samantha','Karen','Moira','Fiona'].some(function(n){return v.name.includes(n);}))) return v;
+      if (gender === 'male' && (v.name.toLowerCase().includes('male') || ['Alex','Daniel','Tom'].some(function(n){return v.name.includes(n);}))) return v;
+    }
+  }
+  // Fallback: any voice matching gender hint
+  var gendered = voices.filter(function(v){ return gender === 'female' ? v.name.toLowerCase().includes('female') || v.name.includes('woman') : v.name.toLowerCase().includes('male') || v.name.includes('man'); });
+  return gendered[0] || voices[0];
+}
+
+function speakText(text) {
+  if (!voice.enabled || !voice.synth) return;
+  voice.synth.cancel();
+  var profile = getVoiceProfile();
+  var utterance = new SpeechSynthesisUtterance(text);
+  utterance.pitch = profile.pitch;
+  utterance.rate = profile.rate;
+  utterance.volume = 1;
+  var v = getBestVoice(profile.voice);
+  if (v) utterance.voice = v;
+  utterance.onstart = function() {
+    voice.speaking = true;
+    var a = getArch(state.archId);
+    document.getElementById('speakingName').textContent = a.name;
+    document.getElementById('speakingIndicator').classList.add('show');
+    document.getElementById('micBtn').disabled = true;
+  };
+  utterance.onend = function() {
+    voice.speaking = false;
+    document.getElementById('speakingIndicator').classList.remove('show');
+    document.getElementById('micBtn').disabled = false;
+    // Auto-start listening after prospect finishes speaking
+    if (voice.enabled && !state.ended) {
+      setTimeout(startListening, 400);
+    }
+  };
+  utterance.onerror = function() {
+    voice.speaking = false;
+    document.getElementById('speakingIndicator').classList.remove('show');
+    document.getElementById('micBtn').disabled = false;
+  };
+  voice.synth.speak(utterance);
+}
+
+function initRecognition() {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return null;
+  var r = new SR();
+  r.continuous = false;
+  r.interimResults = true;
+  r.lang = 'en-US';
+  r.onstart = function() {
+    voice.listening = true;
+    document.getElementById('micBtn').classList.add('listening');
+    document.getElementById('inp').placeholder = 'Listening...';
+  };
+  r.onresult = function(e) {
+    var interim = '';
+    var final = '';
+    for (var i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript;
+      else interim += e.results[i][0].transcript;
+    }
+    document.getElementById('inp').value = final || interim;
+    if (final) {
+      stopListening();
+      setTimeout(sendMsg, 300);
+    }
+  };
+  r.onerror = function(e) {
+    stopListening();
+    if (e.error !== 'no-speech' && e.error !== 'aborted') {
+      document.getElementById('inp').placeholder = 'Mic error — try again';
+    }
+  };
+  r.onend = function() {
+    stopListening();
+  };
+  return r;
+}
+
+function startListening() {
+  if (!voice.supported || voice.speaking || state.ended || state.loading) return;
+  if (!voice.recognition) voice.recognition = initRecognition();
+  if (!voice.recognition) return;
+  try {
+    voice.recognition.start();
+    document.getElementById('inp').value = '';
+    document.getElementById('inp').placeholder = 'Listening...';
+  } catch(e) {}
+}
+
+function stopListening() {
+  voice.listening = false;
+  document.getElementById('micBtn').classList.remove('listening');
+  document.getElementById('inp').placeholder = 'Type your response... or tap mic to speak';
+  if (voice.recognition) {
+    try { voice.recognition.stop(); } catch(e) {}
+  }
+}
+
+function toggleVoiceMode() {
+  voice.enabled = !voice.enabled;
+  var toggle = document.getElementById('voiceToggle');
+  var label = document.getElementById('voiceToggleLabel');
+  if (voice.enabled) {
+    toggle.classList.add('on');
+    label.textContent = 'Voice On';
+    // Load voices
+    if (voice.synth && !voice.synth.getVoices().length) {
+      voice.synth.addEventListener('voiceschanged', function(){}, { once: true });
+    }
+    if (!voice.supported) {
+      label.textContent = 'Not Supported';
+      voice.enabled = false;
+      toggle.classList.remove('on');
+    }
+  } else {
+    toggle.classList.remove('on');
+    label.textContent = 'Voice Off';
+    voice.synth.cancel();
+    stopListening();
+  }
+}
+
+// Mic button: tap to start, tap again to stop + send
+document.getElementById('micBtn').addEventListener('click', function() {
+  if (!voice.supported) {
+    alert('Voice input is not supported in this browser. Try Chrome on desktop or mobile.');
+    return;
+  }
+  if (voice.listening) {
+    stopListening();
+    if (document.getElementById('inp').value.trim()) sendMsg();
+  } else {
+    if (!voice.enabled) {
+      voice.enabled = true;
+      document.getElementById('voiceToggle').classList.add('on');
+      document.getElementById('voiceToggleLabel').textContent = 'Voice On';
+    }
+    startListening();
+  }
+});
+
+document.getElementById('voiceToggle').addEventListener('click', toggleVoiceMode);
+
+// Hook into sendMsg to auto-speak replies when voice is on
+var _origSendMsg = sendMsg;
+sendMsg = async function() {
+  await _origSendMsg();
+};
+
+// Hook into appendMsg to auto-speak prospect replies
+var _origAppendMsg = appendMsg;
+appendMsg = function(role, text) {
+  _origAppendMsg(role, text);
+  if (role === 'assistant' && voice.enabled) {
+    // Small delay so typing animation clears first
+    setTimeout(function(){ speakText(text); }, 100);
+  }
+};
+
+// Stop speaking when session ends
+var _origScoreCall = scoreCall;
+scoreCall = async function() {
+  voice.synth.cancel();
+  stopListening();
+  await _origScoreCall();
+};
+
+// Stop/restart on archetype change
+var _origLoadArch = loadArch;
+loadArch = function(id) {
+  voice.synth.cancel();
+  stopListening();
+  voice.recognition = null;
+  _origLoadArch(id);
+};
+
 document.getElementById("sendBtn").addEventListener("click",sendMsg);
 document.getElementById("inp").addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMsg();}});
 document.getElementById("inp").addEventListener("input",function(){this.style.height="auto";this.style.height=Math.min(this.scrollHeight,100)+"px";});
