@@ -2,6 +2,41 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ── Auth Guard ────────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://emcakiwlyztkvlncykzq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtY2FraXdseXp0a3ZsbmN5a3pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNTg0NzAsImV4cCI6MjA4ODYzNDQ3MH0.j1BVZIHShz-YBopeDltUGTXmM8mKZnd1JIC0eZ__mO8';
+const MASTER_EMAIL = 'gemrepai@proton.me';
+
+const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let _authToken = null;
+
+async function initAuth() {
+  const { data: { session } } = await _sb.auth.getSession();
+  if (session) {
+    _authToken = session.access_token;
+    return true;
+  }
+  // No session — redirect to login
+  window.location.href = '/login.html';
+  return false;
+}
+
+// Keep token fresh
+_sb.auth.onAuthStateChange((event, session) => {
+  if (session) _authToken = session.access_token;
+  else { _authToken = null; window.location.href = '/login.html'; }
+});
+
+// Helper — returns auth headers for every API call
+function authHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + _authToken
+  };
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>GemRep &mdash; AI Sales Trainer</title>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1003,7 +1038,7 @@ async function sendMsg() {
     var sysPrompt = getSystemPrompt(state.archId, state.mode);
     var res = await fetchWithTimeout('/api/chat', {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:authHeaders(),
       body:JSON.stringify({max_tokens:400, system:sysPrompt, messages:state.history})
     }, 9000);
     if (!res.ok) throw new Error('Chat API error: ' + res.status);
@@ -1054,7 +1089,7 @@ async function scoreCall() {
   try {
     var res = await fetchWithTimeout('/api/chat', {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:authHeaders(),
       body: JSON.stringify({max_tokens:600, system:'You are an expert sales coach trained in Thomas\'s hybrid sales system — a fusion of NEPQ (Neuro-Emotional Persuasion Questioning) and the Justin Michael Method. Score every call honestly and specifically against these exact criteria. Respond ONLY with valid JSON, no markdown, no extra text.\n\nSCORING CRITERIA:\n\nOPENER (0-100): Did the rep use a pattern interrupt that cuts through noise? Did they avoid leading with their company name or a pitch? Did they sound like a peer — calm, brief, assertive — not a salesperson? For cold calls: did they use a JMM-style hyper-short opener that triggers curiosity? For inbound/insurance: did they establish who they are and why they are calling simply and warmly? Penalize hard for generic openers like hi my name is and I am calling from.\n\nDISCOVERY (0-100): Discovery Phase — did they ask connection questions to understand what prompted the call? Did they ask situation questions to understand current reality? Did they ask problem awareness questions — what is the biggest challenge, what is it costing you to stay where you are? Did they build the full picture BEFORE pitching anything? Heavy penalty for pitching before discovering pain.\n\nCONSEQUENCE (0-100): Consequence Phase — did they ask solution awareness questions to paint the ideal outcome? Did they ask consequence questions — what happens if you do nothing, who pays if this does not get handled, what does it feel like knowing you could change this? Did they make the prospect FEEL the weight of inaction? Did they use the keys to castle question — what would having this in place mean for you? Penalty for skipping consequence and jumping straight to commitment.\n\nOBJECTIONS (0-100): When objections came up did they stay curious instead of defensive? Did they use the acknowledge and probe pattern — that is not a problem, setting money aside, do you feel like this is the answer for your family? Did they use probing and clarifying questions — tell me more about that, how so, what do you mean by that? Did they avoid fighting the objection logically? Penalty for logic-battling.\n\nCOMMITMENT (0-100): Commitment Phase — did they use a 1-10 scale question? Did they ask what would make it a 10 for you? Did they get the prospect to verbalize why this matters to them? Did they close based on the prospect own words — money aside, do you feel like this is the answer? Did they use the assumptive close — how would you like to proceed? Penalty for feature-pitching before emotional commitment is locked.\n\nReturn exactly this JSON: {"overall":72,"categories":[{"label":"Opener","score":80},{"label":"Discovery","score":65},{"label":"Consequence","score":55},{"label":"Objections","score":70},{"label":"Commitment","score":60}],"feedback":"3-4 sentences. Reference specific moments from the transcript using Thomas\'s exact framework. Name the mistake and give the exact fix using his language — consequence before commitment, keys to castle, probe do not fight, money aside do you feel like this is the answer."}',
         messages:[{role:'user', content:'Score this call. Prospect: '+a.name+' ('+a.label+'). Difficulty mode: '+modeLabel+'.\n\nTRANSCRIPT:\n'+transcript}]
       })
@@ -1129,7 +1164,7 @@ async function el_speak(text, archId) {
     setCallBarState('speaking', getArch(archId).name);
     var res = await fetchWithTimeout('/api/tts', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders(),
       body: JSON.stringify({ text: text, voiceId: voiceId })
     }, 9000); // 9s timeout — under Vercel 10s limit
     if (!res.ok) throw new Error('TTS error: ' + res.status);
@@ -1568,7 +1603,7 @@ async function drillScorePitch() {
   try {
     var res = await fetchWithTimeout('/api/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders(),
       body: JSON.stringify({
         max_tokens: 600,
         system: systemPrompt,
@@ -1644,7 +1679,10 @@ document.getElementById('drillBackBtn').addEventListener('click', function() {
 // ═══════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════
-renderStartVbtns();
+(async function() {
+  const ok = await initAuth();
+  if (ok) renderStartVbtns();
+})();
 renderArchGrid();
 renderModePicker();
 updateGoBtn();
