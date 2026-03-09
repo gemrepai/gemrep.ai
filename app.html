@@ -1041,6 +1041,8 @@ var isListening = false;
 function initRecognition() {
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) return null;
+  // Always create fresh instance — iOS Safari dies after a few reuses
+  if (recognition) { try { recognition.abort(); } catch(e) {} recognition = null; }
   var r = new SR();
   r.continuous = false;
   r.interimResults = true;
@@ -1050,7 +1052,7 @@ function initRecognition() {
     document.getElementById('micBtn').classList.add('listening');
     document.getElementById('iwrap').classList.add('listening-active');
     document.getElementById('inp').placeholder = 'Listening...';
-    document.getElementById('voiceStatus').textContent = '&#127908; Listening...';
+    document.getElementById('voiceStatus').textContent = '🎤 Listening...';
     document.getElementById('voiceStatus').className = 'voice-status on';
   };
   r.onresult = function(e) {
@@ -1065,21 +1067,22 @@ function initRecognition() {
   r.onerror = function(e) {
     stopListening();
     if (e.error !== 'no-speech' && e.error !== 'aborted') {
-      document.getElementById('inp').placeholder = 'Mic error — tap to try again';
+      document.getElementById('inp').placeholder = 'Mic error — tap 🎤 to try again';
     }
   };
   r.onend = function() { stopListening(); };
+  recognition = r;
   return r;
 }
 
 function startListening() {
   if (el_speaking || state.ended || state.loading) return;
-  if (!recognition) recognition = initRecognition();
-  if (!recognition) return;
+  var r = initRecognition();
+  if (!r) return;
   try {
-    recognition.start();
+    r.start();
     document.getElementById('inp').value = '';
-  } catch(e) {}
+  } catch(e) { console.warn('mic error:', e); }
 }
 
 function stopListening() {
