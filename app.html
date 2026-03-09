@@ -190,6 +190,34 @@ textarea:disabled{opacity:.4}
 .go-btn.ready:hover{opacity:.9;transform:scale(1.02)}
 
 .hidden{display:none!important}
+/* SOLO DRILL */
+.drill-screen{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:22px;padding:28px;z-index:50;overflow-y:auto}
+.drill-back{position:absolute;top:16px;left:16px;background:none;border:1px solid var(--border);border-radius:7px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:11px;padding:5px 11px;cursor:pointer}
+.drill-title{font-family:"Instrument Serif",serif;font-size:36px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
+.drill-sub{font-size:13px;color:var(--dim);text-align:center;max-width:420px;line-height:1.6}
+.drill-type-picker{display:flex;gap:10px;max-width:480px;width:100%}
+.drill-type-btn{flex:1;padding:14px;border-radius:12px;border:2px solid var(--border);background:var(--panel);color:var(--dim);font-family:"DM Sans",sans-serif;font-size:13px;cursor:pointer;transition:all .15s;text-align:center}
+.drill-type-btn:hover{border-color:rgba(255,77,28,.5)}
+.drill-type-btn.selected{border-color:#ff4d1c;background:rgba(255,77,28,.07);color:var(--text)}
+.drill-type-icon{font-size:26px;margin-bottom:6px}
+.drill-type-label{font-weight:600;margin-bottom:3px}
+.drill-type-desc{font-size:10px;color:var(--dim);line-height:1.4}
+.drill-product-picker{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:480px}
+.drill-prod-btn{padding:8px 16px;border-radius:20px;border:1px solid var(--border);background:var(--panel);color:var(--dim);font-family:"DM Sans",sans-serif;font-size:12px;cursor:pointer;transition:all .15s}
+.drill-prod-btn:hover{border-color:#ff4d1c;color:var(--text)}
+.drill-prod-btn.selected{border-color:#ff4d1c;color:var(--text);background:rgba(255,77,28,.1)}
+.drill-record-area{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;max-width:480px}
+.drill-record-btn{width:80px;height:80px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;transition:all .2s;flex-shrink:0}
+.drill-record-btn.idle{background:linear-gradient(135deg,#ff4d1c,#ff8c00);box-shadow:0 4px 24px rgba(255,77,28,.4)}
+.drill-record-btn.idle:hover{transform:scale(1.05)}
+.drill-record-btn.recording{background:#ff1744;box-shadow:0 0 0 0 rgba(255,23,68,.4);animation:recordPulse 1.5s infinite}
+@keyframes recordPulse{0%{box-shadow:0 0 0 0 rgba(255,23,68,.4)}70%{box-shadow:0 0 0 18px rgba(255,23,68,0)}100%{box-shadow:0 0 0 0 rgba(255,23,68,0)}}
+.drill-status{font-size:13px;color:var(--dim);text-align:center;min-height:20px}
+.drill-status.recording{color:#ff1744}
+.drill-transcript{width:100%;max-width:480px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:13px;color:var(--dim);line-height:1.65;min-height:80px;max-height:200px;overflow-y:auto;display:none}
+.drill-transcript.show{display:block}
+.drill-score-btn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"Instrument Serif",serif;font-size:15px;letter-spacing:2px;padding:12px 36px;cursor:pointer;display:none}
+.drill-score-btn.show{display:block}
 /* TOAST */
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:#1e2028;border:1px solid var(--border);border-radius:8px;padding:9px 16px;font-size:12px;color:var(--dim);z-index:200;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)}
 @media(max-width:768px){
@@ -375,6 +403,54 @@ textarea:disabled{opacity:.4}
   </div>
 </div>
 
+<!-- SOLO DRILL SCREEN -->
+<div class="drill-screen hidden" id="drillScreen">
+  <button class="drill-back" id="drillBackBtn">&#8592; Back</button>
+  <div style="text-align:center">
+    <div class="drill-title">SOLO DRILL</div>
+    <div class="drill-sub">Speak your pitch uninterrupted. Get scored on structure, discovery, and consequence — no prospect needed.</div>
+  </div>
+
+  <!-- Step 1: Type -->
+  <div id="drillStep1" style="width:100%;max-width:480px">
+    <div style="font-size:10px;letter-spacing:2px;color:var(--dim);text-align:center;margin-bottom:12px;text-transform:uppercase">What are you drilling?</div>
+    <div class="drill-type-picker">
+      <button class="drill-type-btn" data-dtype="opener">
+        <div class="drill-type-icon">&#9889;</div>
+        <div class="drill-type-label">Opener Only</div>
+        <div class="drill-type-desc">First 30 seconds. Pattern interrupt, who you are, why you called.</div>
+      </button>
+      <button class="drill-type-btn" data-dtype="full">
+        <div class="drill-type-icon">&#127919;</div>
+        <div class="drill-type-label">Full Pitch</div>
+        <div class="drill-type-desc">Opener through close. Discovery, consequence, commitment.</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 2: Product -->
+  <div id="drillStep2" style="width:100%;max-width:480px;display:none">
+    <div style="font-size:10px;letter-spacing:2px;color:var(--dim);text-align:center;margin-bottom:12px;text-transform:uppercase">What product are you pitching?</div>
+    <div class="drill-product-picker" id="drillProductPicker">
+      <button class="drill-prod-btn" data-prod="Final Expense">Final Expense</button>
+      <button class="drill-prod-btn" data-prod="Medicare Supplement">Medicare Supplement</button>
+      <button class="drill-prod-btn" data-prod="Life Insurance">Life Insurance</button>
+      <button class="drill-prod-btn" data-prod="B2B SaaS">B2B SaaS</button>
+      <button class="drill-prod-btn" data-prod="Cold Call">Cold Call</button>
+      <button class="drill-prod-btn" data-prod="High Ticket">High Ticket</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Record -->
+  <div class="drill-record-area" id="drillStep3" style="display:none">
+    <div class="drill-status" id="drillStatus">Tap to start recording your pitch</div>
+    <button class="drill-record-btn idle" id="drillRecordBtn">&#127908;</button>
+    <div style="font-size:11px;color:var(--muted);text-align:center" id="drillTimer"></div>
+    <div class="drill-transcript" id="drillTranscript"></div>
+    <button class="drill-score-btn" id="drillScoreBtn">&#128202; SCORE MY PITCH</button>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toastMsg"></div>
 
@@ -417,6 +493,7 @@ textarea:disabled{opacity:.4}
   </div>
 
   <button class="go-btn" id="goBtn">BEGIN TRAINING &#8594;</button>
+  <button id="soloDrillBtn" style="background:none;border:1px solid var(--border);border-radius:10px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 28px;cursor:pointer;transition:all .15s;margin-top:-8px">&#127908; Solo Drill</button>
 </div>
 
 <script>
@@ -1346,6 +1423,222 @@ document.getElementById('mobMenuBtn').addEventListener('click', function() {
 document.getElementById('mobOverlay').addEventListener('click', function() {
   document.querySelector('.sidebar').classList.remove('open');
   document.getElementById('mobOverlay').classList.remove('open');
+});
+
+// ═══════════════════════════════════════════
+// SOLO DRILL
+// ═══════════════════════════════════════════
+var drill = {
+  type: null,       // 'opener' | 'full'
+  product: null,    // product string
+  recording: false,
+  transcript: '',
+  timerInterval: null,
+  elapsed: 0,
+  recognition: null,
+};
+
+function drillResetUI() {
+  drill.type = null;
+  drill.product = null;
+  drill.recording = false;
+  drill.transcript = '';
+  drill.elapsed = 0;
+  if (drill.timerInterval) { clearInterval(drill.timerInterval); drill.timerInterval = null; }
+  if (drill.recognition) { try { drill.recognition.abort(); } catch(e) {} drill.recognition = null; }
+
+  // Reset steps
+  document.getElementById('drillStep1').style.display = 'block';
+  document.getElementById('drillStep2').style.display = 'none';
+  document.getElementById('drillStep3').style.display = 'none';
+  document.querySelectorAll('.drill-type-btn').forEach(function(b){ b.classList.remove('selected'); });
+  document.querySelectorAll('.drill-prod-btn').forEach(function(b){ b.classList.remove('selected'); });
+  document.getElementById('drillStatus').textContent = 'Tap to start recording your pitch';
+  document.getElementById('drillStatus').className = 'drill-status';
+  document.getElementById('drillTimer').textContent = '';
+  document.getElementById('drillTranscript').textContent = '';
+  document.getElementById('drillTranscript').classList.remove('show');
+  document.getElementById('drillScoreBtn').classList.remove('show');
+  var btn = document.getElementById('drillRecordBtn');
+  btn.className = 'drill-record-btn idle';
+  btn.innerHTML = '&#127908;';
+}
+
+function drillStartRecording() {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { showToast('Voice recording needs Chrome or Safari.'); return; }
+
+  drill.recording = true;
+  drill.transcript = '';
+  drill.elapsed = 0;
+
+  var btn = document.getElementById('drillRecordBtn');
+  btn.className = 'drill-record-btn recording';
+  btn.innerHTML = '&#9632;'; // stop square
+  document.getElementById('drillStatus').textContent = 'Recording... speak your pitch';
+  document.getElementById('drillStatus').className = 'drill-status recording';
+  document.getElementById('drillTranscript').classList.remove('show');
+  document.getElementById('drillScoreBtn').classList.remove('show');
+
+  // Timer
+  drill.timerInterval = setInterval(function() {
+    drill.elapsed++;
+    var m = Math.floor(drill.elapsed / 60);
+    var s = drill.elapsed % 60;
+    document.getElementById('drillTimer').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    // Auto-stop opener at 45s
+    if (drill.type === 'opener' && drill.elapsed >= 45) drillStopRecording();
+  }, 1000);
+
+  // Recognition — accumulate full transcript
+  if (drill.recognition) { try { drill.recognition.abort(); } catch(e) {} }
+  var r = new SR();
+  r.continuous = true;
+  r.interimResults = true;
+  r.lang = 'en-US';
+  var finalText = '';
+  r.onresult = function(e) {
+    var interim = '';
+    for (var i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) finalText += e.results[i][0].transcript + ' ';
+      else interim = e.results[i][0].transcript;
+    }
+    var display = (finalText + interim).trim();
+    document.getElementById('drillTranscript').textContent = display || '';
+    if (display) document.getElementById('drillTranscript').classList.add('show');
+    drill.transcript = finalText.trim();
+  };
+  r.onerror = function(e) {
+    if (e.error !== 'no-speech' && e.error !== 'aborted') showToast('Mic error — tap stop and try again.');
+  };
+  r.onend = function() {
+    if (drill.recording) drillStopRecording();
+  };
+  drill.recognition = r;
+  try { r.start(); } catch(e) { showToast('Could not start mic — try again.'); }
+}
+
+function drillStopRecording() {
+  drill.recording = false;
+  if (drill.timerInterval) { clearInterval(drill.timerInterval); drill.timerInterval = null; }
+  if (drill.recognition) { try { drill.recognition.stop(); } catch(e) {} }
+
+  var btn = document.getElementById('drillRecordBtn');
+  btn.className = 'drill-record-btn idle';
+  btn.innerHTML = '&#127908;';
+
+  var transcript = drill.transcript.trim();
+  if (!transcript) {
+    document.getElementById('drillStatus').textContent = 'Nothing recorded — tap to try again';
+    document.getElementById('drillStatus').className = 'drill-status';
+    return;
+  }
+
+  document.getElementById('drillStatus').textContent = 'Pitch recorded — ready to score';
+  document.getElementById('drillStatus').className = 'drill-status';
+  document.getElementById('drillTranscript').textContent = transcript;
+  document.getElementById('drillTranscript').classList.add('show');
+  document.getElementById('drillScoreBtn').classList.add('show');
+}
+
+async function drillScorePitch() {
+  var transcript = drill.transcript.trim();
+  if (!transcript) { showToast('No pitch recorded yet.'); return; }
+
+  // Reuse the score overlay
+  document.getElementById('scoreOverlay').classList.add('open');
+  document.getElementById('scoreFeed').textContent = 'Analyzing your pitch...';
+  document.getElementById('scoreGrid').innerHTML = '';
+  document.getElementById('overall').textContent = '...';
+
+  var typeLabel = drill.type === 'opener' ? 'Opener Only (30-second drill)' : 'Full Pitch';
+  var typeLabel = drill.type === 'opener' ? 'Opener Only (30-second drill)' : 'Full Pitch';
+  var systemPrompt = [
+    "You are an expert sales coach trained in the NEPQ and Justin Michael Method hybrid system.",
+    "The rep recorded a solo pitch drill with no prospect. Score honestly. Respond ONLY with valid JSON.",
+    "Drill type: " + typeLabel + ". Product: " + drill.product,
+    "OPENER (0-100): Pattern interrupt used? Avoided generic opener? Sounded like a peer?",
+    "DISCOVERY (0-100): Asked questions to uncover pain? Avoided feature dumping?",
+    "CONSEQUENCE (0-100): Made listener feel weight of inaction? Asked consequence questions?",
+    "OBJECTIONS (0-100): Preemptively addressed objections with curiosity and redirect?",
+    "COMMITMENT (0-100): Attempted close? Used 1-10 scale? Earned close through discovery?",
+    'Return exactly: {"overall":72,"categories":[{"label":"Opener","score":80},{"label":"Discovery","score":65},{"label":"Consequence","score":55},{"label":"Objections","score":70},{"label":"Commitment","score":60}],"feedback":"3-4 sentences specific to what they said."}'
+  ].join("\n");
+
+  try {
+    var res = await fetchWithTimeout('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        max_tokens: 600,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: 'Score this solo pitch drill.\n\nPITCH TRANSCRIPT:\n' + transcript }]
+      })
+    }, 9000);
+    var data = await res.json();
+    var raw = (data.content && data.content[0]) ? data.content[0].text : '{}';
+    raw = raw.replace(/```json|```/g, '').trim();
+    var sc = JSON.parse(raw);
+    var col = sc.overall >= 75 ? '#00e676' : sc.overall >= 55 ? '#ffd600' : '#ff1744';
+    document.getElementById('overall').textContent = sc.overall + '/100';
+    document.getElementById('overall').style.color = col;
+    document.getElementById('scoreGrid').innerHTML = (sc.categories || []).map(function(c) {
+      var cc = c.score >= 75 ? '#00e676' : c.score >= 55 ? '#ffd600' : '#ff1744';
+      return "<div class='si'><div class='silbl'>" + c.label + "</div><div class='sbar'><div class='sbarfill' style='width:" + c.score + "%;background:" + cc + "'></div></div><div class='sival' style='color:" + cc + "'>" + c.score + "</div></div>";
+    }).join('');
+    document.getElementById('scoreFeed').textContent = sc.feedback || '';
+  } catch(e) {
+    document.getElementById('scoreFeed').textContent = e.name === 'AbortError' ? 'Scoring timed out — tap Try Again.' : 'Could not analyze — please try again.';
+  }
+}
+
+// Wire up drill type buttons
+document.querySelectorAll('.drill-type-btn').forEach(function(b) {
+  b.addEventListener('click', function() {
+    drill.type = this.getAttribute('data-dtype');
+    document.querySelectorAll('.drill-type-btn').forEach(function(x){ x.classList.remove('selected'); });
+    this.classList.add('selected');
+    setTimeout(function() {
+      document.getElementById('drillStep2').style.display = 'block';
+    }, 200);
+  });
+});
+
+// Wire up product buttons
+document.querySelectorAll('.drill-prod-btn').forEach(function(b) {
+  b.addEventListener('click', function() {
+    drill.product = this.getAttribute('data-prod');
+    document.querySelectorAll('.drill-prod-btn').forEach(function(x){ x.classList.remove('selected'); });
+    this.classList.add('selected');
+    setTimeout(function() {
+      document.getElementById('drillStep3').style.display = 'flex';
+      document.getElementById('drillStep3').style.flexDirection = 'column';
+      document.getElementById('drillStep3').style.alignItems = 'center';
+    }, 200);
+  });
+});
+
+// Record button
+document.getElementById('drillRecordBtn').addEventListener('click', function() {
+  if (drill.recording) drillStopRecording();
+  else drillStartRecording();
+});
+
+// Score button
+document.getElementById('drillScoreBtn').addEventListener('click', drillScorePitch);
+
+// Solo Drill entry button
+document.getElementById('soloDrillBtn').addEventListener('click', function() {
+  drillResetUI();
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('drillScreen').classList.remove('hidden');
+});
+
+// Back button
+document.getElementById('drillBackBtn').addEventListener('click', function() {
+  if (drill.recording) drillStopRecording();
+  document.getElementById('drillScreen').classList.add('hidden');
+  document.getElementById('startScreen').classList.remove('hidden');
 });
 
 // ═══════════════════════════════════════════
