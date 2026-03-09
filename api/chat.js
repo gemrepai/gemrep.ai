@@ -6,7 +6,7 @@ const supabase = createClient(
 );
 
 // Your email — always gets full access regardless of subscription status
-const MASTER_EMAIL = 'gemrepai@proton.me';
+const MASTER_EMAIL = 'tomcrowhurst@proton.me';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
