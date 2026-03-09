@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GemRep — Login</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0a;color:#e8e9ec;font-family:'DM Sans',system-ui,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#16181c;border:1px solid #2a2d35;border-radius:16px;padding:40px 36px;width:100%;max-width:400px;text-align:center}
+.logo{font-size:32px;font-weight:700;letter-spacing:4px;color:#fff;margin-bottom:6px}
+.tag{font-size:11px;letter-spacing:2px;color:#ff4d1c;text-transform:uppercase;margin-bottom:32px}
+.label{font-size:12px;color:#8a8d9a;text-align:left;margin-bottom:6px;display:block}
+input{width:100%;background:#111214;border:1px solid #2a2d35;border-radius:8px;color:#e8e9ec;font-family:inherit;font-size:14px;padding:12px 14px;outline:none;transition:border .15s;margin-bottom:16px}
+input:focus{border-color:#ff4d1c}
+.btn{width:100%;background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:#fff;font-family:inherit;font-size:14px;font-weight:600;letter-spacing:1px;padding:13px;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.9}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.msg{font-size:13px;margin-top:16px;min-height:20px;color:#8a8d9a}
+.msg.success{color:#00e676}
+.msg.error{color:#ff1744}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">GEMREP</div>
+  <div class="tag">AI Sales Training</div>
+  <label class="label">Enter your email to get a login link</label>
+  <input type="email" id="emailInput" placeholder="you@email.com" />
+  <button class="btn" id="loginBtn">SEND MAGIC LINK</button>
+  <div class="msg" id="msg"></div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://emcakiwlyztkvlncykzq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtY2FraXdseXp0a3ZsbmN5a3pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNTg0NzAsImV4cCI6MjA4ODYzNDQ3MH0.j1BVZIHShz-YBopeDltUGTXmM8mKZnd1JIC0eZ__mO8';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// If already logged in, go straight to app
+sb.auth.getSession().then(({ data: { session } }) => {
+  if (session) window.location.href = '/app.html';
+});
+
+// Handle magic link return
+sb.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_IN' && session) {
+    window.location.href = '/app.html';
+  }
+});
+
+document.getElementById('loginBtn').addEventListener('click', async function() {
+  const email = document.getElementById('emailInput').value.trim();
+  const msg = document.getElementById('msg');
+  if (!email) { msg.textContent = 'Please enter your email.'; msg.className = 'msg error'; return; }
+
+  this.disabled = true;
+  this.textContent = 'SENDING...';
+  msg.textContent = '';
+  msg.className = 'msg';
+
+  const { error } = await sb.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: 'https://gemrep.ai/app.html' }
+  });
+
+  if (error) {
+    msg.textContent = error.message;
+    msg.className = 'msg error';
+    this.disabled = false;
+    this.textContent = 'SEND MAGIC LINK';
+  } else {
+    msg.textContent = 'Check your email — link expires in 1 hour.';
+    msg.className = 'msg success';
+    this.textContent = 'LINK SENT';
+  }
+});
+
+document.getElementById('emailInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('loginBtn').click();
+});
+</script>
+</body>
+</html>
