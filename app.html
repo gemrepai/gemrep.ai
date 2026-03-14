@@ -981,21 +981,28 @@ function showTab(name) {
 }
 
 // ═══════════════════════════════════════════
-// Unlock iOS audio context — must happen inside a user gesture
+// iOS audio unlock — keep a persistent unlocked Audio element
+var _iosUnlocked = false;
+var _iosAudioCtx = null;
+
 function unlockIOSAudio() {
+  if (_iosUnlocked) return;
+  // 1. Unlock Web Audio API context
   try {
-    var ctx = new (window.AudioContext || window.webkitAudioContext)();
-    var buf = ctx.createBuffer(1, 1, 22050);
-    var src = ctx.createBufferSource();
+    _iosAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    var buf = _iosAudioCtx.createBuffer(1, 1, 22050);
+    var src = _iosAudioCtx.createBufferSource();
     src.buffer = buf;
-    src.connect(ctx.destination);
+    src.connect(_iosAudioCtx.destination);
     src.start(0);
-    setTimeout(function() { ctx.close(); }, 100);
   } catch(e) {}
-  // Also play a silent HTML5 audio to unlock <Audio> element playback
+  // 2. Play silent mp3 to unlock HTMLAudioElement — this is the key one for ElevenLabs
   try {
-    var sil = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=');
-    sil.play().catch(function(){});
+    var sil = new Audio('data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsgU291bmQgRWZmZWN0cwBUWFhYAAAADQAAAFNvZnR3YXJlAExhdmY1OA==');
+    sil.volume = 0;
+    sil.play().then(function() {
+      _iosUnlocked = true;
+    }).catch(function() {});
   } catch(e) {}
 }
 
@@ -1123,7 +1130,7 @@ async function scoreCall() {
     var res = await fetchWithTimeout('/api/chat', {
       method:'POST',
       headers:authHeaders(),
-      body: JSON.stringify({max_tokens:600, system:(function() {
+      body: JSON.stringify({max_tokens:900, system:(function() {
   var vertical = state.vertical || 'insurance';
   var objectionGuide = {
     insurance: {
@@ -1261,6 +1268,10 @@ function fetchWithTimeout(url, options, ms) {
 
 async function el_speak(text, archId) {
   var voiceId = EL_VOICES[archId] || EL_VOICES.custom;
+  // Resume audio context if suspended (iOS requirement)
+  if (_iosAudioCtx && _iosAudioCtx.state === 'suspended') {
+    try { await _iosAudioCtx.resume(); } catch(e) {}
+  }
   try {
     el_stopSpeaking();
     setCallBarState('speaking', getArch(archId).name);
@@ -1282,7 +1293,7 @@ async function el_speak(text, archId) {
       el_speaking = false;
       URL.revokeObjectURL(url);
       setCallBarState('listening', null);
-      if (!state.ended && !state.loading) setTimeout(startListening, 800); // iOS needs longer delay after audio
+      if (!state.ended && !state.loading) setTimeout(startListening, 1500); // give rep time to process
     }
     el_audio.onended = onAudioDone;
     el_audio.onerror = onAudioDone;
