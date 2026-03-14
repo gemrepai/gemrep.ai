@@ -1282,7 +1282,7 @@ async function el_speak(text, archId) {
       el_speaking = false;
       URL.revokeObjectURL(url);
       setCallBarState('listening', null);
-      if (!state.ended && !state.loading) setTimeout(startListening, 300);
+      if (!state.ended && !state.loading) setTimeout(startListening, 800); // iOS needs longer delay after audio
     }
     el_audio.onended = onAudioDone;
     el_audio.onerror = onAudioDone;
@@ -1389,27 +1389,52 @@ function initRecognition() {
     document.getElementById('voiceStatus').textContent = '🎤 Listening...';
     document.getElementById('voiceStatus').className = 'voice-status on';
   };
+  var _iosSendTimer = null;
   r.onresult = function(e) {
-    var interim='', final='';
-    for (var i=e.resultIndex;i<e.results.length;i++) {
+    var interim = '', final = '';
+    for (var i = e.resultIndex; i < e.results.length; i++) {
       if (e.results[i].isFinal) final += e.results[i][0].transcript;
       else interim += e.results[i][0].transcript;
     }
-    document.getElementById('inp').value = final || interim;
-    if (final) { stopListening(); setTimeout(sendMsg, 200); }
+    var text = final || interim;
+    document.getElementById('inp').value = text;
+
+    // iOS fix: isFinal often never fires — use a debounce timer instead
+    // If no new results come in for 1.2s, treat whatever we have as final
+    if (_iosSendTimer) clearTimeout(_iosSendTimer);
+    if (final) {
+      // Desktop path — isFinal fired, send immediately
+      clearTimeout(_iosSendTimer);
+      stopListening();
+      setTimeout(sendMsg, 150);
+    } else if (interim) {
+      // iOS path — start debounce timer
+      _iosSendTimer = setTimeout(function() {
+        var val = document.getElementById('inp').value.trim();
+        if (val && !state.loading && !state.ended) {
+          stopListening();
+          sendMsg();
+        }
+      }, 2200);
+    }
   };
   r.onerror = function(e) {
+    if (_iosSendTimer) clearTimeout(_iosSendTimer);
     stopListening();
-    if (e.error !== 'no-speech' && e.error !== 'aborted') {
+    if (e.error === 'no-speech') {
+      // iOS kills mic on silence — restart automatically
+      if (!el_speaking && !state.ended && !state.loading) setTimeout(startListening, 500);
+    } else if (e.error !== 'aborted') {
       document.getElementById('inp').placeholder = 'Mic error — tap 🎤 to try again';
     }
   };
   r.onend = function() {
+    if (_iosSendTimer) clearTimeout(_iosSendTimer);
     var hadText = document.getElementById('inp').value.trim();
     stopListening();
-    // iOS Safari often fires onend immediately — auto restart if no text captured
+    // iOS restart — if nothing captured and not speaking, restart mic
     if (!hadText && !el_speaking && !state.ended && !state.loading) {
-      setTimeout(startListening, 400);
+      setTimeout(startListening, 500);
     }
   };
   recognition = r;
