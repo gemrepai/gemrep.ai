@@ -19,14 +19,14 @@ async function initAuth() {
     return true;
   }
   // No session — redirect to login
-  window.location.href = '/login.html';
+  window.location.href = '/login';
   return false;
 }
 
 // Keep token fresh
 _sb.auth.onAuthStateChange((event, session) => {
   if (session) _authToken = session.access_token;
-  else { _authToken = null; window.location.href = '/login.html'; }
+  else { _authToken = null; window.location.href = '/login'; }
 });
 
 // Helper — returns auth headers for every API call
