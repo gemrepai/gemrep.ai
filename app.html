@@ -1110,7 +1110,7 @@ async function sendMsg() {
 // SCORE CALL
 // ═══════════════════════════════════════════
 async function scoreCall() {
-  if (state.ended || state.history.length < 3) return;
+  if (state.ended) return;
   state.ended = true;
   el_stopSpeaking();
   stopListening();
@@ -1120,9 +1120,14 @@ async function scoreCall() {
   document.getElementById('sendBtn').disabled = true;
   document.getElementById('scbtnwrap').style.display = 'none';
   document.getElementById('scoreOverlay').classList.add('open');
-  document.getElementById('scoreFeed').textContent = 'Analyzing your call...';
   document.getElementById('scoreGrid').innerHTML = '';
   document.getElementById('overall').textContent = '...';
+  // Need at least a few exchanges to score
+  if (state.history.length < 3) {
+    document.getElementById('scoreFeed').textContent = 'Not enough conversation to score — run a longer call next time.';
+    return;
+  }
+  document.getElementById('scoreFeed').textContent = 'Analyzing your call...';
   var a = getArch(state.archId);
   var modeLabel = {easy:'Easy',medium:'Medium',hard:'Hard'}[state.mode]||'';
   var transcript = state.history.map(function(m){ return (m.role==='user'?'REP':'PROSPECT')+': '+m.content; }).join('\n');
@@ -1293,7 +1298,7 @@ async function el_speak(text, archId) {
       el_speaking = false;
       URL.revokeObjectURL(url);
       setCallBarState('listening', null);
-      if (!state.ended && !state.loading) setTimeout(startListening, 1500); // give rep time to process
+      if (!state.ended && !state.loading) setTimeout(startListening, 400);
     }
     el_audio.onended = onAudioDone;
     el_audio.onerror = onAudioDone;
