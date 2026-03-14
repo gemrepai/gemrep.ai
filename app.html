@@ -1193,7 +1193,7 @@ async function scoreCall() {
 })(),
         messages:[{role:'user', content:'Score this call. Prospect: '+a.name+' ('+a.label+'). Difficulty mode: '+modeLabel+'.\n\nTRANSCRIPT:\n'+transcript}]
       })
-    });
+    }, 25000);
     var data = await res.json();
     var raw = (data.content && data.content[0]) ? data.content[0].text : '{}';
     raw = raw.replace(/```json|```/g,'').trim();
@@ -1442,7 +1442,7 @@ function initRecognition() {
           stopListening();
           sendMsg();
         }
-      }, 2200);
+      }, 3500);
     }
   };
   r.onerror = function(e) {
