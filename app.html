@@ -39,6 +39,18 @@ function authHeaders() {
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>GemRep &mdash; AI Sales Trainer</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#ff4d1c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GemRep">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -969,12 +981,33 @@ function showTab(name) {
 }
 
 // ═══════════════════════════════════════════
+// Unlock iOS audio context — must happen inside a user gesture
+function unlockIOSAudio() {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var buf = ctx.createBuffer(1, 1, 22050);
+    var src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.start(0);
+    setTimeout(function() { ctx.close(); }, 100);
+  } catch(e) {}
+  // Also play a silent HTML5 audio to unlock <Audio> element playback
+  try {
+    var sil = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=');
+    sil.play().catch(function(){});
+  } catch(e) {}
+}
+
 // OPENER — phone ring then prospect picks up
 // ═══════════════════════════════════════════
 function addOpener() {
   var a = getArch(state.archId);
   var opener = 'Hello?';
   state.history = [{role:'assistant', content: opener}];
+
+  // Unlock iOS audio immediately on user gesture
+  unlockIOSAudio();
 
   var el = document.getElementById('msgs');
   var ringDiv = document.createElement('div');
@@ -1302,7 +1335,14 @@ function initRecognition() {
       document.getElementById('inp').placeholder = 'Mic error — tap 🎤 to try again';
     }
   };
-  r.onend = function() { stopListening(); };
+  r.onend = function() {
+    var hadText = document.getElementById('inp').value.trim();
+    stopListening();
+    // iOS Safari often fires onend immediately — auto restart if no text captured
+    if (!hadText && !el_speaking && !state.ended && !state.loading) {
+      setTimeout(startListening, 400);
+    }
+  };
   recognition = r;
   return r;
 }
@@ -1686,6 +1726,15 @@ document.getElementById('drillBackBtn').addEventListener('click', function() {
 renderArchGrid();
 renderModePicker();
 updateGoBtn();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(e) {
+      console.log('SW registration failed:', e);
+    });
+  });
+}
 </script>
 </body>
 </html>
