@@ -1291,7 +1291,19 @@ async function el_speak(text, archId) {
       var dur = el_audio.duration;
       if (dur && isFinite(dur)) setTimeout(onAudioDone, (dur * 1000) + 1500);
     };
-    await el_audio.play();
+    var playPromise = el_audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(function(err) {
+        console.warn('iOS play blocked:', err);
+        // Try unlocking audio and retry once
+        unlockIOSAudio();
+        setTimeout(function() {
+          el_audio && el_audio.play().catch(function() {
+            ws_speak(text, archId);
+          });
+        }, 300);
+      });
+    }
   } catch(e) {
     console.error('ElevenLabs error:', e);
     el_speaking = false;
@@ -1299,7 +1311,6 @@ async function el_speak(text, archId) {
     if (e.name === 'AbortError') {
       showToast('Voice took too long — type your response or tap the mic.');
     } else {
-      // Silent fallback to web speech — user won't notice
       ws_speak(text, archId);
     }
   }
@@ -1411,7 +1422,7 @@ function initRecognition() {
       // iOS path — start debounce timer
       _iosSendTimer = setTimeout(function() {
         var val = document.getElementById('inp').value.trim();
-        if (val && !state.loading && !state.ended) {
+        if (val && !state.loading && !state.ended && !el_speaking) {
           stopListening();
           sendMsg();
         }
