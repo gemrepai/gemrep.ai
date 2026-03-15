@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Sales Script Worksheet — GemRep</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#0a0a0a;--dark:#111214;--panel:#16181c;--border:#2a2d35;--text:#e8e9ec;--dim:#8a8d9a;--accent:#ff4d1c;--accent2:#ff8c00;--green:#00e676}
+body{background:var(--black);color:var(--text);font-family:"DM Sans",sans-serif;min-height:100vh}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;border-bottom:1px solid var(--border);background:var(--dark)}
+.nav-logo{font-family:"Instrument Serif",serif;font-size:20px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
+.nav-cta{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:8px;color:white;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;padding:8px 20px;cursor:pointer;text-decoration:none}
+
+/* HERO */
+.hero{max-width:700px;margin:0 auto;padding:60px 24px 40px;text-align:center}
+.hero-label{font-size:11px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:16px}
+.hero-title{font-family:"Instrument Serif",serif;font-size:42px;line-height:1.15;margin-bottom:16px}
+.hero-title em{font-style:italic;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:16px;color:var(--dim);line-height:1.7;margin-bottom:36px;max-width:520px;margin-left:auto;margin-right:auto}
+
+/* DOWNLOAD BTN */
+.dl-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:12px;color:white;font-family:"Instrument Serif",serif;font-size:17px;letter-spacing:2px;padding:15px 40px;cursor:pointer;text-decoration:none;box-shadow:0 4px 28px rgba(255,77,28,.4);transition:opacity .15s}
+.dl-btn:hover{opacity:.9}
+.dl-note{font-size:12px;color:var(--dim);margin-top:12px}
+
+/* PREVIEW */
+.preview{max-width:900px;margin:48px auto;padding:0 24px}
+.preview-label{font-size:11px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;text-align:center;margin-bottom:24px}
+.pages{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.page-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.page-header{background:var(--dark);padding:14px 18px;border-bottom:1px solid var(--border)}
+.page-num{font-size:10px;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;margin-bottom:4px}
+.page-title{font-size:14px;font-weight:600}
+.page-body{padding:18px}
+.phase{margin-bottom:14px}
+.phase-tag{display:inline-block;background:rgba(255,77,28,.12);color:var(--accent);font-size:9px;font-weight:600;letter-spacing:1px;padding:3px 8px;border-radius:4px;text-transform:uppercase;margin-bottom:6px}
+.phase-title{font-size:12px;font-weight:600;margin-bottom:3px}
+.phase-desc{font-size:11px;color:var(--dim);line-height:1.5}
+.lines{margin-top:8px}
+.line{height:1px;background:var(--border);margin-bottom:10px}
+
+/* WHAT YOU GET */
+.features{max-width:700px;margin:0 auto 60px;padding:0 24px}
+.features-title{font-family:"Instrument Serif",serif;font-size:28px;text-align:center;margin-bottom:32px}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.feat{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px}
+.feat-icon{font-size:22px;margin-bottom:8px}
+.feat-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.feat-desc{font-size:12px;color:var(--dim);line-height:1.5}
+
+/* BOTTOM CTA */
+.bottom-cta{background:var(--dark);border-top:1px solid var(--border);padding:48px 24px;text-align:center}
+.bottom-cta h2{font-family:"Instrument Serif",serif;font-size:28px;margin-bottom:12px}
+.bottom-cta p{font-size:14px;color:var(--dim);margin-bottom:28px}
+
+@media(max-width:600px){
+  .pages{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:1fr}
+  .hero-title{font-size:30px}
+  nav{padding:0 20px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">GEMREP</a>
+  <a class="nav-cta" href="/app">Try Free →</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">Free Download</div>
+  <h1 class="hero-title">Build a script that <em>actually</em> moves people.</h1>
+  <p class="hero-sub">A two-page fillable worksheet that maps your pitch to the conversation framework used by top closers. Free. No email required.</p>
+
+  <a class="dl-btn" href="/gemrep_worksheet.pdf" download="GemRep_Script_Worksheet.pdf">
+    &#11015; Download Free Worksheet
+  </a>
+  <div class="dl-note">PDF &nbsp;·&nbsp; 2 pages &nbsp;·&nbsp; Print-friendly</div>
+</div>
+
+<!-- PAGE PREVIEW -->
+<div class="preview">
+  <div class="preview-label">What's inside</div>
+  <div class="pages">
+
+    <!-- Page 1 preview -->
+    <div class="page-card">
+      <div class="page-header">
+        <div class="page-num">Page 1</div>
+        <div class="page-title">Script Builder Worksheet</div>
+      </div>
+      <div class="page-body">
+        <div class="phase">
+          <div class="phase-tag">Phase 1</div>
+          <div class="phase-title">Open + Connect</div>
+          <div class="phase-desc">Write your opener. Sound like a peer, not a telemarketer.</div>
+          <div class="lines"><div class="line"></div><div class="line"></div></div>
+        </div>
+        <div class="phase">
+          <div class="phase-tag">Phase 2</div>
+          <div class="phase-title">Discovery + Situation</div>
+          <div class="phase-desc">Connection questions, situation questions, problem awareness, cost of status quo.</div>
+          <div class="lines"><div class="line"></div><div class="line"></div></div>
+        </div>
+        <div class="phase">
+          <div class="phase-tag">Phase 3</div>
+          <div class="phase-title">Consequence of Inaction</div>
+          <div class="phase-desc">What happens if nothing changes? Who gets affected?</div>
+          <div class="lines"><div class="line"></div><div class="line"></div></div>
+        </div>
+        <div class="phase">
+          <div class="phase-tag">Phase 4</div>
+          <div class="phase-title">Commitment + Close</div>
+          <div class="phase-desc">Your commitment question, your close, yes and no paths.</div>
+          <div class="lines"><div class="line"></div><div class="line"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 2 preview -->
+    <div class="page-card">
+      <div class="page-header">
+        <div class="page-num">Page 2</div>
+        <div class="page-title">Objection Reframe Cheat Sheet</div>
+      </div>
+      <div class="page-body">
+        <div class="phase">
+          <div class="phase-tag">Insurance</div>
+          <div class="phase-desc" style="margin-bottom:8px">Reframes for: need to think about it, need to talk to spouse, already have coverage, can't afford it, send me info.</div>
+        </div>
+        <div class="phase">
+          <div class="phase-tag">B2B</div>
+          <div class="phase-desc" style="margin-bottom:8px">Reframes for: need to think about it, already have a vendor, not in the budget, need to talk to someone.</div>
+        </div>
+        <div class="phase">
+          <div class="phase-tag">Cold Call</div>
+          <div class="phase-desc" style="margin-bottom:8px">Reframes for: not interested, too busy, already have something, call me back, send me info.</div>
+        </div>
+        <div class="phase" style="background:rgba(255,77,28,.06);border-radius:6px;padding:10px">
+          <div class="phase-title" style="font-size:11px;color:var(--accent)">Write your own version</div>
+          <div class="phase-desc">Space next to every reframe to write it in your own words. Keep it next to your phone.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- WHAT YOU GET -->
+<div class="features">
+  <h2 class="features-title">What you get</h2>
+  <div class="feat-grid">
+    <div class="feat">
+      <div class="feat-icon">&#128221;</div>
+      <div class="feat-title">Fillable + printable</div>
+      <div class="feat-desc">Type into it on your computer or print it out and write by hand. Works both ways.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">&#127919;</div>
+      <div class="feat-title">Framework-aligned</div>
+      <div class="feat-desc">Built around the same 4-phase conversation framework GemRep scores you on.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">&#128172;</div>
+      <div class="feat-title">Objection library</div>
+      <div class="feat-desc">15 proven reframes across Insurance, B2B, and Cold Call — plus space to write your own.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">&#128197;</div>
+      <div class="feat-title">Keep it next to your phone</div>
+      <div class="feat-desc">Print page 2 and tape it to your monitor. The reframes are there when you need them.</div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM CTA -->
+<div class="bottom-cta">
+  <h2>Script built. Now pressure-test it.</h2>
+  <p>Practice your script against a live AI prospect. GemRep scores every call on all 4 phases and tells you exactly what to fix.</p>
+  <a class="dl-btn" href="/app">Try GemRep Free →</a>
+</div>
+
+</body>
+</html>
