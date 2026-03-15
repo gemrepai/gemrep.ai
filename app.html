@@ -507,6 +507,9 @@ textarea:disabled{opacity:.4}
     <div class="start-logo">GEMREP</div>
     <div class="start-tag">AI SALES TRAINING</div>
   </div>
+  <div id="iosBanner" style="display:none;background:rgba(255,214,0,.08);border:1px solid rgba(255,214,0,.25);border-radius:8px;padding:10px 16px;font-size:12px;color:#ffd600;text-align:center;max-width:480px;line-height:1.5">
+    &#9888; For the best experience, use GemRep on desktop Chrome or Edge. iOS voice support is in beta.
+  </div>
 
   <!-- Vertical selector -->
   <div class="svbtns" id="startVbtns"></div>
@@ -1844,6 +1847,10 @@ document.getElementById('drillBackBtn').addEventListener('click', function() {
   const ok = await initAuth();
   if (ok) renderStartVbtns();
 })();
+
+// Show iOS warning banner
+var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+if (isIOS) document.getElementById('iosBanner').style.display = 'block';
 renderArchGrid();
 renderModePicker();
 updateGoBtn();
