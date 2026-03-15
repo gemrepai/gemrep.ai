@@ -81,7 +81,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 40px
   <h1 class="hero-title">Build a script that <em>actually</em> moves people.</h1>
   <p class="hero-sub">A two-page fillable worksheet that maps your pitch to the conversation framework used by top closers. Free. No email required.</p>
 
-  <a class="dl-btn" href="/gemrep_worksheet.pdf" download="GemRep_Script_Worksheet.pdf">
+  <a class="dl-btn" href="/gemrep_worksheet.pdf">
     &#11015; Download Free Worksheet
   </a>
   <div class="dl-note">PDF &nbsp;·&nbsp; 2 pages &nbsp;·&nbsp; Print-friendly</div>
