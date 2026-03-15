@@ -199,11 +199,11 @@ textarea:disabled{opacity:.4}
 .mbtn-secondary{background:none;border:1px solid #2a2d35;color:#8a8d9a}
 
 /* START SCREEN */
-.start{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;padding:20px;overflow-y:auto;z-index:50}
-.start-logo{font-family:"Instrument Serif",serif;font-size:52px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;letter-spacing:4px}
+.start{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:flex-start;flex-direction:column;gap:12px;padding:16px 20px;overflow-y:auto;z-index:50}
+.start-logo{font-family:"Instrument Serif",serif;font-size:38px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;letter-spacing:4px}
 .start-tag{font-size:13px;color:var(--dim);letter-spacing:1px}
 .svbtns{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
-.svbtn{background:var(--panel);border:2px solid var(--border);border-radius:10px;padding:9px 18px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:13px;cursor:pointer;transition:all .15s}
+.svbtn{background:var(--panel);border:2px solid var(--border);border-radius:10px;padding:7px 16px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:12px;cursor:pointer;transition:all .15s}
 .svbtn:hover{border-color:#ff4d1c;color:var(--text)}
 .svbtn.active{border-color:#ff4d1c;color:var(--text);background:rgba(255,77,28,.08)}
 
@@ -212,11 +212,11 @@ textarea:disabled{opacity:.4}
 .pfbtn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--panel);color:var(--dim);font-family:"DM Sans",sans-serif;font-size:11px;cursor:pointer;transition:all .15s}
 .pfbtn:hover{border-color:#ff4d1c;color:var(--text)}
 .pfbtn.active{border-color:#ff4d1c;color:var(--text);background:rgba(255,77,28,.1)}
-.arch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;max-width:560px;width:100%}
-.arch-card{background:var(--panel);border:2px solid var(--border);border-radius:12px;padding:13px;cursor:pointer;transition:all .15s;text-align:left}
+.arch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;max-width:560px;width:100%}
+.arch-card{background:var(--panel);border:2px solid var(--border);border-radius:12px;padding:10px;cursor:pointer;transition:all .15s;text-align:left}
 .arch-card:hover{border-color:rgba(255,77,28,.5);transform:translateY(-2px)}
 .arch-card.selected{border-color:#ff4d1c;background:rgba(255,77,28,.07)}
-.arch-emoji{font-size:24px;margin-bottom:6px}
+.arch-emoji{font-size:20px;margin-bottom:4px}
 .arch-name{font-size:13px;font-weight:600;margin-bottom:2px}
 .arch-label{font-size:10px;color:var(--dim)}
 .arch-meta{display:flex;align-items:center;gap:6px;margin-top:5px;flex-wrap:wrap}
@@ -225,14 +225,14 @@ textarea:disabled{opacity:.4}
 
 /* MODE PICKER */
 .mode-picker{display:flex;gap:8px;max-width:560px;width:100%}
-.mode-btn{flex:1;padding:11px;border-radius:10px;border:2px solid var(--border);background:var(--panel);color:var(--dim);font-family:"DM Sans",sans-serif;font-size:12px;cursor:pointer;transition:all .15s;text-align:center}
+.mode-btn{flex:1;padding:8px;border-radius:10px;border:2px solid var(--border);background:var(--panel);color:var(--dim);font-family:"DM Sans",sans-serif;font-size:12px;cursor:pointer;transition:all .15s;text-align:center}
 .mode-btn:hover{border-color:var(--muted)}
 .mode-btn.selected-easy{border-color:#00e676;color:#00e676;background:rgba(0,230,118,.07)}
 .mode-btn.selected-medium{border-color:#ffd600;color:#ffd600;background:rgba(255,214,0,.07)}
 .mode-btn.selected-hard{border-color:#ff1744;color:#ff1744;background:rgba(255,23,68,.07)}
 .mode-label{font-size:10px;color:inherit;opacity:.7;margin-top:2px}
 
-.go-btn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"Instrument Serif",serif;font-size:16px;letter-spacing:3px;padding:13px 44px;cursor:pointer;transition:all .15s;opacity:.4;pointer-events:none}
+.go-btn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"Instrument Serif",serif;font-size:15px;letter-spacing:3px;padding:11px 40px;cursor:pointer;transition:all .15s;opacity:.4;pointer-events:none}
 .go-btn.ready{opacity:1;pointer-events:auto}
 .go-btn.ready:hover{opacity:.9;transform:scale(1.02)}
 
