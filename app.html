@@ -265,6 +265,32 @@ textarea:disabled{opacity:.4}
 .drill-transcript.show{display:block}
 .drill-score-btn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"Instrument Serif",serif;font-size:15px;letter-spacing:2px;padding:12px 36px;cursor:pointer;display:none}
 .drill-score-btn.show{display:block}
+/* OBJECTION LAB */
+.objlab-screen{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:28px;z-index:50;overflow-y:auto}
+.objlab-back{position:absolute;top:16px;left:16px;background:none;border:1px solid var(--border);border-radius:7px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:11px;padding:5px 11px;cursor:pointer}
+.objlab-title{font-family:"Instrument Serif",serif;font-size:36px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
+.objlab-sub{font-size:13px;color:var(--dim);text-align:center;max-width:420px;line-height:1.6}
+.objlab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-width:480px;width:100%}
+.objlab-vert{padding:10px 16px;border-radius:10px;border:2px solid var(--border);background:var(--panel);color:var(--dim);font-family:"DM Sans",sans-serif;font-size:12px;cursor:pointer;transition:all .15s;text-align:center}
+.objlab-vert:hover{border-color:rgba(255,77,28,.5)}
+.objlab-vert.selected{border-color:#ff4d1c;background:rgba(255,77,28,.07);color:var(--text)}
+.objlab-objlist{display:flex;flex-direction:column;gap:6px;max-width:480px;width:100%}
+.objlab-obj{padding:10px 14px;border-radius:9px;border:1px solid var(--border);background:var(--panel);color:var(--dim);font-family:"DM Sans",sans-serif;font-size:13px;cursor:pointer;transition:all .15s;text-align:left}
+.objlab-obj:hover{border-color:rgba(255,77,28,.5);color:var(--text)}
+.objlab-obj.selected{border-color:#ff4d1c;background:rgba(255,77,28,.07);color:var(--text)}
+.objlab-arena{width:100%;max-width:480px;display:flex;flex-direction:column;gap:12px}
+.objlab-prospect-bubble{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:14px 16px;font-size:14px;line-height:1.6;color:var(--text)}
+.objlab-prospect-label{font-size:9px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-bottom:6px}
+.objlab-record-row{display:flex;align-items:center;gap:14px}
+.objlab-rec-btn{width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .2s;flex-shrink:0}
+.objlab-rec-btn.idle{background:linear-gradient(135deg,#ff4d1c,#ff8c00);box-shadow:0 4px 20px rgba(255,77,28,.4)}
+.objlab-rec-btn.recording{background:#ff1744;animation:recordPulse 1.5s infinite}
+.objlab-response-box{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--dim);min-height:52px;line-height:1.5}
+.objlab-score-btn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"Instrument Serif",serif;font-size:14px;letter-spacing:2px;padding:11px 32px;cursor:pointer;display:none}
+.objlab-score-btn.show{display:block}
+.objlab-feedback{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:12px;color:var(--dim);line-height:1.65;display:none;width:100%;max-width:480px}
+.objlab-feedback.show{display:block}
+.objlab-score-num{font-family:"Instrument Serif",serif;font-size:42px;text-align:center;margin-bottom:8px}
 /* TOAST */
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:#1e2028;border:1px solid var(--border);border-radius:8px;padding:9px 16px;font-size:12px;color:var(--dim);z-index:200;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)}
 @media(max-width:768px){
@@ -450,6 +476,58 @@ textarea:disabled{opacity:.4}
   </div>
 </div>
 
+<!-- OBJECTION LAB SCREEN -->
+<div class="objlab-screen hidden" id="objLabScreen">
+  <button class="objlab-back" id="objLabBackBtn">&#8592; Back</button>
+  <div style="text-align:center">
+    <div class="objlab-title">OBJECTION LAB</div>
+    <div class="objlab-sub">Get hit with a real objection. Handle it. Get scored on one thing — did you redirect with curiosity or did you fold?</div>
+  </div>
+
+  <!-- Step 1: Pick vertical -->
+  <div id="objLabStep1" style="width:100%;max-width:480px">
+    <div style="font-size:10px;letter-spacing:2px;color:var(--dim);text-align:center;margin-bottom:10px;text-transform:uppercase">Pick a vertical</div>
+    <div class="objlab-grid">
+      <button class="objlab-vert" data-vert="insurance">&#128737; Insurance</button>
+      <button class="objlab-vert" data-vert="b2b">&#128188; B2B</button>
+      <button class="objlab-vert" data-vert="cold">&#128222; Cold Call</button>
+      <button class="objlab-vert" data-vert="custom">&#9889; Custom</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Pick objection -->
+  <div id="objLabStep2" style="width:100%;max-width:480px;display:none">
+    <div style="font-size:10px;letter-spacing:2px;color:var(--dim);text-align:center;margin-bottom:10px;text-transform:uppercase">Pick an objection</div>
+    <div class="objlab-objlist" id="objLabObjList"></div>
+  </div>
+
+  <!-- Step 3: Arena -->
+  <div id="objLabStep3" style="display:none;width:100%;max-width:480px;flex-direction:column;gap:12px;align-items:center">
+    <div class="objlab-arena">
+      <div>
+        <div class="objlab-prospect-label">Prospect says:</div>
+        <div class="objlab-prospect-bubble" id="objLabProspectLine">—</div>
+      </div>
+      <div style="font-size:10px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;text-align:center">Your response</div>
+      <div class="objlab-record-row">
+        <button class="objlab-rec-btn idle" id="objLabRecBtn">&#127908;</button>
+        <div class="objlab-response-box" id="objLabResponseBox">Tap the mic and respond...</div>
+      </div>
+      <button class="objlab-score-btn" id="objLabScoreBtn">&#128202; SCORE MY RESPONSE</button>
+    </div>
+  </div>
+
+  <!-- Feedback -->
+  <div class="objlab-feedback" id="objLabFeedback">
+    <div class="objlab-score-num" id="objLabScoreNum">—</div>
+    <div id="objLabFeedbackText" style="font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:14px"></div>
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button id="objLabTryAgain" style="background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:8px;color:white;font-family:'DM Sans',sans-serif;font-size:12px;padding:9px 20px;cursor:pointer">Try Again</button>
+      <button id="objLabNewObj" style="background:none;border:1px solid var(--border);border-radius:8px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:12px;padding:9px 20px;cursor:pointer">New Objection</button>
+    </div>
+  </div>
+</div>
+
 <!-- SOLO DRILL SCREEN -->
 <div class="drill-screen hidden" id="drillScreen">
   <button class="drill-back" id="drillBackBtn">&#8592; Back</button>
@@ -540,7 +618,10 @@ textarea:disabled{opacity:.4}
   </div>
 
   <button class="go-btn" id="goBtn">BEGIN TRAINING &#8594;</button>
-  <button id="soloDrillBtn" style="background:none;border:1px solid var(--border);border-radius:10px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 28px;cursor:pointer;transition:all .15s;margin-top:-8px">&#127908; Solo Drill</button>
+  <div style="display:flex;gap:10px;margin-top:-8px">
+    <button id="soloDrillBtn" style="background:none;border:1px solid var(--border);border-radius:10px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 22px;cursor:pointer;transition:all .15s">&#127908; Solo Drill</button>
+    <button id="objLabBtn" style="background:none;border:1px solid var(--border);border-radius:10px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 22px;cursor:pointer;transition:all .15s">&#9889; Objection Lab</button>
+  </div>
 </div>
 
 <script>
@@ -559,8 +640,7 @@ var EL_VOICES = {
   // Insurance
   ins_frank:    'ErXwobaYiN019PkySvjV', // Antoni — warm male, slight hesitation
   ins_bob:      'VR6AewLTigWG4xSOukaG', // Arnold — gruff, hostile male
-  ins_helen:    'EXAVITQu4vr4xnSDxMaL',
-  ins_connie:   'MF3mGyEYCl7XYWbV9V6O', // Elli — warm, measured older female // Bella — warm, hopeful female
+  ins_helen:    'EXAVITQu4vr4xnSDxMaL', // Bella — warm, hopeful female
   ins_dorothy:  'MF3mGyEYCl7XYWbV9V6O', // Elli — older, gentle female
   // Cold Call
   cold_mike:    'flq6f7yk4E4fJM5XTYuZ', // Michael — gruff, impatient male
@@ -652,7 +732,7 @@ var ARCHETYPES = {
       tags:[{t:'Fear-driven',c:'#ff6b8a'},{t:'Under-insured',c:'#ffd600'},{t:'Family-first',c:'#409cff'}],
       emotion:'Deep fear of leaving his family with nothing. Haunted by the idea of his kids suffering.',
       sellWith:'Reassurance and family security. This ensures your spouse and kids stay in the home.',
-      tips:['Ask consequence: if something happened yesterday, what would that look like for Linda and the kids?','Ask discovery: what\'s kept you from getting this handled until now?','Handle think about it: setting the cost aside, do you feel like this is the answer for your family?','Never fight procrastination — get curious about what\'s behind it'],
+      tips:["Ask consequence: if something happened yesterday, what would that look like for Linda and the kids?","Ask discovery: what's kept you from getting this handled until now?","Handle think about it: setting the cost aside, do you feel like this is the answer for your family?","Never fight procrastination — get curious about what's behind it"],
       watchFor:'He goes quiet after you mention family = he is picturing it. Slow down.',
       difficulty:2,
       baseSystem:'You are Fearful Frank, a 67-year-old retired factory worker on a fixed income. You have thought about burial insurance for years but kept putting it off. You are anxious about being a burden to your kids when you pass. You respond to warmth and simple clear language. You shut down with jargon or pushy tactics. Objections: I do not know if I can afford it on my Social Security, I need to think about it, what if I get sick and they cancel it.',
@@ -670,28 +750,28 @@ var ARCHETYPES = {
       baseSystem:'You are Burned Bob, a 71-year-old semi-retired contractor. You had a final expense policy years ago that lapsed and a separate claim that got denied. You are FURIOUS at the insurance industry. You challenge everything. You desperately need burial coverage but will not buy from someone who does not acknowledge what happened to you. If the agent validates your experience without getting defensive you slowly open up.',
     },
     {
-      id:'ins_helen', name:'Hopeful Helen', emoji:'&#127752;',
-      label:'Hopeful Guardian', title:'New Mom · Teacher',
+      id:'ins_helen', name:'Sharp Sarah', emoji:'&#128105;&#8205;&#127979;',
+      label:'Analytical Buyer', title:'Age 34 · Married · Two Kids',
       age:'34', product:'Life Insurance', productColor:'#00e676',
-      tags:[{t:'Hope-driven',c:'#00e676'},{t:'Future-focused',c:'#409cff'},{t:'Optimistic',c:'#ff8c00'}],
-      emotion:'Excited about her family future. Buying insurance feels like an act of love.',
-      sellWith:'Positive vision. Imagine your kids thriving debt-free.',
-      tips:['Ask consequence: if something happened to Jason tomorrow, what would that mean for Cora?','Ask discovery: what would having this in place mean for your family?','Handle spouse objection: if Jason were on this call right now, what\'s the one thing he\'d want to know?','Close with: setting the cost aside, do you feel like this is the answer for your family?'],
-      watchFor:'She talks about her kids futures excitedly = she is already sold.',
-      difficulty:1,
-      baseSystem:'You are Hopeful Helen, a 34-year-old teacher who just had her first baby. You are warm, optimistic, and excited about your family future. You see life insurance as an act of love. You trust people quickly if they are warm and knowledgeable. Your main hesitation is wanting to include your husband.',
+      tags:[{t:'Analytical',c:'#409cff'},{t:'Direct',c:'#00e676'},{t:'Well-researched',c:'#ffd600'}],
+      emotion:"She wants the right answer, not a sales pitch. Equivocation makes her distrust you immediately.",
+      sellWith:"Be direct and specific. Answer her questions fully. She respects competence over charm.",
+      tips:["Lead with specifics — she already knows what term and whole life are","Ask situation: what does the work coverage actually cover and what\'s the gap?","Ask consequence: if something happened to John, how long would the mortgage last on her salary alone?","Setting the cost aside — does this coverage level actually solve the problem?"],
+      watchFor:"She starts doing math out loud = she\'s interested. Stay with her, don\'t interrupt.",
+      difficulty:3,
+      baseSystem:"You are Sarah Mitchell, a 34-year-old marketing director in Charlotte. Your husband is John, 36, a civil engineer. Your kids are Emma 5 and Lucas 3. You both have group term life through work — yours is 2x salary, his is 1x. You\'ve done your homework and know that\'s not enough to cover the mortgage at 340k plus two years of expenses if either of you died. You called in because you want a straight answer on what it would cost to fill that gap. You went to UNC, you are sharp, and you have zero patience for vague answers, upselling, or reps who can\'t answer a direct question. You like John involved in major decisions but you are the one who researches everything first. If the rep is knowledgeable and direct you open up quickly. If they equivocate or pivot to features you shut down.",
     },
     {
-      id:'ins_connie', name:'Cautious Connie', emoji:'&#128105;',
-      label:'Self-reliant Deflector', title:'Age 67 · Widowed · Retired',
-      age:'67', product:'Final Expense', productColor:'#ff6b8a',
-      tags:[{t:'Deflecting',c:'#ffd600'},{t:'Widowed',c:'#ff6b8a'},{t:'Just checking',c:'#409cff'}],
-      emotion:'Doesn\'t want to be a burden but won\'t admit how alone she really is. Hides behind her son Derek.',
-      sellWith:'Make her feel seen, not sold. The real conversation is about what she\'d be putting on Derek.',
-      tips:['When she says Derek will handle it — ask: has Derek said that, or is that your hope?','Ask consequence: if something happened next month, what does Derek\'s year look like?','Ask discovery: what does Derek do for work — is he in a position to drop everything?','Setting the cost aside — do you feel like having this handled would take a weight off Derek?'],
-      watchFor:'She goes quiet when you mention Derek\'s stress = she\'s pictured it. That\'s your moment.',
-      difficulty:3,
-      baseSystem:'You are Cautious Connie, a 67-year-old retired bookkeeper in Cincinnati. You were married to Harold for 41 years. He passed 3 years ago from a heart attack with no warning. Your three kids are Derek 44 in Columbus, Patrice 41 in Atlanta, and Marcus 38 in Denver. You live alone in the house you and Harold shared. You are proud and independent and hate the idea of being a burden. Your go-to objection is I am just checking on prices right now or Derek will take care of everything when the time comes. You have not actually talked to Derek about this. If the agent asks pointed questions about what Derek\'s year would look like if something happened you get quiet and start to really think. You warm up when someone treats you like an intelligent adult rather than a sales target.',
+      id:'ins_marcus', name:'Curious Marcus', emoji:'&#128666;',
+      label:'IUL Inbound Lead', title:'Age 38 · Trucker · Married',
+      age:'38', product:'Life Insurance', productColor:'#00e676',
+      tags:[{t:'Inbound',c:'#00e676'},{t:'Unsure',c:'#ffd600'},{t:'Open-minded',c:'#409cff'}],
+      emotion:'Intrigued but skeptical. Saw an ad, liked the idea, but doesn\'t fully understand how it works and doesn\'t want to get taken advantage of.',
+      sellWith:'Educate first, sell second. He called you — respect that. Help him understand what an IUL actually does before talking numbers.',
+      tips:['Open with connection: what made you reach out today — was it something specific in the ad?','Ask situation: does he have any life insurance currently, or would this be the first policy?','Ask consequence: if something happened while he\'s on the road, what does Courtney\'s situation look like?','Handle confusion: walk through how the index works simply — don\'t use jargon'],
+      watchFor:'He mentions Courtney or Billy unprompted = he\'s thinking about protection not just investment. Shift there.',
+      difficulty:2,
+      baseSystem:'You are Marcus Webb, a 38-year-old long-haul trucker based in Memphis. Your wife is Courtney, 35, who works part time at a daycare. Your son Billy is 7. You saw a Facebook ad about IULs — something about tax-free retirement and life insurance in one — and called in out of curiosity. You have no existing life insurance. You spend a lot of time on the road and have thought about what would happen to Courtney and Billy if something happened to you on I-40. You\'re genuinely interested but don\'t fully understand how an IUL works and you\'re worried about being sold something complicated you don\'t need. If the rep explains things clearly and doesn\'t oversell you warm up fast. If they lead with numbers before you understand the product you get suspicious and pull back.',
     },
     {
       id:'ins_dorothy', name:'Confused Dorothy', emoji:'&#128117;',
@@ -1847,6 +1927,237 @@ document.getElementById('soloDrillBtn').addEventListener('click', function() {
 document.getElementById('drillBackBtn').addEventListener('click', function() {
   if (drill.recording) drillStopRecording();
   document.getElementById('drillScreen').classList.add('hidden');
+  document.getElementById('startScreen').classList.remove('hidden');
+});
+
+// ═══════════════════════════════════════════
+// OBJECTION LAB
+// ═══════════════════════════════════════════
+var OBJECTIONS = {
+  insurance: [
+    { label: '"I need to think about it"',   line: "That's something I definitely need to think about." },
+    { label: '"I need to talk to my spouse"', line: "I'd have to run this by my husband before I do anything." },
+    { label: '"I already have coverage"',     line: "I actually already have some coverage through work so I think I'm good." },
+    { label: '"I can\'t afford it"',          line: "I just don't think it fits in my budget right now." },
+    { label: '"Send me some information"',    line: "You know what, why don't you just send me some information and I'll take a look." },
+    { label: '"I\'m just checking prices"',   line: "I'm really just calling around to check on prices, I'm not ready to do anything today." },
+    { label: '"My son will handle it"',       line: "Honestly my son Derek will take care of everything when the time comes, so I'm probably okay." },
+  ],
+  b2b: [
+    { label: '"I need to think about it"',    line: "This is interesting but I'm going to need some time to think it over." },
+    { label: '"We already have a vendor"',    line: "We're actually already working with someone for this so I don't think we're looking to switch." },
+    { label: '"Not in the budget"',           line: "Budget is really tight right now, this just isn't something we can prioritize." },
+    { label: '"I need to loop someone in"',   line: "I'd need to bring my director into this before we go any further." },
+    { label: '"Send me some information"',    line: "Just send me something over email and I'll pass it along to the right people." },
+    { label: '"We tried something like this"', line: "We actually did something similar a couple years ago and it didn't really work out for us." },
+  ],
+  cold: [
+    { label: '"I\'m not interested"',         line: "Yeah I'm really not interested, thanks." },
+    { label: '"I\'m too busy"',               line: "This really isn't a good time, I've got a lot going on." },
+    { label: '"We already have something"',   line: "We're all set with what we have, but thanks for calling." },
+    { label: '"Call me back later"',          line: "Can you call me back next week? Now's not a good time." },
+    { label: '"How did you get my number?"',  line: "Wait — how did you even get this number? I'm on the do not call list." },
+    { label: '"Who is this again?"',          line: "Hold on — who are you with and why are you calling me?" },
+  ],
+  custom: [
+    { label: 'Enter your own objection', line: null },
+  ],
+};
+
+var objLab = {
+  vert: null,
+  objection: null,
+  transcript: '',
+  recording: false,
+  recognition: null,
+};
+
+function objLabReset() {
+  objLab.vert = null;
+  objLab.objection = null;
+  objLab.transcript = '';
+  objLab.recording = false;
+  if (objLab.recognition) { try { objLab.recognition.abort(); } catch(e) {} objLab.recognition = null; }
+  document.getElementById('objLabStep1').style.display = 'block';
+  document.getElementById('objLabStep2').style.display = 'none';
+  document.getElementById('objLabStep3').style.display = 'none';
+  document.getElementById('objLabFeedback').classList.remove('show');
+  document.getElementById('objLabScoreBtn').classList.remove('show');
+  document.getElementById('objLabResponseBox').textContent = 'Tap the mic and respond...';
+  document.getElementById('objLabScoreNum').textContent = '—';
+  document.getElementById('objLabFeedbackText').textContent = '';
+  document.querySelectorAll('.objlab-vert').forEach(function(b){ b.classList.remove('selected'); });
+  document.querySelectorAll('.objlab-obj').forEach(function(b){ b.classList.remove('selected'); });
+  var btn = document.getElementById('objLabRecBtn');
+  btn.className = 'objlab-rec-btn idle';
+  btn.innerHTML = '&#127908;';
+}
+
+function objLabRenderObjs() {
+  var list = document.getElementById('objLabObjList');
+  var objs = OBJECTIONS[objLab.vert] || [];
+  list.innerHTML = objs.map(function(o, i) {
+    return "<button class='objlab-obj' data-i='" + i + "'>" + o.label + "</button>";
+  }).join('');
+  list.querySelectorAll('.objlab-obj').forEach(function(b) {
+    b.addEventListener('click', function() {
+      var i = parseInt(this.getAttribute('data-i'));
+      objLab.objection = OBJECTIONS[objLab.vert][i];
+      list.querySelectorAll('.objlab-obj').forEach(function(x){ x.classList.remove('selected'); });
+      this.classList.add('selected');
+      setTimeout(function() { objLabStartArena(); }, 200);
+    });
+  });
+}
+
+function objLabStartArena() {
+  document.getElementById('objLabStep2').style.display = 'none';
+  var step3 = document.getElementById('objLabStep3');
+  step3.style.display = 'flex';
+  var line = objLab.objection.line || 'Enter the objection you want to practice.';
+  document.getElementById('objLabProspectLine').textContent = line;
+  document.getElementById('objLabFeedback').classList.remove('show');
+  document.getElementById('objLabScoreBtn').classList.remove('show');
+  document.getElementById('objLabResponseBox').textContent = 'Tap the mic and respond...';
+  objLab.transcript = '';
+  var btn = document.getElementById('objLabRecBtn');
+  btn.className = 'objlab-rec-btn idle';
+  btn.innerHTML = '&#127908;';
+}
+
+function objLabStartRecording() {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { showToast('Voice needs Chrome or Safari.'); return; }
+  objLab.recording = true;
+  objLab.transcript = '';
+  var btn = document.getElementById('objLabRecBtn');
+  btn.className = 'objlab-rec-btn recording';
+  btn.innerHTML = '&#9632;';
+  document.getElementById('objLabResponseBox').textContent = 'Listening...';
+  document.getElementById('objLabScoreBtn').classList.remove('show');
+
+  if (objLab.recognition) { try { objLab.recognition.abort(); } catch(e) {} }
+  var r = new SR();
+  r.continuous = false;
+  r.interimResults = true;
+  r.lang = 'en-US';
+  var _timer = null;
+  r.onresult = function(e) {
+    var interim = '', final = '';
+    for (var i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript;
+      else interim += e.results[i][0].transcript;
+    }
+    var text = final || interim;
+    document.getElementById('objLabResponseBox').textContent = text;
+    objLab.transcript = text;
+    if (_timer) clearTimeout(_timer);
+    if (final) { objLabStopRecording(); return; }
+    _timer = setTimeout(function() { if (objLab.recording) objLabStopRecording(); }, 3000);
+  };
+  r.onerror = function() { objLabStopRecording(); };
+  r.onend = function() { if (objLab.recording) objLabStopRecording(); };
+  objLab.recognition = r;
+  try { r.start(); } catch(e) { showToast('Could not start mic.'); }
+}
+
+function objLabStopRecording() {
+  objLab.recording = false;
+  if (objLab.recognition) { try { objLab.recognition.stop(); } catch(e) {} }
+  var btn = document.getElementById('objLabRecBtn');
+  btn.className = 'objlab-rec-btn idle';
+  btn.innerHTML = '&#127908;';
+  if (objLab.transcript.trim()) {
+    document.getElementById('objLabScoreBtn').classList.add('show');
+  } else {
+    document.getElementById('objLabResponseBox').textContent = 'Nothing captured — tap to try again.';
+  }
+}
+
+async function objLabScore() {
+  var response = objLab.transcript.trim();
+  if (!response) { showToast('Nothing recorded yet.'); return; }
+  document.getElementById('objLabScoreBtn').classList.remove('show');
+  var feedback = document.getElementById('objLabFeedback');
+  feedback.classList.add('show');
+  document.getElementById('objLabScoreNum').textContent = '...';
+  document.getElementById('objLabFeedbackText').textContent = 'Analyzing...';
+
+  var objLine = objLab.objection.line || objLab.objection.label;
+  var systemPrompt = [
+    'You are a sharp sales coach. A rep just handled a single objection. Score their response on one thing only: did they handle it well?',
+    'Good handling means: they acknowledged without groveling, stayed curious, redirected with a question, and moved toward commitment rather than away from it.',
+    'Bad handling means: they argued, over-explained, folded immediately, got defensive, or gave a generic response that did not address the emotional core of the objection.',
+    'Vertical: ' + objLab.vert,
+    'Prospect said: ' + objLine,
+    'Rep responded: ' + response,
+    'Return exactly this JSON: {"score":72,"feedback":"2-3 sentences. Name what they did well or wrong. Give the exact alternative phrasing they should have used."}'
+  ].join('\n');
+
+  try {
+    var res = await fetchWithTimeout('/api/chat', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ max_tokens: 300, system: systemPrompt, messages: [{ role: 'user', content: 'Score this objection response.' }] })
+    }, 20000);
+    var data = await res.json();
+    var raw = (data.content && data.content[0]) ? data.content[0].text : '{}';
+    raw = raw.replace(/```json|```/g, '').trim();
+    var sc = JSON.parse(raw);
+    var col = sc.score >= 75 ? '#00e676' : sc.score >= 55 ? '#ffd600' : '#ff1744';
+    document.getElementById('objLabScoreNum').textContent = sc.score + '/100';
+    document.getElementById('objLabScoreNum').style.color = col;
+    document.getElementById('objLabFeedbackText').textContent = sc.feedback || '';
+  } catch(e) {
+    document.getElementById('objLabFeedbackText').textContent = 'Could not score — try again.';
+  }
+}
+
+// Wire up vert buttons
+document.querySelectorAll('.objlab-vert').forEach(function(b) {
+  b.addEventListener('click', function() {
+    objLab.vert = this.getAttribute('data-vert');
+    document.querySelectorAll('.objlab-vert').forEach(function(x){ x.classList.remove('selected'); });
+    this.classList.add('selected');
+    objLabRenderObjs();
+    setTimeout(function() {
+      document.getElementById('objLabStep2').style.display = 'block';
+    }, 200);
+  });
+});
+
+// Record button
+document.getElementById('objLabRecBtn').addEventListener('click', function() {
+  if (objLab.recording) objLabStopRecording();
+  else objLabStartRecording();
+});
+
+// Score button
+document.getElementById('objLabScoreBtn').addEventListener('click', objLabScore);
+
+// Try again
+document.getElementById('objLabTryAgain').addEventListener('click', function() {
+  objLabStartArena();
+});
+
+// New objection
+document.getElementById('objLabNewObj').addEventListener('click', function() {
+  document.getElementById('objLabFeedback').classList.remove('show');
+  document.getElementById('objLabStep3').style.display = 'none';
+  document.getElementById('objLabStep2').style.display = 'block';
+});
+
+// Entry button
+document.getElementById('objLabBtn').addEventListener('click', function() {
+  objLabReset();
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('objLabScreen').classList.remove('hidden');
+});
+
+// Back button
+document.getElementById('objLabBackBtn').addEventListener('click', function() {
+  if (objLab.recording) objLabStopRecording();
+  document.getElementById('objLabScreen').classList.add('hidden');
   document.getElementById('startScreen').classList.remove('hidden');
 });
 
