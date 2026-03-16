@@ -266,7 +266,7 @@ textarea:disabled{opacity:.4}
 .drill-score-btn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"Instrument Serif",serif;font-size:15px;letter-spacing:2px;padding:12px 36px;cursor:pointer;display:none}
 .drill-score-btn.show{display:block}
 /* OBJECTION LAB */
-.objlab-screen{position:fixed;inset:0;background:var(--black);display:flex;align-items:flex-start;justify-content:center;flex-direction:column;gap:12px;padding:16px 20px;z-index:50;overflow-y:auto}
+.objlab-screen{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:flex-start;flex-direction:column;gap:14px;padding:24px 20px;z-index:50;overflow-y:auto}
 .objlab-back{position:absolute;top:16px;left:16px;background:none;border:1px solid var(--border);border-radius:7px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:11px;padding:5px 11px;cursor:pointer}
 .objlab-title{font-family:"Instrument Serif",serif;font-size:36px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
 .objlab-sub{font-size:13px;color:var(--dim);text-align:center;max-width:420px;line-height:1.6}
@@ -279,8 +279,8 @@ textarea:disabled{opacity:.4}
 .objlab-obj:hover{border-color:rgba(255,77,28,.5);color:var(--text)}
 .objlab-obj.selected{border-color:#ff4d1c;background:rgba(255,77,28,.07);color:var(--text)}
 .objlab-arena{width:100%;max-width:480px;display:flex;flex-direction:column;gap:12px}
-.objlab-prospect-bubble{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:14px 16px;font-size:14px;line-height:1.6;color:var(--text)}
-.objlab-prospect-label{font-size:9px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-bottom:6px}
+.objlab-prospect-bubble{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:14px 16px;font-size:14px;line-height:1.6;color:var(--text);width:100%}
+.objlab-prospect-label{font-size:9px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-bottom:6px;text-align:center}
 .objlab-record-row{display:flex;align-items:center;gap:14px}
 .objlab-rec-btn{width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .2s;flex-shrink:0}
 .objlab-rec-btn.idle{background:linear-gradient(135deg,#ff4d1c,#ff8c00);box-shadow:0 4px 20px rgba(255,77,28,.4)}
@@ -481,7 +481,7 @@ textarea:disabled{opacity:.4}
 <!-- OBJECTION LAB SCREEN -->
 <div class="objlab-screen hidden" id="objLabScreen">
   <button class="objlab-back" id="objLabBackBtn">&#8592; Back</button>
-  <div style="text-align:center">
+  <div style="text-align:center;max-width:480px">
     <div class="objlab-title">OBJECTION LAB</div>
     <div class="objlab-sub">Get hit with a real objection. Handle it. Get scored on one thing — did you redirect with curiosity or did you fold?</div>
   </div>
@@ -503,18 +503,18 @@ textarea:disabled{opacity:.4}
   </div>
 
   <!-- Step 3: Arena -->
-  <div id="objLabStep3" style="display:none;width:100%;max-width:480px;flex-direction:column;gap:12px;align-items:center">
+  <div id="objLabStep3" class="hidden" style="width:100%;max-width:480px;flex-direction:column;gap:12px;align-items:center">
     <div class="objlab-arena">
       <div>
         <div class="objlab-prospect-label">Prospect says:</div>
         <div class="objlab-prospect-bubble" id="objLabProspectLine">—</div>
       </div>
-      <div style="font-size:10px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;text-align:center">Your response</div>
+      <div style="font-size:10px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;text-align:center;width:100%">Your response</div>
       <div class="objlab-record-row">
         <button class="objlab-rec-btn idle" id="objLabRecBtn">&#127908;</button>
         <div class="objlab-response-box" id="objLabResponseBox">Tap the mic and respond...</div>
       </div>
-      <button class="objlab-score-btn" id="objLabScoreBtn">&#128202; SCORE MY RESPONSE</button>
+      <button class="objlab-score-btn" id="objLabScoreBtn" style="align-self:center">&#128202; SCORE MY RESPONSE</button>
     </div>
   </div>
 
@@ -1980,6 +1980,7 @@ function objLabReset() {
   document.getElementById('objLabStep1').style.display = 'block';
   document.getElementById('objLabStep2').style.display = 'none';
   document.getElementById('objLabStep3').style.display = 'none';
+  document.getElementById('objLabStep3').classList.add('hidden');
   document.getElementById('objLabFeedback').classList.remove('show');
   document.getElementById('objLabScoreBtn').classList.remove('show');
   document.getElementById('objLabResponseBox').textContent = 'Tap the mic and respond...';
@@ -2012,6 +2013,7 @@ function objLabRenderObjs() {
 function objLabStartArena() {
   document.getElementById('objLabStep2').style.display = 'none';
   var step3 = document.getElementById('objLabStep3');
+  step3.classList.remove('hidden');
   step3.style.display = 'flex';
   var line = objLab.objection.line || 'Enter the objection you want to practice.';
   document.getElementById('objLabProspectLine').textContent = line;
@@ -2143,6 +2145,7 @@ document.getElementById('objLabTryAgain').addEventListener('click', function() {
 document.getElementById('objLabNewObj').addEventListener('click', function() {
   document.getElementById('objLabFeedback').classList.remove('show');
   document.getElementById('objLabStep3').style.display = 'none';
+  document.getElementById('objLabStep3').classList.add('hidden');
   document.getElementById('objLabStep2').style.display = 'block';
 });
 
