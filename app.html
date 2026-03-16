@@ -266,11 +266,11 @@ textarea:disabled{opacity:.4}
 .drill-score-btn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"Instrument Serif",serif;font-size:15px;letter-spacing:2px;padding:12px 36px;cursor:pointer;display:none}
 .drill-score-btn.show{display:block}
 /* OBJECTION LAB */
-.objlab-screen{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:28px;z-index:50;overflow-y:auto}
+.objlab-screen{position:fixed;inset:0;background:var(--black);display:flex;align-items:flex-start;justify-content:center;flex-direction:column;gap:12px;padding:16px 20px;z-index:50;overflow-y:auto}
 .objlab-back{position:absolute;top:16px;left:16px;background:none;border:1px solid var(--border);border-radius:7px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:11px;padding:5px 11px;cursor:pointer}
 .objlab-title{font-family:"Instrument Serif",serif;font-size:36px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
 .objlab-sub{font-size:13px;color:var(--dim);text-align:center;max-width:420px;line-height:1.6}
-.objlab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-width:480px;width:100%}
+.objlab-grid{display:flex;gap:8px;max-width:480px;width:100%;justify-content:center}
 .objlab-vert{padding:10px 16px;border-radius:10px;border:2px solid var(--border);background:var(--panel);color:var(--dim);font-family:"DM Sans",sans-serif;font-size:12px;cursor:pointer;transition:all .15s;text-align:center}
 .objlab-vert:hover{border-color:rgba(255,77,28,.5)}
 .objlab-vert.selected{border-color:#ff4d1c;background:rgba(255,77,28,.07);color:var(--text)}
@@ -491,7 +491,6 @@ textarea:disabled{opacity:.4}
       <button class="objlab-vert" data-vert="insurance">&#128737; Insurance</button>
       <button class="objlab-vert" data-vert="b2b">&#128188; B2B</button>
       <button class="objlab-vert" data-vert="cold">&#128222; Cold Call</button>
-      <button class="objlab-vert" data-vert="custom">&#9889; Custom</button>
     </div>
   </div>
 
@@ -766,12 +765,12 @@ var ARCHETYPES = {
       label:'IUL Inbound Lead', title:'Age 38 · Trucker · Married',
       age:'38', product:'Life Insurance', productColor:'#00e676',
       tags:[{t:'Inbound',c:'#00e676'},{t:'Unsure',c:'#ffd600'},{t:'Open-minded',c:'#409cff'}],
-      emotion:'Intrigued but skeptical. Saw an ad, liked the idea, but doesn\'t fully understand how it works and doesn\'t want to get taken advantage of.',
+      emotion:'Intrigued but skeptical. Saw an ad, liked the idea, but does not fully understand how it works and does not want to get taken advantage of.',
       sellWith:'Educate first, sell second. He called you — respect that. Help him understand what an IUL actually does before talking numbers.',
-      tips:['Open with connection: what made you reach out today — was it something specific in the ad?','Ask situation: does he have any life insurance currently, or would this be the first policy?','Ask consequence: if something happened while he\'s on the road, what does Courtney\'s situation look like?','Handle confusion: walk through how the index works simply — don\'t use jargon'],
-      watchFor:'He mentions Courtney or Billy unprompted = he\'s thinking about protection not just investment. Shift there.',
+      tips:['Open with connection: what made you reach out today — was it something specific in the ad?','Ask situation: does he have any life insurance currently, or would this be the first policy?','Ask consequence: if something happened while on the road, what does Courtney situation look like?','Handle confusion: walk through how the index works simply — do not use jargon'],
+      watchFor:'He mentions Courtney or Billy unprompted = he is thinking about protection not just investment. Shift there.',
       difficulty:2,
-      baseSystem:'You are Marcus Webb, a 38-year-old long-haul trucker based in Memphis. Your wife is Courtney, 35, who works part time at a daycare. Your son Billy is 7. You saw a Facebook ad about IULs — something about tax-free retirement and life insurance in one — and called in out of curiosity. You have no existing life insurance. You spend a lot of time on the road and have thought about what would happen to Courtney and Billy if something happened to you on I-40. You\'re genuinely interested but don\'t fully understand how an IUL works and you\'re worried about being sold something complicated you don\'t need. If the rep explains things clearly and doesn\'t oversell you warm up fast. If they lead with numbers before you understand the product you get suspicious and pull back.',
+      baseSystem:'You are Marcus Webb, a 38-year-old long-haul trucker based in Memphis. Your wife is Courtney, 35, who works part time at a daycare. Your son Billy is 7. You saw a Facebook ad about IULs — something about tax-free retirement and life insurance in one — and called in out of curiosity. You have no existing life insurance. You spend a lot of time on the road and have thought about what would happen to Courtney and Billy if something happened to you on I-40. You are genuinely interested but do not fully understand how an IUL works and you are worried about being sold something complicated you do not need. If the rep explains things clearly and does not oversell you warm up fast. If they lead with numbers before you understand the product you get suspicious and pull back.',
     },
     {
       id:'ins_dorothy', name:'Confused Dorothy', emoji:'&#128117;',
@@ -1958,9 +1957,6 @@ var OBJECTIONS = {
     { label: '"Call me back later"',          line: "Can you call me back next week? Now's not a good time." },
     { label: '"How did you get my number?"',  line: "Wait — how did you even get this number? I'm on the do not call list." },
     { label: '"Who is this again?"',          line: "Hold on — who are you with and why are you calling me?" },
-  ],
-  custom: [
-    { label: 'Enter your own objection', line: null },
   ],
 };
 
