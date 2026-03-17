@@ -2060,9 +2060,11 @@ function objLabStartRecording() {
       if (e.results[i].isFinal) _accumulated+=e.results[i][0].transcript+' ';
       else interim=e.results[i][0].transcript;
     }
-    var text=(_accumulated+interim).trim();
-    document.getElementById('objLabResponseBox').textContent=text;
-    objLab.transcript=(_accumulated).trim();
+    // Show everything live — accumulated finals + current interim
+    var display=(_accumulated+interim).trim();
+    document.getElementById('objLabResponseBox').textContent=display;
+    // Only save finals to transcript
+    objLab.transcript=_accumulated.trim();
   };
   r.onerror=function(e){ if(e.error!=='aborted') showToast('Mic error — tap to try again.'); };
   r.onend=function(){
