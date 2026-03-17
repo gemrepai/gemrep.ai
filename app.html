@@ -1234,25 +1234,29 @@ async function scoreCall() {
   var vertical = state.vertical || 'insurance';
   var objectionGuide = {
     insurance: {
-      'need to think about it': 'That is not a problem. If price was completely off the table — is this something you feel would help you and your family? What would need to be in place for this to feel like the right move?',
-      'need to talk to spouse': 'That is not a problem. If they were on this call right now, what is the one thing they would want to know before saying yes?',
+      'need to think about it': 'Setting the cost aside for a second — do you feel like this is the right answer for your family? What would need to be in place for this to feel like the right move?',
+      'need to talk to spouse': 'That is not a problem. If they were on this call right now — what is the one thing they would want to know before saying yes?',
       'already have coverage': 'I totally understand. Out of curiosity — when was the last time someone actually reviewed that policy with you to make sure it still fits where you are today?',
-      'cant afford it': 'I hear you. Setting the cost aside for a second — do you feel like this is something your family needs? Because if we agree on that, we can usually find something that works.',
+      'cant afford it': 'Setting the cost aside for a second — do you feel like this is something your family needs? Because if we agree on that, we can usually find something that works.',
       'send me info': 'Happy to. Before I do — what specifically would you be looking for in that info to help you make a decision?',
+      'just checking': 'That is totally fine. Out of curiosity — what made you decide to look into this now versus six months ago?',
+      'son will handle': 'Has Derek actually said that, or is that more your hope? Because most adult kids want to help but do not want to deal with a ten to fifteen thousand dollar surprise in the middle of their grief.',
     },
     b2b: {
-      'need to think about it': 'That is not a problem. What specifically would you need to see or know to feel confident moving forward?',
-      'need to talk to someone': 'Of course. If they were on this call right now, what would they ask me?',
+      'need to think about it': 'What specifically would you need to see or know to feel confident moving forward?',
+      'need to talk to someone': 'Of course. If they were on this call right now — what would they ask me?',
       'already have a vendor': 'Completely understand. What would that vendor need to stop doing — or what would we need to do — for you to consider making a switch?',
-      'not in the budget': 'I hear you. Is the budget the issue or is it that you are not yet sure the ROI is there? Because those are two different conversations.',
+      'not in the budget': 'Is the budget the issue, or is it that you are not yet sure the ROI is there? Because those are two different conversations.',
       'send me info': 'Happy to send something over. What decision would that info need to help you make?',
+      'tried this before': 'What specifically did not work — the product, the timing, or the way it was rolled out? Because that changes everything.',
     },
     cold: {
       'not interested': 'That is fair. Out of curiosity — what would have to be true for this to be worth 5 minutes of your time?',
-      'too busy': 'I get it. I will be quick — what is the biggest thing on your plate right now that something like this might actually help with?',
+      'too busy': 'I get it. What is the biggest thing on your plate right now that something like this might actually help with?',
       'already have something': 'Makes sense. What would have to be missing from what you have for you to at least take a look?',
       'send me info': 'I can do that. What specifically should I include so it is actually worth opening?',
       'call me back': 'Of course. Before I let you go — is timing the only thing, or is there something about what I said that did not land right?',
+      'how did you get my number': 'Fair question — I will be straight with you. I reached out because [reason]. Does that make sense to connect for 5 minutes?',
     }
   };
   var guide = objectionGuide[vertical] || objectionGuide.insurance;
@@ -1278,12 +1282,12 @@ async function scoreCall() {
     'BAR NAPKIN OBJECTION GUIDE FOR THIS VERTICAL:',
     guideText,
     '',
-    'After scoring, provide:',
-    '1. A feedback paragraph (3-4 sentences) — what moved well, what stalled, and one specific moment from the transcript to fix',
-    '2. A "what to say instead" section — if the rep fumbled an objection, give them the exact reframe from the bar napkin guide above',
+    'CRITICAL INSTRUCTION FOR COACHING SECTION:',
+    'When the rep fumbled an objection, you MUST use the exact bar napkin reframe from the guide above — word for word — as the "what to say instead." Do NOT invent your own reframe. Do NOT give generic sales advice like "acknowledge and redirect" or "be empathetic." Pull the exact language from the bar napkin guide and tell the rep to say that. If the objection does not match any in the guide, stay as close to the spirit of the guide as possible — curiosity-based, question-forward, no groveling.',
+    'FEEDBACK RULES: Reference specific moments from the transcript. Name what the rep said verbatim. Compare it directly to what the bar napkin says. No generic sales coaching.',
     '',
     'Return exactly this JSON:',
-    '{"overall":72,"categories":[{"label":"Open + Connect","score":80},{"label":"Discovery","score":65},{"label":"Consequence","score":55},{"label":"Objections","score":70},{"label":"Commitment","score":60}],"feedback":"Feedback paragraph here.","coaching":"What to say instead — specific objection reframes based on what came up in this call. If no objections came up write: No major objections came up — focus on deepening consequence next call."}'
+    '{"overall":72,"categories":[{"label":"Open + Connect","score":80},{"label":"Discovery","score":65},{"label":"Consequence","score":55},{"label":"Objections","score":70},{"label":"Commitment","score":60}],"feedback":"Feedback paragraph here — reference specific transcript moments.","coaching":"EXACT bar napkin reframe the rep should have used. Quote it directly. If no objections came up write: No major objections — focus on deepening consequence next call."}'
   ].join('\n');
 })(),
         messages:[{role:'user', content:'Score this call. Prospect: '+a.name+' ('+a.label+'). Difficulty mode: '+modeLabel+'.\n\nTRANSCRIPT:\n'+transcript}]
@@ -2085,14 +2089,69 @@ async function objLabScore() {
   document.getElementById('objLabFeedbackText').textContent = 'Analyzing...';
 
   var objLine = objLab.objection.line || objLab.objection.label;
+
+  // Bar napkin reframes per vertical — these are the EXACT responses we train reps to use
+  var barNapkin = {
+    insurance: {
+      'need to think about it': 'That is not a problem. Setting the cost aside for a second — do you feel like this is the right answer for your family? What would need to be in place for this to feel like the right move?',
+      'talk to my spouse': 'That is not a problem. If they were on this call right now — what is the one thing they would want to know before saying yes?',
+      'already have coverage': 'I totally understand. Out of curiosity — when was the last time someone actually reviewed that policy with you to make sure it still fits where you are today?',
+      'afford it': 'I hear you. Setting the cost aside for a second — do you feel like this is something your family needs? Because if we agree on that, we can usually find something that works.',
+      'send me': 'Happy to. Before I do — what specifically would you be looking for in that info to help you make a decision?',
+      'just checking': 'That is totally fine. Out of curiosity — what made you decide to look into this now versus six months ago?',
+      'son will handle': 'I hear that. Has Derek actually said that, or is that more your hope? Because most adult kids want to help but do not want to deal with a 10 to 15 thousand dollar surprise in the middle of their grief.',
+    },
+    b2b: {
+      'need to think about it': 'That is not a problem. What specifically would you need to see or know to feel confident moving forward?',
+      'already have a vendor': 'Completely understand. What would that vendor need to stop doing — or what would we need to do — for you to consider making a switch?',
+      'budget': 'I hear you. Is the budget the issue, or is it that you are not yet sure the ROI is there? Because those are two different conversations.',
+      'loop someone in': 'Of course. If they were on this call right now — what would they ask me?',
+      'send me': 'Happy to send something over. What decision would that info need to help you make?',
+      'tried something like this': 'What specifically did not work — the product, the timing, or the way it was rolled out? Because that changes everything.',
+    },
+    cold: {
+      'not interested': 'That is fair. Out of curiosity — what would have to be true for this to be worth 5 minutes of your time?',
+      'too busy': 'I get it. What is the biggest thing on your plate right now that something like this might actually help with?',
+      'already have something': 'Makes sense. What would have to be missing from what you have for you to at least take a look?',
+      'call me back': 'Of course. Before I let you go — is timing the only thing, or is there something about what I said that did not land right?',
+      'how did you get': 'Fair question. I will be straight with you — I reached out because [reason]. Does that make sense?',
+      'who is this': 'Good question. [Name] with [company] — I will be quick. [One sentence trigger]. Does that land at all?',
+    },
+  };
+
+  // Find the closest bar napkin reframe for this objection
+  var vertGuide = barNapkin[objLab.vert] || {};
+  var objKey = objLine.toLowerCase();
+  var reframe = '';
+  Object.keys(vertGuide).forEach(function(k) {
+    if (objKey.indexOf(k) > -1 || k.split(' ').some(function(w){ return objKey.indexOf(w) > -1; })) {
+      if (!reframe) reframe = vertGuide[k];
+    }
+  });
+  if (!reframe) reframe = 'Acknowledge without groveling, get curious about what is really behind the objection, and redirect with a question that moves toward the real concern.';
+
   var systemPrompt = [
-    'You are a sharp sales coach. A rep just handled a single objection. Score their response on one thing only: did they handle it well?',
-    'Good handling means: they acknowledged without groveling, stayed curious, redirected with a question, and moved toward commitment rather than away from it.',
-    'Bad handling means: they argued, over-explained, folded immediately, got defensive, or gave a generic response that did not address the emotional core of the objection.',
-    'Vertical: ' + objLab.vert,
+    'You are a sales coach scoring a single objection response. You have ONE job: compare what the rep said to the bar napkin reframe below and score how close they got.',
+    '',
+    'THE BAR NAPKIN REFRAME FOR THIS OBJECTION:',
+    '"' + reframe + '"',
+    '',
     'Prospect said: ' + objLine,
     'Rep responded: ' + response,
-    'Return exactly this JSON: {"score":72,"feedback":"2-3 sentences. Name what they did well or wrong. Give the exact alternative phrasing they should have used."}'
+    '',
+    'SCORING RULES:',
+    '90-100: Rep used language that is essentially the same spirit and direction as the bar napkin reframe. They acknowledged, stayed curious, and redirected with a question that addresses the emotional core.',
+    '70-89: Rep was close but missed one element — either no acknowledgment, or their redirect question was vague or did not tie back to the emotional concern.',
+    '50-69: Rep acknowledged but then gave a generic question or pivoted away from the objection instead of into it.',
+    '0-49: Rep argued, folded, over-explained, or completely ignored the objection.',
+    '',
+    'FEEDBACK RULES — follow these exactly:',
+    '1. Quote the exact words the rep used in your first sentence.',
+    '2. Say specifically what was missing compared to the bar napkin reframe.',
+    '3. End with: "The bar napkin says: [exact reframe text]"',
+    'DO NOT invent your own better phrasing. Always end with the bar napkin reframe verbatim.',
+    '',
+    'Return exactly this JSON: {"score":72,"feedback":"Your 2-3 sentence feedback ending with the bar napkin reframe."}'
   ].join('\n');
 
   try {
