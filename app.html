@@ -1315,6 +1315,7 @@ async function scoreCall() {
         messages:[{role:'user', content:'Score this call. Prospect: '+a.name+' ('+a.label+'). Difficulty mode: '+modeLabel+'.\n\nTRANSCRIPT:\n'+transcript}]
       })
     }, 25000);
+    if (!res.ok) { throw new Error('API error ' + res.status + ': ' + await res.text()); }
     var data = await res.json();
     var raw = (data.content && data.content[0]) ? data.content[0].text : '{}';
     raw = raw.replace(/```json|```/g,'').trim();
@@ -1342,7 +1343,10 @@ async function scoreCall() {
     } else {
       coachEl.style.display = 'none';
     }
-  } catch(e) { document.getElementById('scoreFeed').textContent = e.name==='AbortError' ? 'Scoring timed out — tap Try Again.' : 'Could not analyze — please try again.'; }
+  } catch(e) {
+    console.error('scoreCall error:', e);
+    document.getElementById('scoreFeed').textContent = e.name==='AbortError' ? 'Scoring timed out — tap Score My Call to try again.' : 'Could not analyze: ' + e.message;
+  }
 }
 
 // ═══════════════════════════════════════════
