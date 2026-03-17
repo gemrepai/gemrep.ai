@@ -1236,32 +1236,74 @@ async function scoreCall() {
   var guide = objectionGuide[vertical] || objectionGuide.insurance;
   var guideText = Object.entries(guide).map(function(e){ return 'If they say "' + e[0] + '": ' + e[1]; }).join('\n');
 
+  var reframes = {
+    insurance: [
+      'I need to think about it: Thats not a problem. Setting the cost aside — do you feel like this is the right answer for your family? What would need to be in place for this to feel like the right move?',
+      'I need to talk to my husband/wife/spouse: Thats not a problem. If they were on this call right now — whats the one thing theyd want to know before saying yes?',
+      'I already have coverage: I totally get that. Whens the last time someone actually reviewed that policy to make sure it still fits where you are today?',
+      'I cant afford it: Setting the cost aside — do you feel like this is something your family needs? If we agree on that we can usually find something that works.',
+      'Send me information: Happy to. Before I do — what specifically would you be looking for to help you make a decision?',
+      'Im just checking prices: Thats totally fine. What made you decide to look into this now versus six months ago?',
+      'My son/family will handle it: Has he actually said that or is that your hope? Most adult kids want to help — they just dont want a $10,000 surprise in the middle of their grief.',
+    ],
+    b2b: [
+      'I need to think about it: Thats not a problem. What specifically would you need to see or know to feel confident moving forward?',
+      'We already have a vendor: Completely get that. What would that vendor need to stop doing for you to consider making a switch?',
+      'Its not in the budget: Is the budget the issue or is it that youre not yet sure the ROI is there? Those are two different conversations.',
+      'I need to loop someone in: Of course. If they were on this call right now — whatd they ask me?',
+      'Send me information: Happy to. What decision would that info need to help you make?',
+      'We tried something like this: What specifically didnt work — the product, the timing, or the rollout? That changes everything.',
+    ],
+    cold: [
+      'Im not interested: Thats fair. What would have to be true for this to be worth 5 minutes of your time?',
+      'Im too busy: I get it. Whats the biggest thing on your plate that something like this might actually help with?',
+      'We already have something: Makes sense. What would have to be missing from what youve got for you to at least take a look?',
+      'Call me back later: Before I let you go — is timing the only thing or is there something about what I said that didnt land right?',
+      'How did you get my number: Fair question — Ill be straight with you. I reached out because [reason]. Does that make sense?',
+    ],
+  };
+  var reframeList = (reframes[vertical] || reframes.insurance).join('\n');
+
   return [
-    'You are a straightforward sales coach. Score this call honestly based on how well the rep moved the prospect toward a close.',
-    'Your job is to reward real sales progress — not perfect script execution. A rep who builds genuine connection and moves the prospect emotionally scores well even if they did not follow a rigid framework.',
-    'Score each phase based on outcomes and direction, not checklist compliance. Respond ONLY with valid JSON, no markdown.',
+    'You are a direct sales coach. Score this call honestly. Reference exact words from the transcript. No generic coaching. Respond ONLY with valid JSON, no markdown.',
     '',
-    'SCORING FRAMEWORK:',
+    'OPEN + CONNECT (0-100):',
+    'High: Sounds like a peer. Natural opener. Creates comfort immediately. No corporate intro.',
+    'Low: Leads with company name. Hi my name is X calling from Y. Scripted and stiff.',
     '',
-    'OPEN + CONNECT (0-100): Did the rep establish who they are and why they called without sounding like a telemarketer? Did they build enough comfort for the prospect to stay on the line and engage? A warm, natural opener that creates connection scores high. A stiff robotic intro scores low.',
+    'DISCOVERY + SITUATION (0-100):',
+    'High: Asks what prompted the call, biggest challenge, cost of staying where they are. Builds full picture BEFORE pitching.',
+    'Low: Pitches features before asking a single discovery question.',
+    'Reward: What prompted you to look into this. Whats been your biggest challenge. What is it costing you to stay where you are.',
+    'Penalize hard: Any pitch before discovery is complete.',
     '',
-    'DISCOVERY + SITUATION (0-100): Did the rep ask questions to understand the prospect before pitching anything? Did they uncover what prompted the call, what the prospect is currently dealing with, and what their biggest challenge is? Did they ask what it is costing the prospect to stay where they are? Reward curiosity and problem awareness. Penalize reps who pitch before they listen.',
+    'CONSEQUENCE OF INACTION (0-100):',
+    'High: Makes the prospect feel the weight of doing nothing. Personal and emotional, tied to their specific situation.',
+    'Low: Skips consequence and jumps straight to the close.',
+    'Reward: If something happened tomorrow what would that look like for your family. Who else gets affected if this doesnt get handled.',
+    'Penalize: Moving to close without making inaction feel real.',
     '',
-    'CONSEQUENCE OF INACTION (0-100): Did the rep help the prospect feel what staying where they are actually costs them? Did they ask what happens if nothing changes, who gets affected, what this delay means for their family or business? This does not need to be a scripted question — it just needs to land emotionally.',
+    'COMMITMENT + CLOSE (0-100):',
+    'High: Close flows naturally from discovery and consequence. Gets prospect to verbalize why this matters before asking for decision.',
+    'Low: Premature close that skips emotion. Feature dump right before asking for decision.',
+    'Reward: Setting the cost aside do you feel like this is the right answer for your family. What would need to be in place for this to feel like the right move.',
     '',
-    'COMMITMENT + CLOSE (0-100): Did the rep attempt to move the prospect toward a decision? Did they earn the close through the conversation — or did they pitch and hope? A close that flows naturally from the discovery scores high. A premature close that skips emotion scores low.',
+    'OBJECTION HANDLING (0-100):',
+    'High: Stays calm. Acknowledges without groveling. Redirects with curiosity. Uses bar napkin reframes.',
+    'Low: Argues, defends, over-explains, folds, or gives generic response.',
+    'CRITICAL: If rep said anything close to the bar napkin reframes below — score 80+. Do NOT penalize paraphrasing.',
     '',
-    'OBJECTION HANDLING (0-100): When the prospect pushed back, did the rep stay calm and curious? Did they acknowledge the objection and ask a follow-up question instead of fighting it? Reward reps who redirect with curiosity. Penalize reps who argue, over-explain, or fold immediately.',
+    'BAR NAPKIN REFRAMES FOR THIS VERTICAL — if rep said anything close, score 80+:',
+    reframeList,
     '',
-    'BAR NAPKIN OBJECTION GUIDE FOR THIS VERTICAL:',
-    guideText,
-    '',
-    'After scoring, provide:',
-    '1. A feedback paragraph (3-4 sentences) — what moved well, what stalled, and one specific moment from the transcript to fix',
-    '2. A "what to say instead" section — if the rep fumbled an objection, give them the exact reframe from the bar napkin guide above',
+    'FEEDBACK RULES:',
+    '1. Quote the reps exact words from the transcript. Never summarize vaguely.',
+    '2. If they nailed a phase, name exactly what they said and why it worked.',
+    '3. If they fumbled an objection, end the coaching section with the exact bar napkin reframe from the list above. Do NOT invent your own phrasing.',
+    '4. Never write generic advice like acknowledge and redirect or validate their concern.',
     '',
     'Return exactly this JSON:',
-    '{"overall":72,"categories":[{"label":"Open + Connect","score":80},{"label":"Discovery","score":65},{"label":"Consequence","score":55},{"label":"Objections","score":70},{"label":"Commitment","score":60}],"feedback":"Feedback paragraph here.","coaching":"What to say instead — specific objection reframes based on what came up in this call. If no objections came up write: No major objections came up — focus on deepening consequence next call."}'
+    '{"overall":72,"categories":[{"label":"Open + Connect","score":80},{"label":"Discovery","score":65},{"label":"Consequence","score":55},{"label":"Objections","score":70},{"label":"Commitment","score":60}],"feedback":"2-3 sentences quoting exact rep words.","coaching":"If objection fumbled: exact bar napkin reframe verbatim. If nailed: confirm what they said was correct. If no objections: one specific thing to sharpen."}'
   ].join('\n');
 })(),
         messages:[{role:'user', content:'Score this call. Prospect: '+a.name+' ('+a.label+'). Difficulty mode: '+modeLabel+'.\n\nTRANSCRIPT:\n'+transcript}]
@@ -2079,16 +2121,17 @@ async function objLabScore() {
   var safeObjLine = objLine.replace(/'/g, "\\");
   var safeResponse = response.replace(/'/g, "\\");
 
-  var systemPrompt = "You are a sales coach. Score this objection response against the bar napkin reframe. " +
-    "Bar napkin reframe: " + safeReframe + ". " +
+  var systemPrompt = "You are a sales coach scoring one objection response. " +
     "Prospect said: " + safeObjLine + ". " +
     "Rep responded: " + safeResponse + ". " +
-    "Score 85-100 if rep acknowledged and redirected with curiosity toward the emotional core, even paraphrased. " +
-    "Score 70-84 if close but missed one element. " +
-    "Score 50-69 if acknowledged but redirect was vague. " +
-    "Score 0-49 if rep argued, folded, or ignored the objection. " +
-    "Quote the reps exact words in your feedback. End with the bar napkin reframe. " +
-    "Return only valid JSON: {\"score\":72,\"feedback\":\"2-3 sentences.\"}";
+    "The correct bar napkin reframe is: " + safeReframe + ". " +
+    "Score 85-100: rep acknowledged without groveling and redirected with genuine curiosity toward the emotional core, close to the bar napkin spirit. " +
+    "Score 70-84: decent redirect but missed the emotional core or was too assumptive. " +
+    "Score 50-69: acknowledged but gave a vague or generic redirect. " +
+    "Score 0-49: argued, folded, over-explained, or ignored the objection. " +
+    "In your feedback: quote the reps exact words, say what was missing, then end with exactly this: The bar napkin says: " + safeReframe + ". " +
+    "Do NOT suggest your own reframe. Always end with the bar napkin verbatim. " +
+    "Return only valid JSON: {\"score\":72,\"feedback\":\"2-3 sentences ending with the bar napkin.\"}";
 
   try {
     var res=await fetchWithTimeout('/api/chat',{method:'POST',headers:authHeaders(),body:JSON.stringify({max_tokens:300,system:systemPrompt,messages:[{role:'user',content:'Score this objection response.'}]})},20000);
