@@ -265,6 +265,32 @@ textarea:disabled{opacity:.4}
 .drill-transcript.show{display:block}
 .drill-score-btn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"Instrument Serif",serif;font-size:15px;letter-spacing:2px;padding:12px 36px;cursor:pointer;display:none}
 .drill-score-btn.show{display:block}
+/* OBJECTION LAB */
+.objlab-screen{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:flex-start;flex-direction:column;gap:12px;padding:24px 20px;z-index:50;overflow-y:auto}
+.objlab-back{position:absolute;top:16px;left:16px;background:none;border:1px solid var(--border);border-radius:7px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:11px;padding:5px 11px;cursor:pointer}
+.objlab-title{font-family:"Instrument Serif",serif;font-size:36px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
+.objlab-sub{font-size:13px;color:var(--dim);text-align:center;max-width:420px;line-height:1.6}
+.objlab-grid{display:flex;gap:8px;max-width:480px;width:100%;justify-content:center}
+.objlab-vert{padding:10px 16px;border-radius:10px;border:2px solid var(--border);background:var(--panel);color:var(--dim);font-family:"DM Sans",sans-serif;font-size:12px;cursor:pointer;transition:all .15s;text-align:center}
+.objlab-vert:hover{border-color:rgba(255,77,28,.5)}
+.objlab-vert.selected{border-color:#ff4d1c;background:rgba(255,77,28,.07);color:var(--text)}
+.objlab-objlist{display:flex;flex-direction:column;gap:6px;max-width:480px;width:100%}
+.objlab-obj{padding:10px 14px;border-radius:9px;border:1px solid var(--border);background:var(--panel);color:var(--dim);font-family:"DM Sans",sans-serif;font-size:13px;cursor:pointer;transition:all .15s;text-align:left}
+.objlab-obj:hover{border-color:rgba(255,77,28,.5);color:var(--text)}
+.objlab-obj.selected{border-color:#ff4d1c;background:rgba(255,77,28,.07);color:var(--text)}
+.objlab-arena{width:100%;max-width:480px;display:flex;flex-direction:column;gap:12px}
+.objlab-prospect-bubble{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:14px 16px;font-size:14px;line-height:1.6;color:var(--text);width:100%}
+.objlab-prospect-label{font-size:9px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-bottom:6px;text-align:center}
+.objlab-record-row{display:flex;align-items:center;gap:14px}
+.objlab-rec-btn{width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .2s;flex-shrink:0}
+.objlab-rec-btn.idle{background:linear-gradient(135deg,#ff4d1c,#ff8c00);box-shadow:0 4px 20px rgba(255,77,28,.4)}
+.objlab-rec-btn.recording{background:#ff1744;animation:recordPulse 1.5s infinite}
+.objlab-response-box{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--dim);min-height:52px;line-height:1.5}
+.objlab-score-btn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"Instrument Serif",serif;font-size:14px;letter-spacing:2px;padding:11px 32px;cursor:pointer;display:none;align-self:center}
+.objlab-score-btn.show{display:block}
+.objlab-feedback{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:12px;color:var(--dim);line-height:1.65;display:none;width:100%;max-width:480px}
+.objlab-feedback.show{display:block}
+.objlab-score-num{font-family:"Instrument Serif",serif;font-size:42px;text-align:center;margin-bottom:8px}
 /* TOAST */
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:#1e2028;border:1px solid var(--border);border-radius:8px;padding:9px 16px;font-size:12px;color:var(--dim);z-index:200;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)}
 @media(max-width:768px){
@@ -450,6 +476,49 @@ textarea:disabled{opacity:.4}
   </div>
 </div>
 
+<!-- OBJECTION LAB SCREEN -->
+<div class="objlab-screen hidden" id="objLabScreen">
+  <button class="objlab-back" id="objLabBackBtn">&#8592; Back</button>
+  <div style="text-align:center;max-width:480px">
+    <div class="objlab-title">OBJECTION LAB</div>
+    <div class="objlab-sub">Get hit with a real objection. Handle it. Get scored on one thing — did you redirect with curiosity or did you fold?</div>
+  </div>
+  <div id="objLabStep1" style="width:100%;max-width:480px">
+    <div style="font-size:10px;letter-spacing:2px;color:var(--dim);text-align:center;margin-bottom:10px;text-transform:uppercase">Pick a vertical</div>
+    <div class="objlab-grid">
+      <button class="objlab-vert" data-vert="insurance">&#128737; Insurance</button>
+      <button class="objlab-vert" data-vert="b2b">&#128188; B2B</button>
+      <button class="objlab-vert" data-vert="cold">&#128222; Cold Call</button>
+    </div>
+  </div>
+  <div id="objLabStep2" style="width:100%;max-width:480px;display:none">
+    <div style="font-size:10px;letter-spacing:2px;color:var(--dim);text-align:center;margin-bottom:10px;text-transform:uppercase">Pick an objection</div>
+    <div class="objlab-objlist" id="objLabObjList"></div>
+  </div>
+  <div id="objLabStep3" class="hidden" style="width:100%;max-width:480px;flex-direction:column;gap:12px;align-items:center">
+    <div class="objlab-arena">
+      <div>
+        <div class="objlab-prospect-label">Prospect says:</div>
+        <div class="objlab-prospect-bubble" id="objLabProspectLine">—</div>
+      </div>
+      <div style="font-size:10px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;text-align:center;width:100%">Your response</div>
+      <div class="objlab-record-row">
+        <button class="objlab-rec-btn idle" id="objLabRecBtn">&#127908;</button>
+        <div class="objlab-response-box" id="objLabResponseBox">Tap the mic and respond...</div>
+      </div>
+      <button class="objlab-score-btn" id="objLabScoreBtn">&#128202; SCORE MY RESPONSE</button>
+    </div>
+  </div>
+  <div class="objlab-feedback" id="objLabFeedback">
+    <div class="objlab-score-num" id="objLabScoreNum">—</div>
+    <div id="objLabFeedbackText" style="font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:14px"></div>
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button id="objLabTryAgain" style="background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:8px;color:white;font-family:'DM Sans',sans-serif;font-size:12px;padding:9px 20px;cursor:pointer">Try Again</button>
+      <button id="objLabNewObj" style="background:none;border:1px solid var(--border);border-radius:8px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:12px;padding:9px 20px;cursor:pointer">New Objection</button>
+    </div>
+  </div>
+</div>
+
 <!-- SOLO DRILL SCREEN -->
 <div class="drill-screen hidden" id="drillScreen">
   <button class="drill-back" id="drillBackBtn">&#8592; Back</button>
@@ -540,7 +609,10 @@ textarea:disabled{opacity:.4}
   </div>
 
   <button class="go-btn" id="goBtn">BEGIN TRAINING &#8594;</button>
-  <button id="soloDrillBtn" style="background:none;border:1px solid var(--border);border-radius:10px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 28px;cursor:pointer;transition:all .15s;margin-top:-8px">&#127908; Solo Drill</button>
+  <div style="display:flex;gap:10px;margin-top:-8px">
+    <button id="soloDrillBtn" style="background:none;border:1px solid var(--border);border-radius:10px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 22px;cursor:pointer;transition:all .15s">&#127908; Solo Drill</button>
+    <button id="objLabBtn" style="background:none;border:1px solid var(--border);border-radius:10px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 22px;cursor:pointer;transition:all .15s">&#9889; Objection Lab</button>
+  </div>
 </div>
 
 <script>
@@ -1128,11 +1200,7 @@ async function scoreCall() {
     return;
   }
   document.getElementById('scoreFeed').textContent = 'Analyzing your call...';
-  if (!_authToken) {
-    var s = await _sb.auth.getSession();
-    if (s.data.session) _authToken = s.data.session.access_token;
-    else { window.location.href = '/login'; return; }
-  }
+  if (!_authToken) { var _s = await _sb.auth.getSession(); if (_s.data.session) _authToken = _s.data.session.access_token; else { window.location.href='/login'; return; } }
   var a = getArch(state.archId);
   var modeLabel = {easy:'Easy',medium:'Medium',hard:'Hard'}[state.mode]||'';
   var transcript = state.history.map(function(m){ return (m.role==='user'?'REP':'PROSPECT')+': '+m.content; }).join('\n');
@@ -1839,6 +1907,230 @@ document.getElementById('soloDrillBtn').addEventListener('click', function() {
 document.getElementById('drillBackBtn').addEventListener('click', function() {
   if (drill.recording) drillStopRecording();
   document.getElementById('drillScreen').classList.add('hidden');
+  document.getElementById('startScreen').classList.remove('hidden');
+});
+
+// ═══════════════════════════════════════════
+// OBJECTION LAB
+// ═══════════════════════════════════════════
+var OBJECTIONS = {
+  insurance: [
+    { label: '"I need to think about it"',    line: "That's something I definitely need to think about." },
+    { label: '"I need to talk to my spouse"',  line: "I'd have to run this by my husband before I do anything." },
+    { label: '"I already have coverage"',      line: "I actually already have some coverage through work so I think I'm good." },
+    { label: '"I cannot afford it"',            line: "I just don't think it fits in my budget right now." },
+    { label: '"Send me some information"',     line: "Why don't you just send me some information and I'll take a look." },
+    { label: '"Just checking prices"',          line: "I'm really just calling around to check on prices, I'm not ready to do anything today." },
+    { label: '"My son will handle it"',        line: "Honestly my son Derek will take care of everything when the time comes, so I'm probably okay." },
+  ],
+  b2b: [
+    { label: '"I need to think about it"',     line: "This is interesting but I'm going to need some time to think it over." },
+    { label: '"We already have a vendor"',     line: "We're actually already working with someone for this so I don't think we're looking to switch." },
+    { label: '"Not in the budget"',            line: "Budget is really tight right now, this just isn't something we can prioritize." },
+    { label: '"I need to loop someone in"',    line: "I'd need to bring my director into this before we go any further." },
+    { label: '"Send me some information"',     line: "Just send me something over email and I'll pass it along to the right people." },
+    { label: '"We tried something like this"', line: "We actually did something similar a couple years ago and it didn't really work out for us." },
+  ],
+  cold: [
+    { label: '"Not interested"',                line: "Yeah I'm really not interested, thanks." },
+    { label: '"Too busy"',                      line: "This really isn't a good time, I've got a lot going on." },
+    { label: '"We already have something"',    line: "We're all set with what we have, but thanks for calling." },
+    { label: '"Call me back later"',           line: "Can you call me back next week? Now's not a good time." },
+    { label: '"How did you get my number?"',   line: "Wait — how did you even get this number? I'm on the do not call list." },
+  ],
+};
+
+var objLab = { vert:null, objection:null, transcript:'', recording:false, recognition:null };
+
+function objLabReset() {
+  objLab.vert=null; objLab.objection=null; objLab.transcript=''; objLab.recording=false;
+  if (objLab.recognition) { try { objLab.recognition.abort(); } catch(e) {} objLab.recognition=null; }
+  document.getElementById('objLabStep1').style.display='block';
+  document.getElementById('objLabStep2').style.display='none';
+  document.getElementById('objLabStep3').style.display='none';
+  document.getElementById('objLabStep3').classList.add('hidden');
+  document.getElementById('objLabFeedback').classList.remove('show');
+  document.getElementById('objLabScoreBtn').classList.remove('show');
+  document.getElementById('objLabResponseBox').textContent='Tap the mic and respond...';
+  document.getElementById('objLabScoreNum').textContent='—';
+  document.getElementById('objLabFeedbackText').textContent='';
+  document.querySelectorAll('.objlab-vert').forEach(function(b){ b.classList.remove('selected'); });
+  var btn=document.getElementById('objLabRecBtn');
+  btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
+}
+
+function objLabRenderObjs() {
+  var list=document.getElementById('objLabObjList');
+  var objs=OBJECTIONS[objLab.vert]||[];
+  list.innerHTML=objs.map(function(o,i){ return "<button class='objlab-obj' data-i='"+i+"'>"+o.label+"</button>"; }).join('');
+  list.querySelectorAll('.objlab-obj').forEach(function(b) {
+    b.addEventListener('click', function() {
+      var i=parseInt(this.getAttribute('data-i'));
+      objLab.objection=OBJECTIONS[objLab.vert][i];
+      list.querySelectorAll('.objlab-obj').forEach(function(x){ x.classList.remove('selected'); });
+      this.classList.add('selected');
+      setTimeout(objLabStartArena, 200);
+    });
+  });
+}
+
+function objLabStartArena() {
+  document.getElementById('objLabStep2').style.display='none';
+  var s3=document.getElementById('objLabStep3');
+  s3.classList.remove('hidden'); s3.style.display='flex';
+  document.getElementById('objLabProspectLine').textContent=objLab.objection.line||'—';
+  document.getElementById('objLabFeedback').classList.remove('show');
+  document.getElementById('objLabScoreBtn').classList.remove('show');
+  document.getElementById('objLabResponseBox').textContent='Tap the mic and respond...';
+  objLab.transcript='';
+  var btn=document.getElementById('objLabRecBtn');
+  btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
+}
+
+function objLabStartRecording() {
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if (!SR) { showToast('Voice needs Chrome or Safari.'); return; }
+  objLab.recording=true; objLab.transcript='';
+  var btn=document.getElementById('objLabRecBtn');
+  btn.className='objlab-rec-btn recording'; btn.innerHTML='&#9632;';
+  document.getElementById('objLabResponseBox').textContent='Listening...';
+  document.getElementById('objLabScoreBtn').classList.remove('show');
+  if (objLab.recognition) { try { objLab.recognition.abort(); } catch(e) {} }
+  var r=new SR(); r.continuous=false; r.interimResults=true; r.lang='en-US';
+  var _t=null;
+  r.onresult=function(e) {
+    var interim='',final='';
+    for (var i=e.resultIndex;i<e.results.length;i++) {
+      if (e.results[i].isFinal) final+=e.results[i][0].transcript;
+      else interim+=e.results[i][0].transcript;
+    }
+    var text=final||interim;
+    document.getElementById('objLabResponseBox').textContent=text;
+    objLab.transcript=text;
+    if (_t) clearTimeout(_t);
+    if (final) { objLabStopRecording(); return; }
+    _t=setTimeout(function(){ if (objLab.recording) objLabStopRecording(); },3000);
+  };
+  r.onerror=function(){ objLabStopRecording(); };
+  r.onend=function(){ if (objLab.recording) objLabStopRecording(); };
+  objLab.recognition=r;
+  try { r.start(); } catch(e) { showToast('Could not start mic.'); }
+}
+
+function objLabStopRecording() {
+  objLab.recording=false;
+  if (objLab.recognition) { try { objLab.recognition.stop(); } catch(e) {} }
+  var btn=document.getElementById('objLabRecBtn');
+  btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
+  if (objLab.transcript.trim()) document.getElementById('objLabScoreBtn').classList.add('show');
+  else document.getElementById('objLabResponseBox').textContent='Nothing captured — tap to try again.';
+}
+
+async function objLabScore() {
+  var response=objLab.transcript.trim();
+  if (!response) { showToast('Nothing recorded yet.'); return; }
+  if (!_authToken) {
+    var _s=await _sb.auth.getSession();
+    if (_s.data.session) _authToken=_s.data.session.access_token;
+    else { window.location.href='/login'; return; }
+  }
+  document.getElementById('objLabScoreBtn').classList.remove('show');
+  var fb=document.getElementById('objLabFeedback');
+  fb.classList.add('show');
+  document.getElementById('objLabScoreNum').textContent='...';
+  document.getElementById('objLabFeedbackText').textContent='Analyzing...';
+  var objLine=objLab.objection.line||objLab.objection.label;
+  var barNapkin={
+    insurance:{
+      'think about it':"That's not a problem. Setting the cost aside — do you feel like this is the right answer for your family? What would need to be in place for this to feel like the right move?",
+      'talk to my husband':"That's not a problem. If he were on this call right now — what's the one thing he'd want to know before saying yes?",
+      'talk to my wife':"That's not a problem. If she were on this call right now — what's the one thing she'd want to know before saying yes?",
+      'talk to my spouse':"That's not a problem. If they were on this call right now — what's the one thing they'd want to know before saying yes?",
+      'run this by':"That's not a problem. If they were on this call right now — what's the one thing they'd want to know before saying yes?",
+      'discuss with':"That's not a problem. If they were on this call right now — what's the one thing they'd want to know before saying yes?",
+      'already have coverage':"I totally get that. When's the last time someone actually reviewed that policy to make sure it still fits where you are today?",
+      'afford':"Setting the cost aside — do you feel like this is something your family needs? If we agree on that we can usually find something that works.",
+      'send me':"Happy to. Before I do — what specifically would you be looking for to help you make a decision?",
+      'just checking':"That's totally fine. What made you decide to look into this now versus six months ago?",
+      'son will handle':"Has he actually said that or is that your hope? Most adult kids want to help — they just don't want a $10,000 surprise in the middle of their grief.",
+    },
+    b2b:{
+      'think about it':"That's not a problem. What specifically would you need to see or know to feel confident moving forward?",
+      'already have a vendor':"Completely get that. What would that vendor need to stop doing for you to consider making a switch?",
+      'budget':"Is the budget the issue or is it that you're not yet sure the ROI is there? Those are two different conversations.",
+      'loop someone':"Of course. If they were on this call right now — what'd they ask me?",
+      'send me':"Happy to. What decision would that info need to help you make?",
+      'tried':"What specifically didn't work — the product, the timing, or the rollout? That changes everything.",
+    },
+    cold:{
+      'not interested':"That's fair. What would have to be true for this to be worth 5 minutes of your time?",
+      'too busy':"I get it. What's the biggest thing on your plate that something like this might actually help with?",
+      'already have':"Makes sense. What would have to be missing from what you've got for you to at least take a look?",
+      'call me back':"Before I let you go — is timing the only thing or is there something about what I said that didn't land right?",
+      'how did you get':"Fair question — I'll be straight with you. I reached out because [reason]. Does that make sense?",
+    },
+  };
+  var vertGuide=barNapkin[objLab.vert]||{};
+  var objKey=objLine.toLowerCase();
+  var reframe=''; var bestLen=0;
+  Object.keys(vertGuide).forEach(function(k){ if (objKey.indexOf(k)>-1&&k.length>bestLen){ bestLen=k.length; reframe=vertGuide[k]; } });
+  if (!reframe) reframe='Acknowledge without groveling, stay curious, and redirect with a question that moves toward the real concern.';
+
+  var systemPrompt=[
+    'You are a sales coach scoring a single objection response. Compare what the rep said to the bar napkin reframe and score how close they got.',
+    'THE BAR NAPKIN REFRAME: "'+reframe+'"',
+    'Prospect said: '+objLine,
+    'Rep responded: '+response,
+    '90-100: Same spirit as the bar napkin — acknowledged, stayed curious, redirected to the emotional core.',
+    '70-89: Close but missed one element.',
+    '50-69: Acknowledged but gave a generic or vague redirect.',
+    '0-49: Argued, folded, over-explained, or ignored the objection.',
+    "RULES: Quote the reps exact words. End with the bar napkin reframe verbatim.",
+    'Return exactly: {"score":72,"feedback":"2-3 sentences ending with the bar napkin reframe."}'
+  ].join('\n');
+
+  try {
+    var res=await fetchWithTimeout('/api/chat',{method:'POST',headers:authHeaders(),body:JSON.stringify({max_tokens:300,system:systemPrompt,messages:[{role:'user',content:'Score this objection response.'}]})},20000);
+    if (!res.ok) throw new Error('API '+res.status);
+    var data=await res.json();
+    var raw=(data.content&&data.content[0])?data.content[0].text:'{}';
+    raw=raw.replace(/```json|```/g,'').trim();
+    var sc=JSON.parse(raw);
+    var col=sc.score>=75?'#00e676':sc.score>=55?'#ffd600':'#ff1744';
+    document.getElementById('objLabScoreNum').textContent=sc.score+'/100';
+    document.getElementById('objLabScoreNum').style.color=col;
+    document.getElementById('objLabFeedbackText').textContent=sc.feedback||'';
+  } catch(e) {
+    document.getElementById('objLabFeedbackText').textContent='Could not score — try again. '+e.message;
+  }
+}
+
+document.querySelectorAll('.objlab-vert').forEach(function(b) {
+  b.addEventListener('click', function() {
+    objLab.vert=this.getAttribute('data-vert');
+    document.querySelectorAll('.objlab-vert').forEach(function(x){ x.classList.remove('selected'); });
+    this.classList.add('selected');
+    objLabRenderObjs();
+    setTimeout(function(){ document.getElementById('objLabStep2').style.display='block'; },200);
+  });
+});
+document.getElementById('objLabRecBtn').addEventListener('click', function(){ if (objLab.recording) objLabStopRecording(); else objLabStartRecording(); });
+document.getElementById('objLabScoreBtn').addEventListener('click', objLabScore);
+document.getElementById('objLabTryAgain').addEventListener('click', objLabStartArena);
+document.getElementById('objLabNewObj').addEventListener('click', function(){
+  document.getElementById('objLabFeedback').classList.remove('show');
+  document.getElementById('objLabStep3').style.display='none';
+  document.getElementById('objLabStep3').classList.add('hidden');
+  document.getElementById('objLabStep2').style.display='block';
+});
+document.getElementById('objLabBtn').addEventListener('click', function(){
+  objLabReset();
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('objLabScreen').classList.remove('hidden');
+});
+document.getElementById('objLabBackBtn').addEventListener('click', function(){
+  if (objLab.recording) objLabStopRecording();
+  document.getElementById('objLabScreen').classList.add('hidden');
   document.getElementById('startScreen').classList.remove('hidden');
 });
 
