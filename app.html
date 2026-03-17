@@ -2033,7 +2033,10 @@ function objLabStartArena() {
   document.getElementById('objLabScoreBtn').classList.remove('show');
   document.getElementById('objLabSendHold').style.display='none';
   document.getElementById('objLabResponseBox').textContent='Tap the mic and respond...';
+  document.getElementById('objLabScoreNum').textContent='—';
+  document.getElementById('objLabFeedbackText').textContent='';
   objLab.transcript='';
+  if (objLab.recognition) { try { objLab.recognition.abort(); } catch(e) {} objLab.recognition=null; }
   var btn=document.getElementById('objLabRecBtn');
   btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
 }
@@ -2049,17 +2052,18 @@ function objLabStartRecording() {
   if (objLab.recognition) { try { objLab.recognition.abort(); } catch(e) {} }
   var r=new SR(); r.continuous=false; r.interimResults=true; r.lang='en-US';
   var _t=null;
+  var _accumulated='';
   r.onresult=function(e) {
-    var interim='',final='';
+    var interim='';
     for (var i=e.resultIndex;i<e.results.length;i++) {
-      if (e.results[i].isFinal) final+=e.results[i][0].transcript;
-      else interim+=e.results[i][0].transcript;
+      if (e.results[i].isFinal) _accumulated+=e.results[i][0].transcript+' ';
+      else interim=e.results[i][0].transcript;
     }
-    var text=final||interim;
+    var text=(_accumulated+interim).trim();
     document.getElementById('objLabResponseBox').textContent=text;
     objLab.transcript=text;
+    // Reset silence timer on every new word — only stop after 6s of true silence
     if (_t) clearTimeout(_t);
-    if (final) { objLabStopRecording(); return; }
     _t=setTimeout(function(){ if (objLab.recording) objLabStopRecording(); },6000);
   };
   r.onerror=function(){ objLabStopRecording(); };
