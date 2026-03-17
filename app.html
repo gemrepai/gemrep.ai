@@ -2135,10 +2135,17 @@ async function objLabScore() {
   Object.keys(vertGuide).forEach(function(k){
     if (objKey.indexOf(k)>-1&&k.length>bestLen){ bestLen=k.length; reframe=vertGuide[k]; }
   });
-  if (!reframe) reframe='Acknowledge without groveling, stay curious, and redirect with a question that moves toward the real concern.';
+  if (!reframe) reframe='Acknowledge without losing status, stay curious, and redirect toward the emotional core.';
 
   // Everything goes in messages — JSON.stringify handles all escaping, no apostrophe issues
-  var systemPrompt = 'You are a blunt sales coach. Respond ONLY with valid JSON. No preamble, no markdown. Be direct — no flowery language. Quote the reps exact words. Format: {"score":72,"feedback":"your feedback here"}';
+  var systemPrompt = [
+    'You are a direct sales coach. No flowery language. Quote the reps exact words. Respond ONLY with valid JSON, no markdown, no preamble.',
+    'Score the rep on two things only: 1) Did they acknowledge the objection without losing status? 2) Did they redirect toward the emotional core with curiosity?',
+    'SCORING: 85-100 = acknowledged and redirected to emotion with curiosity, even one sentence. 70-84 = acknowledged but redirect missed the emotional hook. 50-69 = acknowledged but went nowhere. 0-49 = argued or ignored.',
+    'Do NOT penalize brevity. One strong sentence scores 85+.',
+    'Do NOT compare to any script. Score only on acknowledgment and emotional curiosity.',
+    'Return ONLY: {"score":72,"feedback":"2 sentences max. Quote exact rep words. Name what worked and one thing to sharpen."}'
+  ].join(' ');
 
   try {
     var res=await fetchWithTimeout('/api/chat',{
@@ -2162,8 +2169,8 @@ async function objLabScore() {
     document.getElementById('objLabScoreNum').textContent=sc.score+'/100';
     document.getElementById('objLabScoreNum').style.color=col;
     var feedbackText = (sc.feedback||'');
-    var feedbackText = (sc.feedback||'');
     if (reframe) feedbackText += ' | Bar napkin reference: ' + reframe;
+    document.getElementById('objLabFeedbackText').textContent=feedbackText;
   } catch(e) {
     document.getElementById('objLabFeedbackText').textContent='Could not score — try again. '+e.message;
   }
