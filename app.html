@@ -291,6 +291,14 @@ textarea:disabled{opacity:.4}
 .objlab-feedback{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:12px;color:var(--dim);line-height:1.65;display:none;width:100%;max-width:480px}
 .objlab-feedback.show{display:block}
 .objlab-score-num{font-family:"Instrument Serif",serif;font-size:42px;text-align:center;margin-bottom:8px}
+/* SEND HOLD BAR */
+.send-hold{display:none;position:absolute;bottom:80px;left:50%;transform:translateX(-50%);z-index:25;background:var(--panel);border:1px solid var(--border);border-radius:50px;padding:6px 8px;display:none;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.6);white-space:nowrap}
+.send-hold.show{display:flex}
+.send-hold-progress{position:absolute;bottom:0;left:0;height:2px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);border-radius:0 0 50px 50px;transition:width linear}
+.sh-send{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:50px;color:white;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:600;padding:6px 16px;cursor:pointer;letter-spacing:.5px}
+.sh-more{background:none;border:1px solid var(--border);border-radius:50px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:12px;padding:6px 14px;cursor:pointer;transition:all .15s}
+.sh-more:hover{border-color:var(--green);color:var(--green)}
+.sh-text{font-size:11px;color:var(--dim);padding:0 4px}
 /* TOAST */
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:#1e2028;border:1px solid var(--border);border-radius:8px;padding:9px 16px;font-size:12px;color:var(--dim);z-index:200;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)}
 @media(max-width:768px){
@@ -428,6 +436,12 @@ textarea:disabled{opacity:.4}
     <div class="msgs" id="msgs"></div>
     <div class="scbtnwrap" id="scbtnwrap">
       <button class="scbtn" id="scBtn">&#128202; SCORE MY CALL</button>
+    </div>
+    <!-- SEND HOLD BAR -->
+    <div class="send-hold" id="sendHold">
+      <span class="sh-text">Ready to send</span>
+      <button class="sh-more" id="shMore">&#127908; Keep talking</button>
+      <button class="sh-send" id="shSend">Send &#10148;</button>
     </div>
 
     <!-- SCORE OVERLAY -->
@@ -1158,6 +1172,7 @@ function showTyping() {
 function removeTyping() { var t = document.getElementById('typing'); if (t) t.remove(); }
 
 async function sendMsg() {
+  hideSendHold();
   if (state.loading || state.ended) return;
   var inp = document.getElementById('inp');
   var text = inp.value.trim();
@@ -1525,47 +1540,79 @@ function initRecognition() {
     var text = final || interim;
     document.getElementById('inp').value = text;
 
-    // iOS fix: isFinal often never fires — use a debounce timer instead
-    // If no new results come in for 1.2s, treat whatever we have as final
     if (_iosSendTimer) clearTimeout(_iosSendTimer);
-    if (final) {
-      // Desktop path — isFinal fired, send immediately
-      clearTimeout(_iosSendTimer);
-      stopListening();
-      setTimeout(sendMsg, 150);
-    } else if (interim) {
-      // iOS path — start debounce timer
+
+    if (final || interim) {
+      // Show hold bar — give rep a chance to keep talking or send manually
       _iosSendTimer = setTimeout(function() {
         var val = document.getElementById('inp').value.trim();
         if (val && !state.loading && !state.ended && !el_speaking) {
           stopListening();
-          sendMsg();
+          showSendHold();
         }
-      }, 3500);
+      }, final ? 800 : 3500);
     }
   };
   r.onerror = function(e) {
     if (_iosSendTimer) clearTimeout(_iosSendTimer);
     stopListening();
     if (e.error === 'no-speech') {
-      // iOS kills mic on silence — restart automatically
       if (!el_speaking && !state.ended && !state.loading) setTimeout(startListening, 500);
     } else if (e.error !== 'aborted') {
-      document.getElementById('inp').placeholder = 'Mic error — tap 🎤 to try again';
+      document.getElementById('inp').placeholder = 'Mic error — tap to try again';
     }
   };
   r.onend = function() {
     if (_iosSendTimer) clearTimeout(_iosSendTimer);
     var hadText = document.getElementById('inp').value.trim();
-    stopListening();
-    // iOS restart — if nothing captured and not speaking, restart mic
-    if (!hadText && !el_speaking && !state.ended && !state.loading) {
-      setTimeout(startListening, 500);
+    if (!hadText) {
+      stopListening();
+      if (!el_speaking && !state.ended && !state.loading) setTimeout(startListening, 500);
     }
+    // If we have text, leave it — the hold bar or manual send handles it
   };
   recognition = r;
   return r;
 }
+
+// ── SEND HOLD BAR ─────────────────────────────────────────────────────────
+var _holdTimer = null;
+var _holdInterval = null;
+
+function showSendHold() {
+  var hold = document.getElementById('sendHold');
+  hold.classList.add('show');
+  // Auto-send after 5 seconds if no action
+  var elapsed = 0;
+  var total = 5000;
+  if (_holdInterval) clearInterval(_holdInterval);
+  if (_holdTimer) clearTimeout(_holdTimer);
+  _holdTimer = setTimeout(function() {
+    hideSendHold();
+    sendMsg();
+  }, total);
+  _holdInterval = setInterval(function() {
+    elapsed += 100;
+  }, 100);
+}
+
+function hideSendHold() {
+  var hold = document.getElementById('sendHold');
+  hold.classList.remove('show');
+  if (_holdTimer) { clearTimeout(_holdTimer); _holdTimer = null; }
+  if (_holdInterval) { clearInterval(_holdInterval); _holdInterval = null; }
+}
+
+document.getElementById('shSend').addEventListener('click', function() {
+  hideSendHold();
+  sendMsg();
+});
+
+document.getElementById('shMore').addEventListener('click', function() {
+  hideSendHold();
+  // Restart mic so rep can keep adding
+  setTimeout(startListening, 200);
+});
 
 function startListening() {
   if (el_speaking || state.ended || state.loading) return;
