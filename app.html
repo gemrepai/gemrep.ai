@@ -2079,18 +2079,16 @@ async function objLabScore() {
   var safeObjLine = objLine.replace(/'/g, "\\");
   var safeResponse = response.replace(/'/g, "\\");
 
-  var systemPrompt=[
-    'You are a sales coach scoring a single objection response. Compare what the rep said to the bar napkin reframe and score how close they got.',
-    'THE BAR NAPKIN REFRAME: "+safeReframe+"',
-    'Prospect said: '+safeObjLine,
-    'Rep responded: '+safeResponse,
-    '90-100: Same spirit as the bar napkin — acknowledged, stayed curious, redirected to the emotional core. IMPORTANT: "That\s not a problem" + emotional redirect IS correct bar napkin language. Do NOT criticize it. Score it 85+.',
-    '70-89: Close but missed one element.',
-    '50-69: Acknowledged but gave a generic or vague redirect.',
-    '0-49: Argued, folded, over-explained, or ignored the objection.',
-    "RULES: Quote the reps exact words. End with the bar napkin reframe verbatim.",
-    'Return exactly: {"score":72,"feedback":"2-3 sentences ending with the bar napkin reframe."}'
-  ].join('\n');
+  var systemPrompt = "You are a sales coach. Score this objection response against the bar napkin reframe. " +
+    "Bar napkin reframe: " + safeReframe + ". " +
+    "Prospect said: " + safeObjLine + ". " +
+    "Rep responded: " + safeResponse + ". " +
+    "Score 85-100 if rep acknowledged and redirected with curiosity toward the emotional core, even paraphrased. " +
+    "Score 70-84 if close but missed one element. " +
+    "Score 50-69 if acknowledged but redirect was vague. " +
+    "Score 0-49 if rep argued, folded, or ignored the objection. " +
+    "Quote the reps exact words in your feedback. End with the bar napkin reframe. " +
+    "Return only valid JSON: {\"score\":72,\"feedback\":\"2-3 sentences.\"}";
 
   try {
     var res=await fetchWithTimeout('/api/chat',{method:'POST',headers:authHeaders(),body:JSON.stringify({max_tokens:300,system:systemPrompt,messages:[{role:'user',content:'Score this objection response.'}]})},20000);
