@@ -2048,11 +2048,12 @@ function objLabStartRecording() {
   var btn=document.getElementById('objLabRecBtn');
   btn.className='objlab-rec-btn recording'; btn.innerHTML='&#9632;';
   document.getElementById('objLabResponseBox').textContent='Listening...';
+  document.getElementById('objLabSendHold').style.display='none';
   document.getElementById('objLabScoreBtn').classList.remove('show');
   if (objLab.recognition) { try { objLab.recognition.abort(); } catch(e) {} }
-  var r=new SR(); r.continuous=false; r.interimResults=true; r.lang='en-US';
-  var _t=null;
   var _accumulated='';
+  // Use continuous=true so it never auto-stops
+  var r=new SR(); r.continuous=true; r.interimResults=true; r.lang='en-US';
   r.onresult=function(e) {
     var interim='';
     for (var i=e.resultIndex;i<e.results.length;i++) {
@@ -2061,13 +2062,13 @@ function objLabStartRecording() {
     }
     var text=(_accumulated+interim).trim();
     document.getElementById('objLabResponseBox').textContent=text;
-    objLab.transcript=text;
-    // Reset silence timer on every new word — only stop after 6s of true silence
-    if (_t) clearTimeout(_t);
-    _t=setTimeout(function(){ if (objLab.recording) objLabStopRecording(); },6000);
+    objLab.transcript=(_accumulated).trim();
   };
-  r.onerror=function(){ objLabStopRecording(); };
-  r.onend=function(){ if (objLab.recording) objLabStopRecording(); };
+  r.onerror=function(e){ if(e.error!=='aborted') showToast('Mic error — tap to try again.'); };
+  r.onend=function(){
+    // If still recording (browser killed it), restart
+    if (objLab.recording) { try { r.start(); } catch(e){} }
+  };
   objLab.recognition=r;
   try { r.start(); } catch(e) { showToast('Could not start mic.'); }
 }
@@ -2077,12 +2078,6 @@ function objLabStopRecording() {
   if (objLab.recognition) { try { objLab.recognition.stop(); } catch(e) {} }
   var btn=document.getElementById('objLabRecBtn');
   btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
-  if (objLab.transcript.trim()) {
-    // Show send-hold bar instead of immediately scoring
-    document.getElementById('objLabSendHold').style.display='flex';
-  } else {
-    document.getElementById('objLabResponseBox').textContent='Nothing captured — tap to try again.';
-  }
 }
 
 async function objLabScore() {
@@ -2178,7 +2173,22 @@ document.querySelectorAll('.objlab-vert').forEach(function(b) {
     setTimeout(function(){ document.getElementById('objLabStep2').style.display='block'; },200);
   });
 });
-document.getElementById('objLabRecBtn').addEventListener('click', function(){ if (objLab.recording) objLabStopRecording(); else objLabStartRecording(); });
+document.getElementById('objLabRecBtn').addEventListener('click', function(){
+  if (objLab.recording) {
+    // Manual stop — show send-hold bar
+    objLab.recording=false;
+    if (objLab.recognition) { try { objLab.recognition.stop(); } catch(e) {} }
+    var btn=document.getElementById('objLabRecBtn');
+    btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
+    if (objLab.transcript.trim()) {
+      document.getElementById('objLabSendHold').style.display='flex';
+    } else {
+      document.getElementById('objLabResponseBox').textContent='Nothing captured — tap to try again.';
+    }
+  } else {
+    objLabStartRecording();
+  }
+});
 document.getElementById('objLabScoreBtn').addEventListener('click', objLabScore);
 document.getElementById('objLabTryAgain').addEventListener('click', objLabStartArena);
 document.getElementById('objLabNewObj').addEventListener('click', function(){
