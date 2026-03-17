@@ -2147,7 +2147,7 @@ async function objLabScore() {
       body:JSON.stringify({
         max_tokens:300,
         system:systemPrompt,
-        messages:[{role:'user',content:'Prospect said: '+objLine+'. Rep responded: '+response+'. Did the rep acknowledge without losing status and redirect toward the emotional core with curiosity? Score and give feedback. End with: Bar napkin reference: '+reframe}]
+        messages:[{role:'user',content:'Prospect said: '+objLine+'. Rep responded: '+response}]
       })
     },20000);
     if (!res.ok) throw new Error('API '+res.status);
@@ -2161,7 +2161,9 @@ async function objLabScore() {
     var col=sc.score>=75?'#00e676':sc.score>=55?'#ffd600':'#ff1744';
     document.getElementById('objLabScoreNum').textContent=sc.score+'/100';
     document.getElementById('objLabScoreNum').style.color=col;
-    document.getElementById('objLabFeedbackText').textContent=sc.feedback||'';
+    var feedbackText = (sc.feedback||'');
+    var feedbackText = (sc.feedback||'');
+    if (reframe) feedbackText += ' | Bar napkin reference: ' + reframe;
   } catch(e) {
     document.getElementById('objLabFeedbackText').textContent='Could not score — try again. '+e.message;
   }
