@@ -2124,7 +2124,7 @@ async function objLabScore() {
   if (!reframe) reframe='Acknowledge without groveling, stay curious, and redirect with a question that moves toward the real concern.';
 
   // Everything goes in messages — JSON.stringify handles all escaping, no apostrophe issues
-  var systemPrompt = 'You are a sales coach scoring one objection response. Score 85-100 if the rep acknowledged without groveling and redirected toward the emotional core with curiosity. Score 70-84 if decent but missed the emotional core. Score 50-69 if vague redirect. Score 0-49 if argued, folded, or ignored. Quote the reps exact words. End feedback with the bar napkin reframe verbatim. Return only valid JSON: {"score":72,"feedback":"2-3 sentences."}';
+  var systemPrompt = 'You are a sales coach. Respond ONLY with a valid JSON object. No preamble, no explanation, no markdown. Just the JSON. Format: {"score":72,"feedback":"your feedback here"}';
 
   try {
     var res=await fetchWithTimeout('/api/chat',{
@@ -2133,13 +2133,16 @@ async function objLabScore() {
       body:JSON.stringify({
         max_tokens:300,
         system:systemPrompt,
-        messages:[{role:'user',content:'Bar napkin reframe: '+reframe+'. Prospect said: '+objLine+'. Rep responded: '+response+'. Score the rep and end feedback with bar napkin verbatim.'}]
+        messages:[{role:'user',content:'Score this objection response. Bar napkin reframe: '+reframe+'. Prospect: '+objLine+'. Rep: '+response+'. Score 85+ if rep acknowledged and redirected with curiosity toward the emotional core. End feedback with the bar napkin reframe. Return ONLY valid JSON: {"score":72,"feedback":"text"}'}]
       })
     },20000);
     if (!res.ok) throw new Error('API '+res.status);
     var data=await res.json();
     var raw=(data.content&&data.content[0])?data.content[0].text:'{}';
     raw=raw.replace(/```json|```/g,'').trim();
+    // Extract JSON object if Claude added any preamble
+    var jsonMatch=raw.match(/\{[\s\S]*\}/);
+    if(jsonMatch) raw=jsonMatch[0];
     var sc=JSON.parse(raw);
     var col=sc.score>=75?'#00e676':sc.score>=55?'#ffd600':'#ff1744';
     document.getElementById('objLabScoreNum').textContent=sc.score+'/100';
