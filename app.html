@@ -2123,17 +2123,9 @@ async function objLabScore() {
   });
   if (!reframe) reframe='Acknowledge without groveling, stay curious, and redirect with a question that moves toward the real concern.';
 
-  // System prompt has NO user input injected — safe from apostrophes
-  var systemPrompt = 'You are a sales coach scoring one objection response. ' +
-    'The correct bar napkin reframe for this objection is: ' + reframe + '. ' +
-    'Score 85-100 if rep acknowledged and redirected toward the emotional core with curiosity — paraphrasing the bar napkin is fine. ' +
-    'Score 70-84 if decent but missed the emotional core. ' +
-    'Score 50-69 if acknowledged but redirect was vague. ' +
-    'Score 0-49 if rep argued, folded, or ignored the objection. ' +
-    'Quote the reps exact words. End feedback with: The bar napkin says: ' + reframe + '. ' +
-    'Do NOT invent your own reframe. Return only valid JSON: {"score":72,"feedback":"2-3 sentences."}';
+  // Everything goes in messages — JSON.stringify handles all escaping, no apostrophe issues
+  var systemPrompt = 'You are a sales coach scoring one objection response. Score 85-100 if the rep acknowledged without groveling and redirected toward the emotional core with curiosity. Score 70-84 if decent but missed the emotional core. Score 50-69 if vague redirect. Score 0-49 if argued, folded, or ignored. Quote the reps exact words. End feedback with the bar napkin reframe verbatim. Return only valid JSON: {"score":72,"feedback":"2-3 sentences."}';
 
-  // Prospect line and rep response go in messages — JSON.stringify handles all escaping
   try {
     var res=await fetchWithTimeout('/api/chat',{
       method:'POST',
@@ -2141,7 +2133,7 @@ async function objLabScore() {
       body:JSON.stringify({
         max_tokens:300,
         system:systemPrompt,
-        messages:[{role:'user',content:'Prospect: '+objLine+' Rep: '+response}]
+        messages:[{role:'user',content:'Bar napkin reframe: '+reframe+'. Prospect said: '+objLine+'. Rep responded: '+response+'. Score the rep and end feedback with bar napkin verbatim.'}]
       })
     },20000);
     if (!res.ok) throw new Error('API '+res.status);
