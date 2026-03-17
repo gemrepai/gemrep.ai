@@ -265,32 +265,6 @@ textarea:disabled{opacity:.4}
 .drill-transcript.show{display:block}
 .drill-score-btn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"Instrument Serif",serif;font-size:15px;letter-spacing:2px;padding:12px 36px;cursor:pointer;display:none}
 .drill-score-btn.show{display:block}
-/* OBJECTION LAB */
-.objlab-screen{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:flex-start;flex-direction:column;gap:12px;padding:24px 20px;z-index:50;overflow-y:auto}
-.objlab-back{position:absolute;top:16px;left:16px;background:none;border:1px solid var(--border);border-radius:7px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:11px;padding:5px 11px;cursor:pointer}
-.objlab-title{font-family:"Instrument Serif",serif;font-size:36px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
-.objlab-sub{font-size:13px;color:var(--dim);text-align:center;max-width:420px;line-height:1.6}
-.objlab-grid{display:flex;gap:8px;max-width:480px;width:100%;justify-content:center}
-.objlab-vert{padding:10px 16px;border-radius:10px;border:2px solid var(--border);background:var(--panel);color:var(--dim);font-family:"DM Sans",sans-serif;font-size:12px;cursor:pointer;transition:all .15s;text-align:center}
-.objlab-vert:hover{border-color:rgba(255,77,28,.5)}
-.objlab-vert.selected{border-color:#ff4d1c;background:rgba(255,77,28,.07);color:var(--text)}
-.objlab-objlist{display:flex;flex-direction:column;gap:6px;max-width:480px;width:100%}
-.objlab-obj{padding:10px 14px;border-radius:9px;border:1px solid var(--border);background:var(--panel);color:var(--dim);font-family:"DM Sans",sans-serif;font-size:13px;cursor:pointer;transition:all .15s;text-align:left}
-.objlab-obj:hover{border-color:rgba(255,77,28,.5);color:var(--text)}
-.objlab-obj.selected{border-color:#ff4d1c;background:rgba(255,77,28,.07);color:var(--text)}
-.objlab-arena{width:100%;max-width:480px;display:flex;flex-direction:column;gap:12px}
-.objlab-prospect-bubble{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:14px 16px;font-size:14px;line-height:1.6;color:var(--text);width:100%}
-.objlab-prospect-label{font-size:9px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-bottom:6px;text-align:center}
-.objlab-record-row{display:flex;align-items:center;gap:14px}
-.objlab-rec-btn{width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .2s;flex-shrink:0}
-.objlab-rec-btn.idle{background:linear-gradient(135deg,#ff4d1c,#ff8c00);box-shadow:0 4px 20px rgba(255,77,28,.4)}
-.objlab-rec-btn.recording{background:#ff1744;animation:recordPulse 1.5s infinite}
-.objlab-response-box{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--dim);min-height:52px;line-height:1.5}
-.objlab-score-btn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"Instrument Serif",serif;font-size:14px;letter-spacing:2px;padding:11px 32px;cursor:pointer;display:none;align-self:center}
-.objlab-score-btn.show{display:block}
-.objlab-feedback{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:12px;color:var(--dim);line-height:1.65;display:none;width:100%;max-width:480px}
-.objlab-feedback.show{display:block}
-.objlab-score-num{font-family:"Instrument Serif",serif;font-size:42px;text-align:center;margin-bottom:8px}
 /* TOAST */
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:#1e2028;border:1px solid var(--border);border-radius:8px;padding:9px 16px;font-size:12px;color:var(--dim);z-index:200;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)}
 @media(max-width:768px){
@@ -476,49 +450,6 @@ textarea:disabled{opacity:.4}
   </div>
 </div>
 
-<!-- OBJECTION LAB SCREEN -->
-<div class="objlab-screen hidden" id="objLabScreen">
-  <button class="objlab-back" id="objLabBackBtn">&#8592; Back</button>
-  <div style="text-align:center;max-width:480px">
-    <div class="objlab-title">OBJECTION LAB</div>
-    <div class="objlab-sub">Get hit with a real objection. Handle it. Get scored on one thing — did you redirect with curiosity or did you fold?</div>
-  </div>
-  <div id="objLabStep1" style="width:100%;max-width:480px">
-    <div style="font-size:10px;letter-spacing:2px;color:var(--dim);text-align:center;margin-bottom:10px;text-transform:uppercase">Pick a vertical</div>
-    <div class="objlab-grid">
-      <button class="objlab-vert" data-vert="insurance">&#128737; Insurance</button>
-      <button class="objlab-vert" data-vert="b2b">&#128188; B2B</button>
-      <button class="objlab-vert" data-vert="cold">&#128222; Cold Call</button>
-    </div>
-  </div>
-  <div id="objLabStep2" style="width:100%;max-width:480px;display:none">
-    <div style="font-size:10px;letter-spacing:2px;color:var(--dim);text-align:center;margin-bottom:10px;text-transform:uppercase">Pick an objection</div>
-    <div class="objlab-objlist" id="objLabObjList"></div>
-  </div>
-  <div id="objLabStep3" class="hidden" style="width:100%;max-width:480px;flex-direction:column;gap:12px;align-items:center">
-    <div class="objlab-arena">
-      <div>
-        <div class="objlab-prospect-label">Prospect says:</div>
-        <div class="objlab-prospect-bubble" id="objLabProspectLine">—</div>
-      </div>
-      <div style="font-size:10px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;text-align:center;width:100%">Your response</div>
-      <div class="objlab-record-row">
-        <button class="objlab-rec-btn idle" id="objLabRecBtn">&#127908;</button>
-        <div class="objlab-response-box" id="objLabResponseBox">Tap the mic and respond...</div>
-      </div>
-      <button class="objlab-score-btn" id="objLabScoreBtn">&#128202; SCORE MY RESPONSE</button>
-    </div>
-  </div>
-  <div class="objlab-feedback" id="objLabFeedback">
-    <div class="objlab-score-num" id="objLabScoreNum">—</div>
-    <div id="objLabFeedbackText" style="font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:14px"></div>
-    <div style="display:flex;gap:8px;justify-content:center">
-      <button id="objLabTryAgain" style="background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:8px;color:white;font-family:'DM Sans',sans-serif;font-size:12px;padding:9px 20px;cursor:pointer">Try Again</button>
-      <button id="objLabNewObj" style="background:none;border:1px solid var(--border);border-radius:8px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:12px;padding:9px 20px;cursor:pointer">New Objection</button>
-    </div>
-  </div>
-</div>
-
 <!-- SOLO DRILL SCREEN -->
 <div class="drill-screen hidden" id="drillScreen">
   <button class="drill-back" id="drillBackBtn">&#8592; Back</button>
@@ -609,10 +540,7 @@ textarea:disabled{opacity:.4}
   </div>
 
   <button class="go-btn" id="goBtn">BEGIN TRAINING &#8594;</button>
-  <div style="display:flex;gap:10px;margin-top:-8px">
-    <button id="soloDrillBtn" style="background:none;border:1px solid var(--border);border-radius:10px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 22px;cursor:pointer;transition:all .15s">&#127908; Solo Drill</button>
-    <button id="objLabBtn" style="background:none;border:1px solid var(--border);border-radius:10px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 22px;cursor:pointer;transition:all .15s">&#9889; Objection Lab</button>
-  </div>
+  <button id="soloDrillBtn" style="background:none;border:1px solid var(--border);border-radius:10px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 28px;cursor:pointer;transition:all .15s;margin-top:-8px">&#127908; Solo Drill</button>
 </div>
 
 <script>
@@ -632,8 +560,6 @@ var EL_VOICES = {
   ins_frank:    'ErXwobaYiN019PkySvjV', // Antoni — warm male, slight hesitation
   ins_bob:      'VR6AewLTigWG4xSOukaG', // Arnold — gruff, hostile male
   ins_helen:    'EXAVITQu4vr4xnSDxMaL', // Bella — warm, hopeful female
-  ins_connie:   'MF3mGyEYCl7XYWbV9V6O', // Elli — warm older female
-  ins_marcus:   'flq6f7yk4E4fJM5XTYuZ', // Michael — gruff male
   ins_dorothy:  'MF3mGyEYCl7XYWbV9V6O', // Elli — older, gentle female
   // Cold Call
   cold_mike:    'flq6f7yk4E4fJM5XTYuZ', // Michael — gruff, impatient male
@@ -725,7 +651,7 @@ var ARCHETYPES = {
       tags:[{t:'Fear-driven',c:'#ff6b8a'},{t:'Under-insured',c:'#ffd600'},{t:'Family-first',c:'#409cff'}],
       emotion:'Deep fear of leaving his family with nothing. Haunted by the idea of his kids suffering.',
       sellWith:'Reassurance and family security. This ensures your spouse and kids stay in the home.',
-      tips:["Ask consequence: if something happened yesterday, what would that look like for Linda and the kids?","Ask discovery: what's kept you from getting this handled until now?","Handle think about it: setting the cost aside, do you feel like this is the answer for your family?","Never fight procrastination — get curious about what's really behind it"],
+      tips:['Ask consequence: if something happened yesterday, what would that look like for your family?','Use keys to castle: what would having this in place mean for you?','Handle think about it: setting money aside, do you feel like this is the answer for your family?','Never fight procrastination — get curious'],
       watchFor:'He goes quiet after you mention family = he is picturing it. Slow down.',
       difficulty:2,
       baseSystem:'You are Fearful Frank, a 67-year-old retired factory worker on a fixed income. You have thought about burial insurance for years but kept putting it off. You are anxious about being a burden to your kids when you pass. You respond to warmth and simple clear language. You shut down with jargon or pushy tactics. Objections: I do not know if I can afford it on my Social Security, I need to think about it, what if I get sick and they cancel it.',
@@ -735,48 +661,24 @@ var ARCHETYPES = {
       label:'Burned and Skeptical', title:'Semi-Retired Contractor · Claim Denied',
       age:'71', product:'Final Expense', productColor:'#ff6b8a',
       tags:[{t:'Burned before',c:'#ff6b8a'},{t:'Distrustful',c:'#ffd600'},{t:'Defensive',c:'#ff8c00'}],
-      emotion:'Rage and distrust. Paid into a policy for 8 years, it lapsed when money got tight, lost everything. Feels robbed by the industry.',
+      emotion:'Rage and distrust. Had a claim denied. Feels manipulated by the industry.',
       sellWith:'Radical transparency. Acknowledge industry failures. Show him the fine print yourself.',
-      tips:["Acknowledge and probe: I hear you — when was the last time you reviewed what that coverage actually does for you?","Flip to emotional commitment: if something happened tomorrow, are you 100% confident what you have fully protects your family?","Never fight the distrust — get curious about what's behind it"],
+      tips:['Acknowledge and probe: I hear you — when was the last time you reviewed what that coverage actually does for you?','Flip to emotional commitment: if something happened tomorrow, are you 100% confident what you have fully protects your family?','Never fight the distrust — get curious about what is behind it'],
       watchFor:'He shares what happened to him = he is opening up. This is your window.',
       difficulty:5,
-      baseSystem:"You are Burned Bob, a 71-year-old semi-retired contractor in Akron Ohio. Your wife is Carol, retired. Your son is Derek, 44, who lives in Columbus and calls every Sunday. You have two grandkids, Emma and Jake. You paid into a final expense policy for 8 years. When you hit a slow stretch you missed two payments and the policy lapsed without warning. You lost every dollar you put in. Carol does not know how bad your finances really are. You are furious at the insurance industry and do not trust anyone who sells it. You need coverage so Carol and Derek are not stuck with funeral costs. But you will not buy from someone who does not acknowledge what happened to you first. If the agent validates your experience without getting defensive you slowly open up.",
+      baseSystem:'You are Burned Bob, a 71-year-old semi-retired contractor. You had a final expense policy years ago that lapsed and a separate claim that got denied. You are FURIOUS at the insurance industry. You challenge everything. You desperately need burial coverage but will not buy from someone who does not acknowledge what happened to you. If the agent validates your experience without getting defensive you slowly open up.',
     },
     {
-      id:'ins_helen', name:'Sharp Sarah', emoji:'&#128105;&#8205;&#127979;',
-      label:'Analytical Buyer', title:'Age 34 · Married · Two Kids',
+      id:'ins_helen', name:'Hopeful Helen', emoji:'&#127752;',
+      label:'Hopeful Guardian', title:'New Mom · Teacher',
       age:'34', product:'Life Insurance', productColor:'#00e676',
-      tags:[{t:'Analytical',c:'#409cff'},{t:'Direct',c:'#00e676'},{t:'Well-researched',c:'#ffd600'}],
-      emotion:'She wants the right answer, not a sales pitch. Equivocation makes her distrust you immediately.',
-      sellWith:'Be direct and specific. Answer her questions fully. She respects competence over charm.',
-      tips:['Lead with specifics — she already knows what term and whole life are','Ask situation: what does the work coverage actually cover and what is the gap?','Ask consequence: if something happened to John, how long would the mortgage last on her salary alone?','Setting the cost aside — does this coverage level actually solve the problem?'],
-      watchFor:'She starts doing math out loud = she is interested. Stay with her, do not interrupt.',
-      difficulty:3,
-      baseSystem:'You are Sarah Mitchell, a 34-year-old marketing director in Charlotte. Your husband is John, 36, a civil engineer. Your kids are Emma 5 and Lucas 3. You both have group term life through work — yours is 2x salary, his is 1x. You have done your homework and know that is not enough to cover the mortgage at 340k plus two years of expenses if either of you died. You called in because you want a straight answer on what it would cost to fill that gap. You went to UNC, you are sharp, and you have zero patience for vague answers, upselling, or reps who cannot answer a direct question. You like John involved in major decisions but you are the one who researches everything first. If the rep is knowledgeable and direct you open up quickly. If they equivocate or pivot to features you shut down.',
-    },
-    {
-      id:'ins_marcus', name:'Curious Marcus', emoji:'&#128666;',
-      label:'IUL Inbound Lead', title:'Age 38 · Trucker · Married',
-      age:'38', product:'Life Insurance', productColor:'#00e676',
-      tags:[{t:'Inbound',c:'#00e676'},{t:'Unsure',c:'#ffd600'},{t:'Open-minded',c:'#409cff'}],
-      emotion:'Intrigued but skeptical. Saw an ad, liked the idea, but does not fully understand how it works and does not want to get taken advantage of.',
-      sellWith:'Educate first, sell second. He called you — respect that. Help him understand what an IUL actually does before talking numbers.',
-      tips:['Open with connection: what made you reach out today — was it something specific in the ad?','Ask situation: does he have any life insurance currently, or would this be the first policy?','Ask consequence: if something happened while on the road, what does Courtney situation look like?','Handle confusion: walk through how the index works simply — do not use jargon'],
-      watchFor:'He mentions Courtney or Billy unprompted = he is thinking about protection not just investment. Shift there.',
-      difficulty:2,
-      baseSystem:'You are Marcus Webb, a 38-year-old long-haul trucker based in Memphis. Your wife is Courtney, 35, who works part time at a daycare. Your son Billy is 7. You saw a Facebook ad about IULs — something about tax-free retirement and life insurance in one — and called in out of curiosity. You have no existing life insurance. You spend a lot of time on the road and have thought about what would happen to Courtney and Billy if something happened to you on I-40. You are genuinely interested but do not fully understand how an IUL works and you are worried about being sold something complicated you do not need. If the rep explains things clearly and does not oversell you warm up fast. If they lead with numbers before you understand the product you get suspicious and pull back.',
-    },
-    {
-      id:'ins_connie', name:'Cautious Connie', emoji:'&#128105;',
-      label:'Self-reliant Deflector', title:'Age 67 · Widowed · Retired',
-      age:'67', product:'Final Expense', productColor:'#ff6b8a',
-      tags:[{t:'Deflecting',c:'#ffd600'},{t:'Widowed',c:'#ff6b8a'},{t:'Just checking',c:'#409cff'}],
-      emotion:"Doesn't want to be a burden but won't admit how alone she really is. Hides behind her son Derek.",
-      sellWith:'Make her feel seen, not sold. The real conversation is about what she would be putting on Derek.',
-      tips:['When she says Derek will handle it — ask: has Derek said that, or is that your hope?','Ask consequence: if something happened next month, what does Derek year look like?','Ask discovery: what does Derek do for work — is he in a position to drop everything?','Setting the cost aside — do you feel like having this handled would take a weight off Derek?'],
-      watchFor:"She goes quiet when you mention Derek's stress = she's pictured it. That's your moment.",
-      difficulty:3,
-      baseSystem:"You are Cautious Connie, a 67-year-old retired bookkeeper in Cincinnati. You were married to Harold for 41 years. He passed 3 years ago from a heart attack. Your three kids are Derek 44 in Columbus, Patrice 41 in Atlanta, and Marcus 38 in Denver. You live alone. You are proud and independent and hate the idea of being a burden. Your go-to objection is: I am just checking on prices right now, or Derek will take care of everything when the time comes. You have not actually talked to Derek about this. If the agent asks pointed questions about what Derek year would look like if something happened you get quiet and start to really think. You warm up when someone treats you like an intelligent adult rather than a sales target.",
+      tags:[{t:'Hope-driven',c:'#00e676'},{t:'Future-focused',c:'#409cff'},{t:'Optimistic',c:'#ff8c00'}],
+      emotion:'Excited about her family future. Buying insurance feels like an act of love.',
+      sellWith:'Positive vision. Imagine your kids thriving debt-free.',
+      tips:['Use keys to castle: how would your family feel knowing this was handled?','Ask solution awareness: what would having this in place mean for you?','Handle spouse objection: if they were here right now, what do you think they would ask me?','Close with: money aside, do you feel like this is the answer for your family?'],
+      watchFor:'She talks about her kids futures excitedly = she is already sold.',
+      difficulty:1,
+      baseSystem:'You are Hopeful Helen, a 34-year-old teacher who just had her first baby. You are warm, optimistic, and excited about your family future. You see life insurance as an act of love. You trust people quickly if they are warm and knowledgeable. Your main hesitation is wanting to include your husband.',
     },
     {
       id:'ins_dorothy', name:'Confused Dorothy', emoji:'&#128117;',
@@ -1226,6 +1128,11 @@ async function scoreCall() {
     return;
   }
   document.getElementById('scoreFeed').textContent = 'Analyzing your call...';
+  if (!_authToken) {
+    var s = await _sb.auth.getSession();
+    if (s.data.session) _authToken = s.data.session.access_token;
+    else { window.location.href = '/login'; return; }
+  }
   var a = getArch(state.archId);
   var modeLabel = {easy:'Easy',medium:'Medium',hard:'Hard'}[state.mode]||'';
   var transcript = state.history.map(function(m){ return (m.role==='user'?'REP':'PROSPECT')+': '+m.content; }).join('\n');
@@ -1262,75 +1169,31 @@ async function scoreCall() {
   var guideText = Object.entries(guide).map(function(e){ return 'If they say "' + e[0] + '": ' + e[1]; }).join('\n');
 
   return [
-    'You are a direct sales coach. Score this call honestly. Reference exact words from the transcript. No generic coaching. Respond ONLY with valid JSON, no markdown.',
+    'You are a straightforward sales coach. Score this call honestly based on how well the rep moved the prospect toward a close.',
+    'Your job is to reward real sales progress — not perfect script execution. A rep who builds genuine connection and moves the prospect emotionally scores well even if they did not follow a rigid framework.',
+    'Score each phase based on outcomes and direction, not checklist compliance. Respond ONLY with valid JSON, no markdown.',
     '',
-    'OPEN + CONNECT (0-100):',
-    'High: Sounds like a peer. Natural, warm, no corporate intro. Creates comfort immediately.',
-    'Low: Leads with company name, scripted opener, "Hi my name is X calling from Y."',
-    'Cold call: Did they use a pattern interrupt — something unexpected that triggers curiosity?',
-    'Insurance/inbound: Did they establish who they are and why they called simply and warmly?',
+    'SCORING FRAMEWORK:',
     '',
-    'DISCOVERY + SITUATION (0-100):',
-    'High: Asks what prompted the call, what the biggest challenge is, what staying where they are is costing them. Builds the full picture BEFORE pitching anything.',
-    'Low: Pitches features or benefits before asking a single discovery question.',
-    'Reward: "What prompted you to look into this?" "What\'s been your biggest challenge?" "What\'s it costing you to stay where you are?"',
-    'Penalize hard: Any pitch or feature statement before discovery is complete.',
+    'OPEN + CONNECT (0-100): Did the rep establish who they are and why they called without sounding like a telemarketer? Did they build enough comfort for the prospect to stay on the line and engage? A warm, natural opener that creates connection scores high. A stiff robotic intro scores low.',
     '',
-    'CONSEQUENCE OF INACTION (0-100):',
-    'High: Makes the prospect feel the weight of doing nothing. Personal, emotional, tied to their specific situation.',
-    'Low: Skips consequence and jumps straight to the close. Or asks hypothetical questions that don\'t land personally.',
-    'Reward: "If something happened tomorrow, what would that look like for your family?" "Who else gets affected if this doesn\'t get handled?"',
-    'Penalize: Moving to close without making inaction feel real.',
+    'DISCOVERY + SITUATION (0-100): Did the rep ask questions to understand the prospect before pitching anything? Did they uncover what prompted the call, what the prospect is currently dealing with, and what their biggest challenge is? Did they ask what it is costing the prospect to stay where they are? Reward curiosity and problem awareness. Penalize reps who pitch before they listen.',
     '',
-    'COMMITMENT + CLOSE (0-100):',
-    'High: Close flows naturally from discovery and consequence. Rep earned it. Gets prospect to verbalize why this matters before asking for a decision.',
-    'Low: Premature close that skips emotion. Feature dump right before asking for decision.',
-    'Reward: "Setting the cost aside — do you feel like this is the right answer for your family?" "What would need to be in place for this to feel like the right move?"',
+    'CONSEQUENCE OF INACTION (0-100): Did the rep help the prospect feel what staying where they are actually costs them? Did they ask what happens if nothing changes, who gets affected, what this delay means for their family or business? This does not need to be a scripted question — it just needs to land emotionally.',
     '',
-    'OBJECTION HANDLING (0-100):',
-    'High: Stays calm. Acknowledges without groveling. Immediately redirects with curiosity.',
-    'Low: Argues, defends, over-explains, gives up, or gives a generic response.',
-    'CRITICAL: If the rep said something close to the bar napkin reframe below — even paraphrased — score it 80+. "That\'s not a problem" + setting cost aside + emotional redirect IS the correct response. Do NOT penalize it.',
+    'COMMITMENT + CLOSE (0-100): Did the rep attempt to move the prospect toward a decision? Did they earn the close through the conversation — or did they pitch and hope? A close that flows naturally from the discovery scores high. A premature close that skips emotion scores low.',
     '',
-    'BAR NAPKIN REFRAMES — score 80+ if rep said anything close to these:',
-    (function() {
-      var reframes = {
-        insurance: [
-          '"I need to think about it" → That\'s not a problem. Setting the cost aside — do you feel like this is the right answer for your family? What would need to be in place for this to feel like the right move?',
-          '"I need to talk to my husband/wife/spouse" → That\'s not a problem. If they were on this call right now — what\'s the one thing they\'d want to know before saying yes?',
-          '"I already have coverage" → I totally get that. When\'s the last time someone actually reviewed that policy to make sure it still fits where you are today?',
-          '"I can\'t afford it" → Setting the cost aside — do you feel like this is something your family needs? If we agree on that we can usually find something that works.',
-          '"Send me information" → Happy to. Before I do — what specifically would you be looking for to help you make a decision?',
-          '"I\'m just checking prices" → That\'s totally fine. What made you decide to look into this now versus six months ago?',
-          '"My son/family will handle it" → Has he actually said that or is that your hope? Most adult kids want to help — they just don\'t want a $10,000 surprise in the middle of their grief.',
-        ],
-        b2b: [
-          '"I need to think about it" → That\'s not a problem. What specifically would you need to see or know to feel confident moving forward?',
-          '"We already have a vendor" → Completely get that. What would that vendor need to stop doing for you to consider making a switch?',
-          '"It\'s not in the budget" → Is the budget the issue or is it that you\'re not yet sure the ROI is there? Those are two different conversations.',
-          '"I need to loop someone in" → Of course. If they were on this call right now — what\'d they ask me?',
-          '"Send me information" → Happy to. What decision would that info need to help you make?',
-          '"We tried something like this before" → What specifically didn\'t work — the product, the timing, or the rollout? That changes everything.',
-        ],
-        cold: [
-          '"I\'m not interested" → That\'s fair. What would have to be true for this to be worth 5 minutes of your time?',
-          '"I\'m too busy" → I get it. What\'s the biggest thing on your plate that something like this might actually help with?',
-          '"We already have something" → Makes sense. What would have to be missing from what you\'ve got for you to at least take a look?',
-          '"Call me back later" → Before I let you go — is timing the only thing or is there something about what I said that didn\'t land right?',
-          '"Send me information" → What specifically should I include so it\'s actually worth opening?',
-        ],
-      };
-      return (reframes[vertical] || reframes.insurance).join('\n');
-    })(),
+    'OBJECTION HANDLING (0-100): When the prospect pushed back, did the rep stay calm and curious? Did they acknowledge the objection and ask a follow-up question instead of fighting it? Reward reps who redirect with curiosity. Penalize reps who argue, over-explain, or fold immediately.',
     '',
-    'FEEDBACK + COACHING RULES:',
-    '1. Quote the rep\'s exact words from the transcript. Never summarize vaguely.',
-    '2. If they nailed a phase, name specifically what they said and why it worked.',
-    '3. If they fumbled an objection, quote the exact bar napkin reframe word for word. Never say "acknowledge and redirect."',
-    '4. If they used bar napkin language, confirm it was correct and score it high.',
+    'BAR NAPKIN OBJECTION GUIDE FOR THIS VERTICAL:',
+    guideText,
+    '',
+    'After scoring, provide:',
+    '1. A feedback paragraph (3-4 sentences) — what moved well, what stalled, and one specific moment from the transcript to fix',
+    '2. A "what to say instead" section — if the rep fumbled an objection, give them the exact reframe from the bar napkin guide above',
     '',
     'Return exactly this JSON:',
-    '{"overall":72,"categories":[{"label":"Open + Connect","score":80},{"label":"Discovery","score":65},{"label":"Consequence","score":55},{"label":"Objections","score":70},{"label":"Commitment","score":60}],"feedback":"2-3 sentences. Quote exact rep words. Name what moved well and what stalled.","coaching":"If they fumbled an objection: quote the exact bar napkin reframe word for word. If they nailed it: confirm what they said was correct. If no objections: one specific thing to sharpen based on what was weakest."}'
+    '{"overall":72,"categories":[{"label":"Open + Connect","score":80},{"label":"Discovery","score":65},{"label":"Consequence","score":55},{"label":"Objections","score":70},{"label":"Commitment","score":60}],"feedback":"Feedback paragraph here.","coaching":"What to say instead — specific objection reframes based on what came up in this call. If no objections came up write: No major objections came up — focus on deepening consequence next call."}'
   ].join('\n');
 })(),
         messages:[{role:'user', content:'Score this call. Prospect: '+a.name+' ('+a.label+'). Difficulty mode: '+modeLabel+'.\n\nTRANSCRIPT:\n'+transcript}]
@@ -1363,10 +1226,7 @@ async function scoreCall() {
     } else {
       coachEl.style.display = 'none';
     }
-  } catch(e) {
-    console.error('scoreCall error:', e);
-    document.getElementById('scoreFeed').textContent = e.name==='AbortError' ? 'Scoring timed out — tap Score My Call to try again.' : 'Could not analyze: ' + e.message;
-  }
+  } catch(e) { document.getElementById('scoreFeed').textContent = e.name==='AbortError' ? 'Scoring timed out — tap Try Again.' : 'Could not analyze — please try again.'; }
 }
 
 // ═══════════════════════════════════════════
@@ -1510,8 +1370,6 @@ var WS_PROFILES = {
   ins_frank:{pitch:0.9,rate:0.9,voice:'male'},
   ins_bob:{pitch:0.85,rate:1.05,voice:'male'},
   ins_helen:{pitch:1.1,rate:1.05,voice:'female'},
-  ins_marcus:{pitch:0.88,rate:1.0,voice:'male'},
-  ins_connie:{pitch:1.05,rate:0.82,voice:'female'},
   ins_dorothy:{pitch:1.05,rate:0.82,voice:'female'},
   cold_mike:{pitch:0.88,rate:1.1,voice:'male'},
   cold_furious:{pitch:0.82,rate:1.2,voice:'male'},
@@ -1981,231 +1839,6 @@ document.getElementById('soloDrillBtn').addEventListener('click', function() {
 document.getElementById('drillBackBtn').addEventListener('click', function() {
   if (drill.recording) drillStopRecording();
   document.getElementById('drillScreen').classList.add('hidden');
-  document.getElementById('startScreen').classList.remove('hidden');
-});
-
-// ═══════════════════════════════════════════
-// OBJECTION LAB
-// ═══════════════════════════════════════════
-var OBJECTIONS = {
-  insurance: [
-    { label: '"I need to think about it"',    line: "That's something I definitely need to think about." },
-    { label: '"I need to talk to my spouse"',  line: "I'd have to run this by my husband before I do anything." },
-    { label: '"I already have coverage"',      line: "I actually already have some coverage through work so I think I'm good." },
-    { label: '"I can\'t afford it"',           line: "I just don't think it fits in my budget right now." },
-    { label: '"Send me some information"',     line: "Why don't you just send me some information and I'll take a look." },
-    { label: "'I'm just checking prices'",    line: "I'm really just calling around to check on prices, I'm not ready to do anything today." },
-    { label: '"My son will handle it"',        line: "Honestly my son Derek will take care of everything when the time comes, so I'm probably okay." },
-  ],
-  b2b: [
-    { label: '"I need to think about it"',    line: "This is interesting but I'm going to need some time to think it over." },
-    { label: '"We already have a vendor"',    line: "We're actually already working with someone for this so I don't think we're looking to switch." },
-    { label: '"Not in the budget"',           line: "Budget is really tight right now, this just isn't something we can prioritize." },
-    { label: '"I need to loop someone in"',   line: "I'd need to bring my director into this before we go any further." },
-    { label: '"Send me some information"',    line: "Just send me something over email and I'll pass it along to the right people." },
-    { label: '"We tried something like this"', line: "We actually did something similar a couple years ago and it didn't really work out for us." },
-  ],
-  cold: [
-    { label: "'I'm not interested'",          line: "Yeah I'm really not interested, thanks." },
-    { label: "'I'm too busy'",                line: "This really isn't a good time, I've got a lot going on." },
-    { label: '"We already have something"',   line: "We're all set with what we have, but thanks for calling." },
-    { label: '"Call me back later"',          line: "Can you call me back next week? Now's not a good time." },
-    { label: '"How did you get my number?"',  line: "Wait — how did you even get this number? I'm on the do not call list." },
-  ],
-};
-
-var objLab = { vert:null, objection:null, transcript:'', recording:false, recognition:null };
-
-function objLabReset() {
-  objLab.vert=null; objLab.objection=null; objLab.transcript=''; objLab.recording=false;
-  if (objLab.recognition) { try { objLab.recognition.abort(); } catch(e) {} objLab.recognition=null; }
-  document.getElementById('objLabStep1').style.display='block';
-  document.getElementById('objLabStep2').style.display='none';
-  document.getElementById('objLabStep3').style.display='none';
-  document.getElementById('objLabStep3').classList.add('hidden');
-  document.getElementById('objLabFeedback').classList.remove('show');
-  document.getElementById('objLabScoreBtn').classList.remove('show');
-  document.getElementById('objLabResponseBox').textContent='Tap the mic and respond...';
-  document.getElementById('objLabScoreNum').textContent='—';
-  document.getElementById('objLabFeedbackText').textContent='';
-  document.querySelectorAll('.objlab-vert').forEach(function(b){ b.classList.remove('selected'); });
-  document.querySelectorAll('.objlab-obj').forEach(function(b){ b.classList.remove('selected'); });
-  var btn=document.getElementById('objLabRecBtn');
-  btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
-}
-
-function objLabRenderObjs() {
-  var list=document.getElementById('objLabObjList');
-  var objs=OBJECTIONS[objLab.vert]||[];
-  list.innerHTML=objs.map(function(o,i){ return "<button class='objlab-obj' data-i='"+i+"'>"+o.label+"</button>"; }).join('');
-  list.querySelectorAll('.objlab-obj').forEach(function(b) {
-    b.addEventListener('click', function() {
-      var i=parseInt(this.getAttribute('data-i'));
-      objLab.objection=OBJECTIONS[objLab.vert][i];
-      list.querySelectorAll('.objlab-obj').forEach(function(x){ x.classList.remove('selected'); });
-      this.classList.add('selected');
-      setTimeout(function(){ objLabStartArena(); }, 200);
-    });
-  });
-}
-
-function objLabStartArena() {
-  document.getElementById('objLabStep2').style.display='none';
-  var step3=document.getElementById('objLabStep3');
-  step3.classList.remove('hidden'); step3.style.display='flex';
-  document.getElementById('objLabProspectLine').textContent=objLab.objection.line||'';
-  document.getElementById('objLabFeedback').classList.remove('show');
-  document.getElementById('objLabScoreBtn').classList.remove('show');
-  document.getElementById('objLabResponseBox').textContent='Tap the mic and respond...';
-  objLab.transcript='';
-  var btn=document.getElementById('objLabRecBtn');
-  btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
-}
-
-function objLabStartRecording() {
-  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if (!SR) { showToast('Voice needs Chrome or Safari.'); return; }
-  objLab.recording=true; objLab.transcript='';
-  var btn=document.getElementById('objLabRecBtn');
-  btn.className='objlab-rec-btn recording'; btn.innerHTML='&#9632;';
-  document.getElementById('objLabResponseBox').textContent='Listening...';
-  document.getElementById('objLabScoreBtn').classList.remove('show');
-  if (objLab.recognition) { try { objLab.recognition.abort(); } catch(e) {} }
-  var r=new SR(); r.continuous=false; r.interimResults=true; r.lang='en-US';
-  var _t=null;
-  r.onresult=function(e) {
-    var interim='',final='';
-    for (var i=e.resultIndex;i<e.results.length;i++) {
-      if (e.results[i].isFinal) final+=e.results[i][0].transcript;
-      else interim+=e.results[i][0].transcript;
-    }
-    var text=final||interim;
-    document.getElementById('objLabResponseBox').textContent=text;
-    objLab.transcript=text;
-    if (_t) clearTimeout(_t);
-    if (final) { objLabStopRecording(); return; }
-    _t=setTimeout(function(){ if (objLab.recording) objLabStopRecording(); }, 3000);
-  };
-  r.onerror=function(){ objLabStopRecording(); };
-  r.onend=function(){ if (objLab.recording) objLabStopRecording(); };
-  objLab.recognition=r;
-  try { r.start(); } catch(e) { showToast('Could not start mic.'); }
-}
-
-function objLabStopRecording() {
-  objLab.recording=false;
-  if (objLab.recognition) { try { objLab.recognition.stop(); } catch(e) {} }
-  var btn=document.getElementById('objLabRecBtn');
-  btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
-  if (objLab.transcript.trim()) {
-    document.getElementById('objLabScoreBtn').classList.add('show');
-  } else {
-    document.getElementById('objLabResponseBox').textContent='Nothing captured — tap to try again.';
-  }
-}
-
-async function objLabScore() {
-  var response=objLab.transcript.trim();
-  if (!response) { showToast('Nothing recorded yet.'); return; }
-  document.getElementById('objLabScoreBtn').classList.remove('show');
-  var feedback=document.getElementById('objLabFeedback');
-  feedback.classList.add('show');
-  document.getElementById('objLabScoreNum').textContent='...';
-  document.getElementById('objLabFeedbackText').textContent='Analyzing...';
-  var objLine=objLab.objection.line||objLab.objection.label;
-  var barNapkin={
-    insurance:{
-      'think about it':"That's not a problem. Setting the cost aside for a second — do you feel like this is the right answer for your family? What would need to be in place for this to feel like the right move?",
-      'talk to my husband':"That's not a problem. If he were on this call right now — what's the one thing he'd want to know before saying yes?",
-      'talk to my wife':"That's not a problem. If she were on this call right now — what's the one thing she'd want to know before saying yes?",
-      'talk to my spouse':"That's not a problem. If they were on this call right now — what's the one thing they'd want to know before saying yes?",
-      'run this by':"That's not a problem. If they were on this call right now — what's the one thing they'd want to know before saying yes?",
-      'already have coverage':"I totally get that. When's the last time someone actually reviewed that policy to make sure it still fits where you are today?",
-      'afford it':"I hear you. Setting the cost aside for a second — do you feel like this is something your family needs? Because if we agree on that, we can usually find something that works.",
-      'send me':"Happy to. Before I do — what specifically would you be looking for in that info to help you make a decision?",
-      'just checking':"That's totally fine. Out of curiosity — what made you decide to look into this now versus six months ago?",
-      'son will handle':"I hear that. Has Derek actually said that, or is that more your hope? Because most adult kids want to help — they just don't want to deal with a $10,000 surprise in the middle of their grief.",
-    },
-    b2b:{
-      'think about it':"That's not a problem. What specifically would you need to see or know to feel confident moving forward?",
-      'already have a vendor':"Completely get that. What would that vendor need to stop doing for you to consider making a switch?",
-      'budget':"I hear you. Is the budget the issue, or is it that you're not yet sure the ROI is there? Because those are two different conversations.",
-      'loop someone in':"Of course. If they were on this call right now — what'd they ask me?",
-      'send me':"Happy to send something over. What decision would that info need to help you make?",
-      'tried':"What specifically didn't work — the product, the timing, or the way it was rolled out? Because that changes everything.",
-    },
-    cold:{
-      'not interested':"That's fair. Out of curiosity — what would have to be true for this to be worth 5 minutes of your time?",
-      'too busy':"I get it. What's the biggest thing on your plate that something like this might actually help with?",
-      'already have something':"Makes sense. What would have to be missing from what you've got for you to at least take a look?",
-      'call me back':"Of course. Before I let you go — is timing the only thing, or is there something about what I said that didn't land right?",
-      'how did you get':"Fair question — I'll be straight with you. I reached out because [reason]. Does that make sense?",
-    },
-  };
-  var vertGuide=barNapkin[objLab.vert]||{};
-  var objKey=objLine.toLowerCase();
-  var reframe=''; var bestLen=0;
-  Object.keys(vertGuide).forEach(function(k){ if (objKey.indexOf(k)>-1&&k.length>bestLen){ bestLen=k.length; reframe=vertGuide[k]; } });
-  if (!reframe) reframe='Acknowledge without groveling, get curious about what is really behind the objection, and redirect with a question that moves toward the real concern.';
-  var systemPrompt=[
-    'You are a sales coach scoring a single objection response. Compare what the rep said to the bar napkin reframe below.',
-    '',
-    'THE BAR NAPKIN REFRAME FOR THIS OBJECTION:',
-    '"'+reframe+'"',
-    '',
-    'Prospect said: '+objLine,
-    'Rep responded: '+response,
-    '',
-    'SCORING: 90-100 = same spirit as bar napkin. 70-89 = close but missed one element. 50-69 = acknowledged but generic redirect. 0-49 = argued, folded, or ignored.',
-    'FEEDBACK: Quote the rep exact words. Say what was missing. End with: "The bar napkin says: [exact reframe]"',
-    'DO NOT invent your own phrasing. Always end with the bar napkin reframe verbatim.',
-    '',
-    'Return exactly: {"score":72,"feedback":"2-3 sentence feedback ending with the bar napkin reframe."}'
-  ].join('\n');
-  try {
-    var res=await fetchWithTimeout('/api/chat',{method:'POST',headers:authHeaders(),body:JSON.stringify({max_tokens:300,system:systemPrompt,messages:[{role:'user',content:'Score this objection response.'}]})},20000);
-    if (!res.ok) throw new Error('API '+res.status);
-    var data=await res.json();
-    var raw=(data.content&&data.content[0])?data.content[0].text:'{}';
-    raw=raw.replace(/```json|```/g,'').trim();
-    var sc=JSON.parse(raw);
-    var col=sc.score>=75?'#00e676':sc.score>=55?'#ffd600':'#ff1744';
-    document.getElementById('objLabScoreNum').textContent=sc.score+'/100';
-    document.getElementById('objLabScoreNum').style.color=col;
-    document.getElementById('objLabFeedbackText').textContent=sc.feedback||'';
-  } catch(e) {
-    document.getElementById('objLabFeedbackText').textContent='Could not score — try again.';
-  }
-}
-
-document.querySelectorAll('.objlab-vert').forEach(function(b) {
-  b.addEventListener('click', function() {
-    objLab.vert=this.getAttribute('data-vert');
-    document.querySelectorAll('.objlab-vert').forEach(function(x){ x.classList.remove('selected'); });
-    this.classList.add('selected');
-    objLabRenderObjs();
-    setTimeout(function(){ document.getElementById('objLabStep2').style.display='block'; }, 200);
-  });
-});
-document.getElementById('objLabRecBtn').addEventListener('click', function() {
-  if (objLab.recording) objLabStopRecording(); else objLabStartRecording();
-});
-document.getElementById('objLabScoreBtn').addEventListener('click', objLabScore);
-document.getElementById('objLabTryAgain').addEventListener('click', function(){ objLabStartArena(); });
-document.getElementById('objLabNewObj').addEventListener('click', function() {
-  document.getElementById('objLabFeedback').classList.remove('show');
-  document.getElementById('objLabStep3').style.display='none';
-  document.getElementById('objLabStep3').classList.add('hidden');
-  document.getElementById('objLabStep2').style.display='block';
-});
-document.getElementById('objLabBtn').addEventListener('click', function() {
-  objLabReset();
-  document.getElementById('startScreen').classList.add('hidden');
-  document.getElementById('objLabScreen').classList.remove('hidden');
-});
-document.getElementById('objLabBackBtn').addEventListener('click', function() {
-  if (objLab.recording) objLabStopRecording();
-  document.getElementById('objLabScreen').classList.add('hidden');
   document.getElementById('startScreen').classList.remove('hidden');
 });
 
