@@ -2124,7 +2124,7 @@ async function objLabScore() {
   if (!reframe) reframe='Acknowledge without groveling, stay curious, and redirect with a question that moves toward the real concern.';
 
   // Everything goes in messages — JSON.stringify handles all escaping, no apostrophe issues
-  var systemPrompt = 'You are a sales coach. Respond ONLY with a valid JSON object. No preamble, no explanation, no markdown. Just the JSON. Format: {"score":72,"feedback":"your feedback here"}';
+  var systemPrompt = 'You are a blunt sales coach. Respond ONLY with valid JSON. No preamble, no markdown. Be direct — no flowery language. Quote the reps exact words. Format: {"score":72,"feedback":"your feedback here"}';
 
   try {
     var res=await fetchWithTimeout('/api/chat',{
