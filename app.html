@@ -560,7 +560,6 @@ var EL_VOICES = {
   ins_frank:    'ErXwobaYiN019PkySvjV', // Antoni — warm male, slight hesitation
   ins_bob:      'VR6AewLTigWG4xSOukaG', // Arnold — gruff, hostile male
   ins_helen:    'EXAVITQu4vr4xnSDxMaL', // Bella — warm, hopeful female
-  ins_connie:   'MF3mGyEYCl7XYWbV9V6O', // Elli — warm older female
   ins_dorothy:  'MF3mGyEYCl7XYWbV9V6O', // Elli — older, gentle female
   // Cold Call
   cold_mike:    'flq6f7yk4E4fJM5XTYuZ', // Michael — gruff, impatient male
@@ -680,18 +679,6 @@ var ARCHETYPES = {
       watchFor:'She talks about her kids futures excitedly = she is already sold.',
       difficulty:1,
       baseSystem:'You are Hopeful Helen, a 34-year-old teacher who just had her first baby. You are warm, optimistic, and excited about your family future. You see life insurance as an act of love. You trust people quickly if they are warm and knowledgeable. Your main hesitation is wanting to include your husband.',
-    },
-    {
-      id:'ins_connie', name:'Cautious Connie', emoji:'&#128105;',
-      label:'Self-reliant Deflector', title:'Age 67 · Widowed · Retired',
-      age:'67', product:'Final Expense', productColor:'#ff6b8a',
-      tags:[{t:'Deflecting',c:'#ffd600'},{t:'Widowed',c:'#ff6b8a'},{t:'Just checking',c:'#409cff'}],
-      emotion:"Doesn't want to be a burden but won't admit how alone she really is. Hides behind her son Derek.",
-      sellWith:'Make her feel seen, not sold. The real conversation is about what she would be putting on Derek.',
-      tips:['When she says Derek will handle it — ask: has Derek said that, or is that your hope?','Ask consequence: if something happened next month, what does Derek\'s year look like?','Ask discovery: what does Derek do for work — is he in a position to drop everything?','Setting the cost aside — do you feel like having this handled would take a weight off Derek?'],
-      watchFor:"She goes quiet when you mention Derek's stress = she's pictured it. That's your moment.",
-      difficulty:3,
-      baseSystem:"You are Cautious Connie, a 67-year-old retired bookkeeper in Cincinnati. You were married to Harold for 41 years. He passed 3 years ago from a heart attack. Your three kids are Derek 44 in Columbus, Patrice 41 in Atlanta, and Marcus 38 in Denver. You live alone. You are proud and independent and hate the idea of being a burden. Your go-to objection is: I am just checking on prices right now, or Derek will take care of everything when the time comes. You have not actually talked to Derek about this. If the agent asks pointed questions about what Derek's year would look like if something happened you get quiet and start to really think. You warm up when someone treats you like an intelligent adult rather than a sales target.",
     },
     {
       id:'ins_dorothy', name:'Confused Dorothy', emoji:'&#128117;',
@@ -1177,82 +1164,37 @@ async function scoreCall() {
   var guideText = Object.entries(guide).map(function(e){ return 'If they say "' + e[0] + '": ' + e[1]; }).join('\n');
 
   return [
-    'You are a direct sales coach. Score this call honestly. Reference exact words from the transcript. No generic coaching. Respond ONLY with valid JSON, no markdown.',
+    'You are a straightforward sales coach. Score this call honestly based on how well the rep moved the prospect toward a close.',
+    'Your job is to reward real sales progress — not perfect script execution. A rep who builds genuine connection and moves the prospect emotionally scores well even if they did not follow a rigid framework.',
+    'Score each phase based on outcomes and direction, not checklist compliance. Respond ONLY with valid JSON, no markdown.',
     '',
-    'OPEN + CONNECT (0-100):',
-    'High: Sounds like a peer. Natural, warm, no corporate intro. Creates comfort immediately.',
-    'Low: Leads with company name, scripted opener, "Hi my name is X calling from Y."',
-    'Cold call: Did they use a pattern interrupt — something unexpected that triggers curiosity?',
-    'Insurance/inbound: Did they establish who they are and why they called simply and warmly?',
+    'SCORING FRAMEWORK:',
     '',
-    'DISCOVERY + SITUATION (0-100):',
-    'High: Asks what prompted the call, what the biggest challenge is, what staying where they are is costing them. Builds the full picture BEFORE pitching anything.',
-    'Low: Pitches features or benefits before asking a single discovery question.',
-    'Reward: "What prompted you to look into this?" "What\'s been your biggest challenge?" "What\'s it costing you to stay where you are?"',
-    'Penalize hard: Any pitch or feature statement before discovery is complete.',
+    'OPEN + CONNECT (0-100): Did the rep establish who they are and why they called without sounding like a telemarketer? Did they build enough comfort for the prospect to stay on the line and engage? A warm, natural opener that creates connection scores high. A stiff robotic intro scores low.',
     '',
-    'CONSEQUENCE OF INACTION (0-100):',
-    'High: Makes the prospect feel the weight of doing nothing. Personal, emotional, tied to their specific situation.',
-    'Low: Skips consequence and jumps straight to the close. Or asks hypothetical questions that don\'t land personally.',
-    'Reward: "If something happened tomorrow, what would that look like for your family?" "What does staying where you are cost you every month?" "Who else gets affected if this doesn\'t get handled?"',
-    'Penalize: Moving to close without making inaction feel real.',
+    'DISCOVERY + SITUATION (0-100): Did the rep ask questions to understand the prospect before pitching anything? Did they uncover what prompted the call, what the prospect is currently dealing with, and what their biggest challenge is? Did they ask what it is costing the prospect to stay where they are? Reward curiosity and problem awareness. Penalize reps who pitch before they listen.',
     '',
-    'COMMITMENT + CLOSE (0-100):',
-    'High: Close flows naturally from discovery and consequence. Rep earned it. Gets prospect to verbalize why this matters before asking for a decision.',
-    'Low: Premature close that skips emotion. No close attempt at all. Feature dump right before asking for decision.',
-    'Reward: "Setting the cost aside — do you feel like this is the right answer for your family?" "What would need to be in place for this to feel like the right move?" "On a scale of 1-10 how ready do you feel?"',
-    'Penalize: "So do you want to move forward?" with no emotional foundation.',
+    'CONSEQUENCE OF INACTION (0-100): Did the rep help the prospect feel what staying where they are actually costs them? Did they ask what happens if nothing changes, who gets affected, what this delay means for their family or business? This does not need to be a scripted question — it just needs to land emotionally.',
     '',
-    'OBJECTION HANDLING (0-100):',
-    'High: Stays calm. Acknowledges without groveling. Immediately redirects with curiosity. Uses bar napkin reframes.',
-    'Low: Argues, defends, over-explains, gives up, or gives a generic response.',
-    'CRITICAL: If the rep said something close to the bar napkin reframe below — even paraphrased — score it 80+. "That\'s not a problem" + setting cost aside + emotional redirect IS the correct response. Do NOT penalize it.',
+    'COMMITMENT + CLOSE (0-100): Did the rep attempt to move the prospect toward a decision? Did they earn the close through the conversation — or did they pitch and hope? A close that flows naturally from the discovery scores high. A premature close that skips emotion scores low.',
     '',
-    'BAR NAPKIN REFRAMES — score 80+ if rep said anything close to these:',
-    (function() {
-      var reframes = {
-        insurance: [
-          '"I need to think about it" → That\'s not a problem. Setting the cost aside — do you feel like this is the right answer for your family? What would need to be in place for this to feel like the right move?',
-          '"I need to talk to my husband/wife/spouse" → That\'s not a problem. If they were on this call right now — what\'s the one thing they\'d want to know before saying yes?',
-          '"I already have coverage" → I totally get that. When\'s the last time someone actually reviewed that policy to make sure it still fits where you are today?',
-          '"I can\'t afford it" → Setting the cost aside — do you feel like this is something your family needs? If we agree on that we can usually find something that works.',
-          '"Send me information" → Happy to. Before I do — what specifically would you be looking for to help you make a decision?',
-          '"I\'m just checking prices" → That\'s totally fine. What made you decide to look into this now versus six months ago?',
-          '"My son/family will handle it" → Has he actually said that or is that your hope? Most adult kids want to help — they just don\'t want a $10,000 surprise in the middle of their grief.',
-        ],
-        b2b: [
-          '"I need to think about it" → That\'s not a problem. What specifically would you need to see or know to feel confident moving forward?',
-          '"We already have a vendor" → Completely get that. What would that vendor need to stop doing for you to consider making a switch?',
-          '"It\'s not in the budget" → Is the budget the issue or is it that you\'re not yet sure the ROI is there? Those are two different conversations.',
-          '"I need to loop someone in" → Of course. If they were on this call right now — what\'d they ask me?',
-          '"Send me information" → Happy to. What decision would that info need to help you make?',
-          '"We tried something like this before" → What specifically didn\'t work — the product, the timing, or the rollout? That changes everything.',
-        ],
-        cold: [
-          '"I\'m not interested" → That\'s fair. What would have to be true for this to be worth 5 minutes of your time?',
-          '"I\'m too busy" → I get it. What\'s the biggest thing on your plate that something like this might actually help with?',
-          '"We already have something" → Makes sense. What would have to be missing from what you\'ve got for you to at least take a look?',
-          '"Call me back later" → Before I let you go — is timing the only thing or is there something about what I said that didn\'t land right?',
-          '"How did you get my number" → Fair question — I\'ll be straight with you. I reached out because [reason]. Does that make sense?',
-          '"Send me information" → What specifically should I include so it\'s actually worth opening?',
-        ],
-      };
-      return (reframes[vertical] || reframes.insurance).join('\n');
-    })(),
+    'OBJECTION HANDLING (0-100): When the prospect pushed back, did the rep stay calm and curious? Did they acknowledge the objection and ask a follow-up question instead of fighting it? Reward reps who redirect with curiosity. Penalize reps who argue, over-explain, or fold immediately.',
     '',
-    'FEEDBACK + COACHING RULES:',
-    '1. Quote the rep\'s exact words from the transcript. Never summarize vaguely.',
-    '2. If they nailed a phase, name specifically what they said and why it worked.',
-    '3. If they fumbled an objection, quote the exact bar napkin reframe word for word. Never say "acknowledge and redirect" or "validate their concern."',
-    '4. If they used bar napkin language, confirm it was correct and score it high.',
+    'BAR NAPKIN OBJECTION GUIDE FOR THIS VERTICAL:',
+    guideText,
+    '',
+    'After scoring, provide:',
+    '1. A feedback paragraph (3-4 sentences) — what moved well, what stalled, and one specific moment from the transcript to fix',
+    '2. A "what to say instead" section — if the rep fumbled an objection, give them the exact reframe from the bar napkin guide above',
     '',
     'Return exactly this JSON:',
-    '{"overall":72,"categories":[{"label":"Open + Connect","score":80},{"label":"Discovery","score":65},{"label":"Consequence","score":55},{"label":"Objections","score":70},{"label":"Commitment","score":60}],"feedback":"2-3 sentences. Quote exact rep words. Name what moved well and what stalled.","coaching":"If they fumbled an objection: quote the exact bar napkin reframe word for word. If they nailed it: confirm what they said was correct. If no objections: one specific thing to sharpen based on what was weakest."}'
+    '{"overall":72,"categories":[{"label":"Open + Connect","score":80},{"label":"Discovery","score":65},{"label":"Consequence","score":55},{"label":"Objections","score":70},{"label":"Commitment","score":60}],"feedback":"Feedback paragraph here.","coaching":"What to say instead — specific objection reframes based on what came up in this call. If no objections came up write: No major objections came up — focus on deepening consequence next call."}'
   ].join('\n');
 })(),
         messages:[{role:'user', content:'Score this call. Prospect: '+a.name+' ('+a.label+'). Difficulty mode: '+modeLabel+'.\n\nTRANSCRIPT:\n'+transcript}]
       })
     }, 25000);
+    if (!res.ok) { throw new Error('API ' + res.status + ' — ' + (await res.text()).slice(0,120)); }
     var data = await res.json();
     var raw = (data.content && data.content[0]) ? data.content[0].text : '{}';
     raw = raw.replace(/```json|```/g,'').trim();
@@ -1280,7 +1222,11 @@ async function scoreCall() {
     } else {
       coachEl.style.display = 'none';
     }
-  } catch(e) { document.getElementById('scoreFeed').textContent = e.name==='AbortError' ? 'Scoring timed out — tap Try Again.' : 'Could not analyze — please try again.'; }
+  } catch(e) {
+    console.error('scoreCall error:', e);
+    var msg = e.name==='AbortError' ? 'Scoring timed out — tap Score My Call to try again.' : 'Could not analyze: ' + e.message;
+    document.getElementById('scoreFeed').textContent = msg;
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -1424,8 +1370,6 @@ var WS_PROFILES = {
   ins_frank:{pitch:0.9,rate:0.9,voice:'male'},
   ins_bob:{pitch:0.85,rate:1.05,voice:'male'},
   ins_helen:{pitch:1.1,rate:1.05,voice:'female'},
-  ins_marcus:{pitch:0.88,rate:1.0,voice:'male'},
-  ins_connie:{pitch:1.05,rate:0.82,voice:'female'},
   ins_dorothy:{pitch:1.05,rate:0.82,voice:'female'},
   cold_mike:{pitch:0.88,rate:1.1,voice:'male'},
   cold_furious:{pitch:0.82,rate:1.2,voice:'male'},
