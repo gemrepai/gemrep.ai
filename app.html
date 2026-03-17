@@ -2147,7 +2147,7 @@ async function objLabScore() {
       body:JSON.stringify({
         max_tokens:300,
         system:systemPrompt,
-        messages:[{role:'user',content:'Score this objection response. Bar napkin reframe: '+reframe+'. Prospect: '+objLine+'. Rep: '+response+'. Score 85+ if rep acknowledged and redirected with curiosity toward the emotional core. End feedback with the bar napkin reframe. Return ONLY valid JSON: {"score":72,"feedback":"text"}'}]
+        messages:[{role:'user',content:'Prospect said: '+objLine+'. Rep responded: '+response+'. Did the rep acknowledge without losing status and redirect toward the emotional core with curiosity? Score and give feedback. End with: Bar napkin reference: '+reframe}]
       })
     },20000);
     if (!res.ok) throw new Error('API '+res.status);
