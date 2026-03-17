@@ -1540,23 +1540,25 @@ function initRecognition() {
     var text = final || interim;
     document.getElementById('inp').value = text;
 
+    // Never auto-send — rep controls when to send
+    // Just accumulate text and show it in the box
     if (_iosSendTimer) clearTimeout(_iosSendTimer);
 
     if (final || interim) {
-      // Show hold bar — give rep a chance to keep talking or send manually
+      // On silence, stop mic but leave text in box — rep hits send or keep talking
       _iosSendTimer = setTimeout(function() {
-        var val = document.getElementById('inp').value.trim();
-        if (val && !state.loading && !state.ended && !el_speaking) {
-          stopListening();
-          showSendHold();
-        }
-      }, final ? 800 : 3500);
+        stopListening();
+        showSendHold();
+      }, 2500);
     }
   };
   r.onerror = function(e) {
     if (_iosSendTimer) clearTimeout(_iosSendTimer);
+    var hadText = document.getElementById('inp').value.trim();
     stopListening();
-    if (e.error === 'no-speech') {
+    if (hadText) {
+      showSendHold();
+    } else if (e.error === 'no-speech') {
       if (!el_speaking && !state.ended && !state.loading) setTimeout(startListening, 500);
     } else if (e.error !== 'aborted') {
       document.getElementById('inp').placeholder = 'Mic error — tap to try again';
@@ -1565,11 +1567,14 @@ function initRecognition() {
   r.onend = function() {
     if (_iosSendTimer) clearTimeout(_iosSendTimer);
     var hadText = document.getElementById('inp').value.trim();
-    if (!hadText) {
-      stopListening();
-      if (!el_speaking && !state.ended && !state.loading) setTimeout(startListening, 500);
+    stopListening();
+    if (hadText) {
+      // Text captured — show hold bar, rep decides when to send
+      showSendHold();
+    } else if (!el_speaking && !state.ended && !state.loading) {
+      // Nothing captured — restart mic
+      setTimeout(startListening, 500);
     }
-    // If we have text, leave it — the hold bar or manual send handles it
   };
   recognition = r;
   return r;
@@ -1582,18 +1587,9 @@ var _holdInterval = null;
 function showSendHold() {
   var hold = document.getElementById('sendHold');
   hold.classList.add('show');
-  // Auto-send after 5 seconds if no action
-  var elapsed = 0;
-  var total = 5000;
-  if (_holdInterval) clearInterval(_holdInterval);
+  // No auto-send — rep controls this entirely
   if (_holdTimer) clearTimeout(_holdTimer);
-  _holdTimer = setTimeout(function() {
-    hideSendHold();
-    sendMsg();
-  }, total);
-  _holdInterval = setInterval(function() {
-    elapsed += 100;
-  }, 100);
+  if (_holdInterval) clearInterval(_holdInterval);
 }
 
 function hideSendHold() {
