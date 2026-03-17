@@ -506,6 +506,14 @@ textarea:disabled{opacity:.4}
         <button class="objlab-rec-btn idle" id="objLabRecBtn">&#127908;</button>
         <div class="objlab-response-box" id="objLabResponseBox">Tap the mic and respond...</div>
       </div>
+      <!-- SEND HOLD BAR -->
+      <div id="objLabSendHold" style="display:none;width:100%;background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.2);border-radius:10px;padding:12px 14px;display:none;align-items:center;justify-content:space-between;gap:10px">
+        <span style="font-size:12px;color:var(--green)">Ready to send</span>
+        <div style="display:flex;gap:8px">
+          <button id="objLabKeepTalking" style="background:none;border:1px solid var(--border);border-radius:7px;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:11px;padding:6px 12px;cursor:pointer">&#127908; Keep talking</button>
+          <button id="objLabSendBtn" style="background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:7px;color:white;font-family:'DM Sans',sans-serif;font-size:11px;padding:6px 14px;cursor:pointer;font-weight:600">Send &#10148;</button>
+        </div>
+      </div>
       <button class="objlab-score-btn" id="objLabScoreBtn">&#128202; SCORE MY RESPONSE</button>
     </div>
   </div>
@@ -2023,6 +2031,7 @@ function objLabStartArena() {
   document.getElementById('objLabProspectLine').textContent=objLab.objection.line||'—';
   document.getElementById('objLabFeedback').classList.remove('show');
   document.getElementById('objLabScoreBtn').classList.remove('show');
+  document.getElementById('objLabSendHold').style.display='none';
   document.getElementById('objLabResponseBox').textContent='Tap the mic and respond...';
   objLab.transcript='';
   var btn=document.getElementById('objLabRecBtn');
@@ -2064,8 +2073,12 @@ function objLabStopRecording() {
   if (objLab.recognition) { try { objLab.recognition.stop(); } catch(e) {} }
   var btn=document.getElementById('objLabRecBtn');
   btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
-  if (objLab.transcript.trim()) document.getElementById('objLabScoreBtn').classList.add('show');
-  else document.getElementById('objLabResponseBox').textContent='Nothing captured — tap to try again.';
+  if (objLab.transcript.trim()) {
+    // Show send-hold bar instead of immediately scoring
+    document.getElementById('objLabSendHold').style.display='flex';
+  } else {
+    document.getElementById('objLabResponseBox').textContent='Nothing captured — tap to try again.';
+  }
 }
 
 async function objLabScore() {
@@ -2174,6 +2187,14 @@ document.getElementById('objLabBtn').addEventListener('click', function(){
   objLabReset();
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('objLabScreen').classList.remove('hidden');
+});
+document.getElementById('objLabSendBtn').addEventListener('click', function(){
+  document.getElementById('objLabSendHold').style.display='none';
+  document.getElementById('objLabScoreBtn').classList.add('show');
+});
+document.getElementById('objLabKeepTalking').addEventListener('click', function(){
+  document.getElementById('objLabSendHold').style.display='none';
+  objLabStartRecording();
 });
 document.getElementById('objLabBackBtn').addEventListener('click', function(){
   if (objLab.recording) objLabStopRecording();
