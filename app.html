@@ -2122,16 +2122,13 @@ async function objLabScore() {
   var safeResponse = response.replace(/'/g, "\\");
 
   var systemPrompt = "You are a sales coach scoring one objection response. " +
-    "Prospect said: " + safeObjLine + ". " +
-    "Rep responded: " + safeResponse + ". " +
-    "The correct bar napkin reframe is: " + safeReframe + ". " +
+    "The correct bar napkin reframe for this objection is: " + safeReframe + ". " +
     "Score 85-100: rep acknowledged without groveling and redirected with genuine curiosity toward the emotional core, close to the bar napkin spirit. " +
     "Score 70-84: decent redirect but missed the emotional core or was too assumptive. " +
     "Score 50-69: acknowledged but gave a vague or generic redirect. " +
     "Score 0-49: argued, folded, over-explained, or ignored the objection. " +
-    "In your feedback: quote the reps exact words, say what was missing, then end with exactly this: The bar napkin says: " + safeReframe + ". " +
-    "Do NOT suggest your own reframe. Always end with the bar napkin verbatim. " +
-    "Return only valid JSON: {\"score\":72,\"feedback\":\"2-3 sentences ending with the bar napkin.\"}";
+    "Quote the reps exact words in feedback. End with: The bar napkin says: " + safeReframe + ". " +
+    "Do NOT invent your own reframe. Return only valid JSON: {\"score\":72,\"feedback\":\"2-3 sentences.\"}";
 
   try {
     var res=await fetchWithTimeout('/api/chat',{method:'POST',headers:authHeaders(),body:JSON.stringify({max_tokens:300,system:systemPrompt,messages:[{role:'user',content:'Score this objection response.'}]})},20000);
