@@ -2081,7 +2081,9 @@ async function objLabScore() {
   fb.classList.add('show');
   document.getElementById('objLabScoreNum').textContent='...';
   document.getElementById('objLabFeedbackText').textContent='Analyzing...';
+
   var objLine=objLab.objection.line||objLab.objection.label;
+
   var barNapkin={
     insurance:{
       'think about':"Thats not a problem. Setting the cost aside — do you feel like this is the right answer for your family? What would need to be in place for this to feel like the right move?",
@@ -2112,26 +2114,36 @@ async function objLabScore() {
       'how did you get':"Fair question — Ill be straight with you. I reached out because [reason]. Does that make sense?",
     },
   };
+
   var vertGuide=barNapkin[objLab.vert]||{};
   var objKey=objLine.toLowerCase();
   var reframe=''; var bestLen=0;
-  Object.keys(vertGuide).forEach(function(k){ if (objKey.indexOf(k)>-1&&k.length>bestLen){ bestLen=k.length; reframe=vertGuide[k]; } });
+  Object.keys(vertGuide).forEach(function(k){
+    if (objKey.indexOf(k)>-1&&k.length>bestLen){ bestLen=k.length; reframe=vertGuide[k]; }
+  });
   if (!reframe) reframe='Acknowledge without groveling, stay curious, and redirect with a question that moves toward the real concern.';
-  var safeReframe = reframe.replace(/'/g, "\\");
-  var safeObjLine = objLine.replace(/'/g, "\\");
-  var safeResponse = response.replace(/'/g, "\\");
 
-  var systemPrompt = "You are a sales coach scoring one objection response. " +
-    "The correct bar napkin reframe for this objection is: " + safeReframe + ". " +
-    "Score 85-100: rep acknowledged without groveling and redirected with genuine curiosity toward the emotional core, close to the bar napkin spirit. " +
-    "Score 70-84: decent redirect but missed the emotional core or was too assumptive. " +
-    "Score 50-69: acknowledged but gave a vague or generic redirect. " +
-    "Score 0-49: argued, folded, over-explained, or ignored the objection. " +
-    "Quote the reps exact words in feedback. End with: The bar napkin says: " + safeReframe + ". " +
-    "Do NOT invent your own reframe. Return only valid JSON: {\"score\":72,\"feedback\":\"2-3 sentences.\"}";
+  // System prompt has NO user input injected — safe from apostrophes
+  var systemPrompt = 'You are a sales coach scoring one objection response. ' +
+    'The correct bar napkin reframe for this objection is: ' + reframe + '. ' +
+    'Score 85-100 if rep acknowledged and redirected toward the emotional core with curiosity — paraphrasing the bar napkin is fine. ' +
+    'Score 70-84 if decent but missed the emotional core. ' +
+    'Score 50-69 if acknowledged but redirect was vague. ' +
+    'Score 0-49 if rep argued, folded, or ignored the objection. ' +
+    'Quote the reps exact words. End feedback with: The bar napkin says: ' + reframe + '. ' +
+    'Do NOT invent your own reframe. Return only valid JSON: {"score":72,"feedback":"2-3 sentences."}';
 
+  // Prospect line and rep response go in messages — JSON.stringify handles all escaping
   try {
-    var res=await fetchWithTimeout('/api/chat',{method:'POST',headers:authHeaders(),body:JSON.stringify({max_tokens:300,system:systemPrompt,messages:[{role:'user',content:'Score this objection response.'}]})},20000);
+    var res=await fetchWithTimeout('/api/chat',{
+      method:'POST',
+      headers:authHeaders(),
+      body:JSON.stringify({
+        max_tokens:300,
+        system:systemPrompt,
+        messages:[{role:'user',content:'Prospect: '+objLine+' Rep: '+response}]
+      })
+    },20000);
     if (!res.ok) throw new Error('API '+res.status);
     var data=await res.json();
     var raw=(data.content&&data.content[0])?data.content[0].text:'{}';
@@ -2145,7 +2157,6 @@ async function objLabScore() {
     document.getElementById('objLabFeedbackText').textContent='Could not score — try again. '+e.message;
   }
 }
-
 document.querySelectorAll('.objlab-vert').forEach(function(b) {
   b.addEventListener('click', function() {
     objLab.vert=this.getAttribute('data-vert');
