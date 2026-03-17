@@ -2145,7 +2145,7 @@ async function objLabScore() {
       "son will handle": "I hear that. Has Derek actually said that, or is that more your hope? Because most adult kids want to help — they just don't want to deal with a $10,000 surprise in the middle of their grief.",
     },
     b2b: {
-      "need to think about it": "That's not a problem. What specifically would you need to see or know to feel confident moving forward?",
+      "think about it": "That's not a problem. What specifically would you need to see or know to feel confident moving forward?",
       "already have a vendor": "Completely get that. What would that vendor need to stop doing — or what would we need to do — for you to consider making a switch?",
       "budget": "I hear you. Is the budget the issue, or is it that you're not yet sure the ROI is there? Because those are two different conversations.",
       "loop someone in": "Of course. If they were on this call right now — what'd they ask me?",
@@ -2162,13 +2162,15 @@ async function objLabScore() {
     },
   };
 
-  // Find the closest bar napkin reframe for this objection
+  // Match objection to bar napkin reframe — exact phrase first, then longest substring match
   var vertGuide = barNapkin[objLab.vert] || {};
   var objKey = objLine.toLowerCase();
   var reframe = '';
+  var bestLen = 0;
   Object.keys(vertGuide).forEach(function(k) {
-    if (objKey.indexOf(k) > -1 || k.split(' ').some(function(w){ return objKey.indexOf(w) > -1; })) {
-      if (!reframe) reframe = vertGuide[k];
+    if (objKey.indexOf(k) > -1 && k.length > bestLen) {
+      bestLen = k.length;
+      reframe = vertGuide[k];
     }
   });
   if (!reframe) reframe = 'Acknowledge without groveling, get curious about what is really behind the objection, and redirect with a question that moves toward the real concern.';
