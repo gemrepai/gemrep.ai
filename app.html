@@ -2060,7 +2060,7 @@ function objLabStartRecording() {
     objLab.transcript=text;
     if (_t) clearTimeout(_t);
     if (final) { objLabStopRecording(); return; }
-    _t=setTimeout(function(){ if (objLab.recording) objLabStopRecording(); },3000);
+    _t=setTimeout(function(){ if (objLab.recording) objLabStopRecording(); },6000);
   };
   r.onerror=function(){ objLabStopRecording(); };
   r.onend=function(){ if (objLab.recording) objLabStopRecording(); };
