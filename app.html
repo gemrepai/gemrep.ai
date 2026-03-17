@@ -2042,32 +2042,32 @@ async function objLabScore() {
   var objLine=objLab.objection.line||objLab.objection.label;
   var barNapkin={
     insurance:{
-      'think about':"That's not a problem. Setting the cost aside — do you feel like this is the right answer for your family? What would need to be in place for this to feel like the right move?",
-      'talk to my husband':"That's not a problem. If he were on this call right now — what's the one thing he'd want to know before saying yes?",
-      'talk to my wife':"That's not a problem. If she were on this call right now — what's the one thing she'd want to know before saying yes?",
-      'talk to my spouse':"That's not a problem. If they were on this call right now — what's the one thing they'd want to know before saying yes?",
-      'run this by':"That's not a problem. If they were on this call right now — what's the one thing they'd want to know before saying yes?",
-      'discuss with':"That's not a problem. If they were on this call right now — what's the one thing they'd want to know before saying yes?",
+      'think about':"Thats not a problem. Setting the cost aside — do you feel like this is the right answer for your family? What would need to be in place for this to feel like the right move?",
+      'talk to my husband':"Thats not a problem. If he were on this call right now — whats the one thing hed want to know before saying yes?",
+      'talk to my wife':"Thats not a problem. If she were on this call right now — whats the one thing shed want to know before saying yes?",
+      'talk to my spouse':"Thats not a problem. If they were on this call right now — whats the one thing theyd want to know before saying yes?",
+      'run this by':"Thats not a problem. If they were on this call right now — whats the one thing theyd want to know before saying yes?",
+      'discuss with':"Thats not a problem. If they were on this call right now — whats the one thing theyd want to know before saying yes?",
       'already have coverage':"I totally get that. When's the last time someone actually reviewed that policy to make sure it still fits where you are today?",
       'afford':"Setting the cost aside — do you feel like this is something your family needs? If we agree on that we can usually find something that works.",
       'send me':"Happy to. Before I do — what specifically would you be looking for to help you make a decision?",
       'just checking':"That's totally fine. What made you decide to look into this now versus six months ago?",
-      'son will handle':"Has he actually said that or is that your hope? Most adult kids want to help — they just don't want a $10,000 surprise in the middle of their grief.",
+      'son will handle':"Has he actually said that or is that your hope? Most adult kids want to help — they just dont want a $10,000 surprise in the middle of their grief.",
     },
     b2b:{
-      'think about':"That's not a problem. What specifically would you need to see or know to feel confident moving forward?",
+      'think about':"Thats not a problem. What specifically would you need to see or know to feel confident moving forward?",
       'already have a vendor':"Completely get that. What would that vendor need to stop doing for you to consider making a switch?",
-      'budget':"Is the budget the issue or is it that you're not yet sure the ROI is there? Those are two different conversations.",
-      'loop someone':"Of course. If they were on this call right now — what'd they ask me?",
+      'budget':"Is the budget the issue or is it that youre not yet sure the ROI is there? Those are two different conversations.",
+      'loop someone':"Of course. If they were on this call right now — whatd they ask me?",
       'send me':"Happy to. What decision would that info need to help you make?",
-      'tried':"What specifically didn't work — the product, the timing, or the rollout? That changes everything.",
+      'tried':"What specifically didnt work — the product, the timing, or the rollout? That changes everything.",
     },
     cold:{
       'not interested':"That's fair. What would have to be true for this to be worth 5 minutes of your time?",
       'too busy':"I get it. What's the biggest thing on your plate that something like this might actually help with?",
-      'already have':"Makes sense. What would have to be missing from what you've got for you to at least take a look?",
-      'call me back':"Before I let you go — is timing the only thing or is there something about what I said that didn't land right?",
-      'how did you get':"Fair question — I'll be straight with you. I reached out because [reason]. Does that make sense?",
+      'already have':"Makes sense. What would have to be missing from what youve got for you to at least take a look?",
+      'call me back':"Before I let you go — is timing the only thing or is there something about what I said that didnt land right?",
+      'how did you get':"Fair question — Ill be straight with you. I reached out because [reason]. Does that make sense?",
     },
   };
   var vertGuide=barNapkin[objLab.vert]||{};
@@ -2075,12 +2075,15 @@ async function objLabScore() {
   var reframe=''; var bestLen=0;
   Object.keys(vertGuide).forEach(function(k){ if (objKey.indexOf(k)>-1&&k.length>bestLen){ bestLen=k.length; reframe=vertGuide[k]; } });
   if (!reframe) reframe='Acknowledge without groveling, stay curious, and redirect with a question that moves toward the real concern.';
+  var safeReframe = reframe.replace(/'/g, "\\'");
+  var safeObjLine = objLine.replace(/'/g, "\\'");
+  var safeResponse = response.replace(/'/g, "\\'");
 
   var systemPrompt=[
     'You are a sales coach scoring a single objection response. Compare what the rep said to the bar napkin reframe and score how close they got.',
-    'THE BAR NAPKIN REFRAME: "'+reframe+'"',
-    'Prospect said: '+objLine,
-    'Rep responded: '+response,
+    'THE BAR NAPKIN REFRAME: "'+safeReframe+'"',
+    'Prospect said: '+safeObjLine,
+    'Rep responded: '+safeResponse,
     '90-100: Same spirit as the bar napkin — acknowledged, stayed curious, redirected to the emotional core. IMPORTANT: "That\'s not a problem" + emotional redirect IS correct bar napkin language. Do NOT criticize it. Score it 85+.',
     '70-89: Close but missed one element.',
     '50-69: Acknowledged but gave a generic or vague redirect.',
