@@ -2083,97 +2083,118 @@ function objLabStopRecording() {
 }
 
 async function objLabScore() {
-  var response=objLab.transcript.trim();
+  var response = objLab.transcript.trim();
   if (!response) { showToast('Nothing recorded yet.'); return; }
   if (!_authToken) {
-    var _s=await _sb.auth.getSession();
-    if (_s.data.session) _authToken=_s.data.session.access_token;
-    else { window.location.href='/login'; return; }
+    var _s = await _sb.auth.getSession();
+    if (_s.data.session) _authToken = _s.data.session.access_token;
+    else { window.location.href = '/login'; return; }
   }
+
   document.getElementById('objLabScoreBtn').classList.remove('show');
-  var fb=document.getElementById('objLabFeedback');
+  var fb = document.getElementById('objLabFeedback');
   fb.classList.add('show');
-  document.getElementById('objLabScoreNum').textContent='...';
-  document.getElementById('objLabFeedbackText').textContent='Analyzing...';
+  document.getElementById('objLabScoreNum').textContent = '...';
+  document.getElementById('objLabFeedbackText').textContent = 'Scoring...';
 
-  var objLine=objLab.objection.line||objLab.objection.label;
+  var objLine = objLab.objection.line || objLab.objection.label;
 
-  var barNapkin={
-    insurance:{
-      'think about':"Thats not a problem. Setting the cost aside — do you feel like this is the right answer for your family? What would need to be in place for this to feel like the right move?",
-      'talk to my husband':"Thats not a problem. If he were on this call right now — whats the one thing hed want to know before saying yes?",
-      'talk to my wife':"Thats not a problem. If she were on this call right now — whats the one thing shed want to know before saying yes?",
-      'talk to my spouse':"Thats not a problem. If they were on this call right now — whats the one thing theyd want to know before saying yes?",
-      'run this by':"Thats not a problem. If they were on this call right now — whats the one thing theyd want to know before saying yes?",
-      'discuss with':"Thats not a problem. If they were on this call right now — whats the one thing theyd want to know before saying yes?",
-      'already have coverage':"I totally get that. Whens the last time someone actually reviewed that policy to make sure it still fits where you are today?",
-      'afford':"Setting the cost aside — do you feel like this is something your family needs? If we agree on that we can usually find something that works.",
-      'send me':"Happy to. Before I do — what specifically would you be looking for to help you make a decision?",
-      'just checking':"Thats totally fine. What made you decide to look into this now versus six months ago?",
-      'son will handle':"Has he actually said that or is that your hope? Most adult kids want to help — they just dont want a $10,000 surprise in the middle of their grief.",
+  var barNapkin = {
+    insurance: {
+      'think about':    "Thats not a problem. Setting the cost aside — do you feel like this is the right answer for your family? What would need to be in place for this to feel like the right move?",
+      'talk to my husband': "Thats not a problem. If he were on this call right now — whats the one thing hed want to know before saying yes?",
+      'talk to my wife':    "Thats not a problem. If she were on this call right now — whats the one thing shed want to know before saying yes?",
+      'talk to my spouse':  "Thats not a problem. If they were on this call right now — whats the one thing theyd want to know before saying yes?",
+      'run this by':        "Thats not a problem. If they were on this call right now — whats the one thing theyd want to know before saying yes?",
+      'discuss with':       "Thats not a problem. If they were on this call right now — whats the one thing theyd want to know before saying yes?",
+      'already have coverage': "I totally get that. Whens the last time someone actually reviewed that policy to make sure it still fits where you are today?",
+      'afford':             "Setting the cost aside — do you feel like this is something your family needs? If we agree on that we can usually find something that works.",
+      'send me':            "Happy to. Before I do — what specifically would you be looking for to help you make a decision?",
+      'just checking':      "Thats totally fine. What made you decide to look into this now versus six months ago?",
+      'son will handle':    "Has he actually said that or is that your hope? Most adult kids want to help — they just dont want a $10,000 surprise in the middle of their grief.",
     },
-    b2b:{
-      'think about':"Thats not a problem. What specifically would you need to see or know to feel confident moving forward?",
-      'already have a vendor':"Completely get that. What would that vendor need to stop doing for you to consider making a switch?",
-      'budget':"Is the budget the issue or is it that youre not yet sure the ROI is there? Those are two different conversations.",
-      'loop someone':"Of course. If they were on this call right now — whatd they ask me?",
-      'send me':"Happy to. What decision would that info need to help you make?",
-      'tried':"What specifically didnt work — the product, the timing, or the rollout? That changes everything.",
+    b2b: {
+      'think about':        "Thats not a problem. What specifically would you need to see or know to feel confident moving forward?",
+      'already have a vendor': "Completely get that. What would that vendor need to stop doing for you to consider making a switch?",
+      'budget':             "Is the budget the issue or is it that youre not yet sure the ROI is there? Those are two different conversations.",
+      'loop someone':       "Of course. If they were on this call right now — whatd they ask me?",
+      'send me':            "Happy to. What decision would that info need to help you make?",
+      'tried':              "What specifically didnt work — the product, the timing, or the rollout? That changes everything.",
     },
-    cold:{
-      'not interested':"Thats fair. What would have to be true for this to be worth 5 minutes of your time?",
-      'too busy':"I get it. Whats the biggest thing on your plate that something like this might actually help with?",
-      'already have':"Makes sense. What would have to be missing from what youve got for you to at least take a look?",
-      'call me back':"Before I let you go — is timing the only thing or is there something about what I said that didnt land right?",
-      'how did you get':"Fair question — Ill be straight with you. I reached out because [reason]. Does that make sense?",
+    cold: {
+      'not interested':     "Thats fair. What would have to be true for this to be worth 5 minutes of your time?",
+      'too busy':           "Got it. Do you even have 1 min just to see if it even makes sense for me to call you back?",
+      'already have':       "Makes sense. What would have to be missing from what youve got for you to at least take a look?",
+      'call me back':       "Before I let you go — is timing the only thing or is there something about what I said that didnt land right?",
+      'how did you get':    "Fair question — Ill be straight with you. I reached out because [reason]. Does that make sense?",
     },
   };
 
-  var vertGuide=barNapkin[objLab.vert]||{};
-  var objKey=objLine.toLowerCase();
-  var reframe=''; var bestLen=0;
-  Object.keys(vertGuide).forEach(function(k){
-    if (objKey.indexOf(k)>-1&&k.length>bestLen){ bestLen=k.length; reframe=vertGuide[k]; }
+  var vertGuide = barNapkin[objLab.vert] || {};
+  var objKey = objLine.toLowerCase();
+  var reframe = ''; var bestLen = 0;
+  Object.keys(vertGuide).forEach(function(k) {
+    if (objKey.indexOf(k) > -1 && k.length > bestLen) { bestLen = k.length; reframe = vertGuide[k]; }
   });
-  if (!reframe) reframe='Acknowledge without losing status, stay curious, and redirect toward the emotional core.';
+  if (!reframe) reframe = 'Acknowledge without losing status, stay curious, and redirect with a question that moves toward the real concern.';
 
-  // Everything goes in messages — JSON.stringify handles all escaping, no apostrophe issues
-  var systemPrompt = [
-    'You are a direct sales coach. No flowery language. Quote the reps exact words. Respond ONLY with valid JSON, no markdown, no preamble.',
-    'Score the rep on two things only: 1) Did they acknowledge the objection without losing status? 2) Did they redirect toward the emotional core with curiosity?',
-    'SCORING: 85-100 = acknowledged and redirected to emotion with curiosity, even one sentence. 70-84 = acknowledged but redirect missed the emotional hook. 50-69 = acknowledged but went nowhere. 0-49 = argued or ignored.',
-    'Do NOT penalize brevity. One strong sentence scores 85+.',
-    'Do NOT compare to any script. Score only on acknowledgment and emotional curiosity.',
-    'Return ONLY: {"score":72,"feedback":"2 sentences max. Quote exact rep words. Name what worked and one thing to sharpen."}'
-  ].join(' ');
+  // ── RULE-BASED SCORING ─────────────────────────────────────────────────
+  // No AI — score purely on whether the rep hit the key signals
+  var rep = response.toLowerCase();
 
-  try {
-    var res=await fetchWithTimeout('/api/chat',{
-      method:'POST',
-      headers:authHeaders(),
-      body:JSON.stringify({
-        max_tokens:300,
-        system:systemPrompt,
-        messages:[{role:'user',content:'Prospect said: '+objLine+'. Rep responded: '+response}]
-      })
-    },20000);
-    if (!res.ok) throw new Error('API '+res.status);
-    var data=await res.json();
-    var raw=(data.content&&data.content[0])?data.content[0].text:'{}';
-    raw=raw.replace(/```json|```/g,'').trim();
-    // Extract JSON object if Claude added any preamble
-    var jsonMatch=raw.match(/\{[\s\S]*\}/);
-    if(jsonMatch) raw=jsonMatch[0];
-    var sc=JSON.parse(raw);
-    var col=sc.score>=75?'#00e676':sc.score>=55?'#ffd600':'#ff1744';
-    document.getElementById('objLabScoreNum').textContent=sc.score+'/100';
-    document.getElementById('objLabScoreNum').style.color=col;
-    var feedbackText = (sc.feedback||'');
-    if (reframe) feedbackText += ' | Bar napkin reference: ' + reframe;
-    document.getElementById('objLabFeedbackText').textContent=feedbackText;
-  } catch(e) {
-    document.getElementById('objLabFeedbackText').textContent='Could not score — try again. '+e.message;
+  // Signal groups — hit any one in a group = credit for that group
+  var signals = {
+    acknowledged: ['not a problem', 'totally', 'makes sense', 'i hear you', 'i get it', 'got it', 'fair enough', 'completely understand', 'understand that'],
+    cost_aside:   ['cost aside', 'setting the cost', 'price aside', 'money aside', 'finances aside', 'budget aside'],
+    emotional:    ['feel like', 'right answer', 'right move', 'right fit', 'right solution', 'right decision', 'right for', 'makes sense for', 'feel this is'],
+    curiosity:    ['what would', 'what needs', 'what specifically', 'what do you', 'what would need', 'what makes', 'what happened', 'what changed', 'how so', 'walk me through', 'tell me more', 'help me understand', 'out of curiosity', 'what is it', 'what part'],
+    no_fight:     true, // always true unless they argue
+    fighting:     ['you should', 'but the price', 'actually its', 'let me explain why', 'you need to understand', 'youre wrong', 'thats not true'],
+  };
+
+  var hit = {
+    acknowledged: signals.acknowledged.some(function(s){ return rep.indexOf(s) > -1; }),
+    cost_aside:   signals.cost_aside.some(function(s){ return rep.indexOf(s) > -1; }),
+    emotional:    signals.emotional.some(function(s){ return rep.indexOf(s) > -1; }),
+    curiosity:    signals.curiosity.some(function(s){ return rep.indexOf(s) > -1; }),
+    fighting:     signals.fighting.some(function(s){ return rep.indexOf(s) > -1; }),
+  };
+
+  var score, feedback;
+
+  if (hit.fighting) {
+    score = 30;
+    feedback = 'You argued or over-explained. Never fight an objection — get curious about what is behind it.';
+  } else if (!hit.acknowledged && !hit.curiosity) {
+    score = 45;
+    feedback = 'You neither acknowledged the objection nor redirected with curiosity. Start with something that keeps status — "thats not a problem" or "totally" — then ask what is really behind it.';
+  } else if (hit.acknowledged && !hit.curiosity && !hit.emotional) {
+    score = 62;
+    feedback = 'You acknowledged without losing status — good. But you stopped there. The redirect is where the money is. Follow up with a question that moves toward the emotional core.';
+  } else if (!hit.acknowledged && hit.curiosity) {
+    score = 68;
+    feedback = 'Good curiosity — you asked a real question. But you skipped the acknowledgment and went straight into it. Lead with something that validates first, then redirect.';
+  } else if (hit.acknowledged && hit.curiosity && !hit.emotional) {
+    score = 78;
+    feedback = 'Solid — you acknowledged and redirected with curiosity. To push into the 85+ range, tie the question to the emotional core — do they feel this is the right answer, what would need to be in place.';
+  } else if (hit.acknowledged && (hit.curiosity || hit.emotional)) {
+    score = hit.cost_aside ? 92 : 85;
+    feedback = hit.cost_aside
+      ? 'Clean execution. You acknowledged, set the cost aside, and redirected to the emotional core. That is the full move.'
+      : 'Strong execution. You acknowledged and redirected to the emotional core. For maximum impact, explicitly set the cost aside before the emotional question.';
+  } else {
+    score = 55;
+    feedback = 'Partial execution. Make sure you are both acknowledging the objection AND redirecting with a question toward the emotional core.';
   }
+
+  // Display score
+  var col = score >= 80 ? '#00e676' : score >= 60 ? '#ffd600' : '#ff1744';
+  document.getElementById('objLabScoreNum').textContent = score + '/100';
+  document.getElementById('objLabScoreNum').style.color = col;
+
+  var fullFeedback = feedback;
+  if (reframe) fullFeedback += ' | Bar napkin: ' + reframe;
+  document.getElementById('objLabFeedbackText').textContent = fullFeedback;
 }
 document.querySelectorAll('.objlab-vert').forEach(function(b) {
   b.addEventListener('click', function() {
