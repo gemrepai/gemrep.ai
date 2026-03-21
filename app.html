@@ -180,7 +180,7 @@ textarea:disabled{opacity:.4}
 /* MODAL */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
 .overlay.open{display:flex}
-.modal{background:#16181c;border:1px solid #2a2d35;border-radius:18px;padding:28px;width:480px;max-width:92vw;position:relative;animation:modalin .3s cubic-bezier(.34,1.56,.64,1)}
+.modal{background:#16181c;border:1px solid #2a2d35;border-radius:18px;padding:28px;width:480px;max-width:92vw;max-height:90vh;overflow-y:auto;position:relative;animation:modalin .3s cubic-bezier(.34,1.56,.64,1)}
 @keyframes modalin{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
 .mclose{position:absolute;top:12px;right:12px;background:none;border:1px solid #2a2d35;border-radius:6px;color:#666;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px}
 .mhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
@@ -1554,20 +1554,15 @@ function initRecognition() {
     // iOS fix: isFinal often never fires — use a debounce timer instead
     // If no new results come in for 1.2s, treat whatever we have as final
     if (_iosSendTimer) clearTimeout(_iosSendTimer);
-    if (final) {
-      // Desktop path — isFinal fired, send immediately
-      clearTimeout(_iosSendTimer);
-      stopListening();
-      setTimeout(sendMsg, 150);
-    } else if (interim) {
-      // iOS path — start debounce timer
+    // Never auto-send on isFinal — always wait for silence so rep can finish
+    if (final || interim) {
       _iosSendTimer = setTimeout(function() {
         var val = document.getElementById('inp').value.trim();
         if (val && !state.loading && !state.ended && !el_speaking) {
           stopListening();
           sendMsg();
         }
-      }, 3500);
+      }, 3000);
     }
   };
   r.onerror = function(e) {
@@ -2283,6 +2278,14 @@ document.getElementById('objLabBtn').addEventListener('click', function(){
   document.getElementById('objLabScreen').classList.remove('hidden');
 });
 document.getElementById('objLabSendBtn').addEventListener('click', function(){
+  var t = objLab.transcript.trim() || document.getElementById('objLabResponseBox').textContent.trim();
+  if (!t || t === 'Tap the mic and respond...' || t === 'Listening...') {
+    showToast('Nothing captured — tap the mic and try again.');
+    document.getElementById('objLabSendHold').style.display='none';
+    return;
+  }
+  // Use whatever is displayed if transcript missed finals
+  if (!objLab.transcript.trim()) objLab.transcript = t;
   document.getElementById('objLabSendHold').style.display='none';
   document.getElementById('objLabScoreBtn').classList.add('show');
 });
