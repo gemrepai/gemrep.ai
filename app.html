@@ -1569,8 +1569,10 @@ function initRecognition() {
     if (_iosSendTimer) clearTimeout(_iosSendTimer);
     stopListening();
     if (e.error === 'no-speech') {
-      // iOS kills mic on silence — restart automatically
       if (!el_speaking && !state.ended && !state.loading) setTimeout(startListening, 500);
+    } else if (e.error === 'network' || e.error === 'service-not-allowed') {
+      showToast('Speech dropped — common Chrome quirk. Try again or refresh if it persists.', 6000);
+      document.getElementById('inp').placeholder = 'Mic error — tap 🎤 to try again';
     } else if (e.error !== 'aborted') {
       document.getElementById('inp').placeholder = 'Mic error — tap 🎤 to try again';
     }
@@ -2002,6 +2004,7 @@ var OBJECTIONS = {
 };
 
 var objLab = { vert:null, objection:null, transcript:'', recording:false, recognition:null };
+var _objLabSessionCount = 0;
 
 function objLabReset() {
   objLab.vert=null; objLab.objection=null; objLab.transcript=''; objLab.recording=false;
@@ -2012,6 +2015,7 @@ function objLabReset() {
   document.getElementById('objLabStep3').classList.add('hidden');
   document.getElementById('objLabFeedback').classList.remove('show');
   document.getElementById('objLabScoreBtn').classList.remove('show');
+  document.getElementById('objLabSendHold').style.display='none';
   document.getElementById('objLabResponseBox').textContent='Tap the mic and respond...';
   document.getElementById('objLabScoreNum').textContent='—';
   document.getElementById('objLabFeedbackText').textContent='';
@@ -2052,9 +2056,17 @@ function objLabStartArena() {
   btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
 }
 
+var _objLabRecCount = 0;
 function objLabStartRecording() {
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if (!SR) { showToast('Voice needs Chrome or Safari.'); return; }
+  _objLabRecCount++;
+  if (_objLabRecCount > 15) {
+    if (confirm('Heavy session detected — refreshing to keep the mic reliable. Your progress is saved.')) {
+      location.reload();
+    }
+    _objLabRecCount = 0;
+  }
   objLab.recording=true; objLab.transcript='';
   var btn=document.getElementById('objLabRecBtn');
   btn.className='objlab-rec-btn recording'; btn.innerHTML='&#9632;';
@@ -2077,7 +2089,7 @@ function objLabStartRecording() {
     // Only save finals to transcript
     objLab.transcript=_accumulated.trim();
   };
-  r.onerror=function(e){ if(e.error!=='aborted') showToast('Mic error — tap to try again.'); };
+  r.onerror=function(e){ if(e.error==='no-speech') showToast('Nothing captured — tap mic and try again.'); else if(e.error!=='aborted') showToast('Speech dropped (Chrome quirk) — try again or refresh if it persists.'); };
   r.onend=function(){
     // If still recording (browser killed it), restart
     if (objLab.recording) { try { r.start(); } catch(e){} }
@@ -2093,7 +2105,7 @@ function objLabStopRecording() {
   btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
 }
 
-async function objLabScore() {
+async function objLabScore() { // returns promise
   var response = objLab.transcript.trim();
   if (!response) { showToast('Nothing recorded yet.'); return; }
   if (!_authToken) {
@@ -2222,9 +2234,12 @@ async function objLabScore() {
     feedback = 'Solid — you acknowledged and redirected with curiosity. To push into the 85+ range, tie the question to the emotional core — do they feel this is the right answer, what would need to be in place.';
   } else if (hit.acknowledged && (hit.curiosity || hit.emotional)) {
     score = hit.cost_aside ? 92 : 85;
+    var costIsRelevant = reframe && reframe.indexOf('cost aside') > -1;
     feedback = hit.cost_aside
       ? 'Clean execution. You acknowledged, set the cost aside, and redirected to the emotional core. That is the full move.'
-      : 'Strong execution. You acknowledged and redirected to the emotional core. For maximum impact, explicitly set the cost aside before the emotional question.';
+      : costIsRelevant
+        ? 'Strong execution. You acknowledged and redirected to the emotional core. For maximum impact, explicitly set the cost aside before the emotional question.'
+        : 'Strong execution. You acknowledged and redirected to the emotional core. Keep the redirect tight and let the question do the work.';
   } else {
     score = 55;
     feedback = 'Partial execution. Make sure you are both acknowledging the objection AND redirecting with a question toward the emotional core.';
@@ -2235,9 +2250,20 @@ async function objLabScore() {
   document.getElementById('objLabScoreNum').textContent = score + '/100';
   document.getElementById('objLabScoreNum').style.color = col;
 
+  // Session counter — Chrome SpeechRecognition degrades after ~12-15 cycles
+  _objLabSessionCount++;
+  if (_objLabSessionCount >= 13) {
+    setTimeout(function() {
+      if (confirm('Heavy practice session detected — refreshing to keep the mic reliable. Tap OK to refresh.')) {
+        location.reload();
+      }
+    }, 1500);
+  }
+
   var fullFeedback = feedback;
   if (reframe) fullFeedback += ' | Bar napkin: ' + reframe;
   document.getElementById('objLabFeedbackText').textContent = fullFeedback;
+  document.getElementById('objLabScoreBtn').disabled = false;
 }
 document.querySelectorAll('.objlab-vert').forEach(function(b) {
   b.addEventListener('click', function() {
@@ -2264,7 +2290,14 @@ document.getElementById('objLabRecBtn').addEventListener('click', function(){
     objLabStartRecording();
   }
 });
-document.getElementById('objLabScoreBtn').addEventListener('click', objLabScore);
+document.getElementById('objLabScoreBtn').addEventListener('click', function(){
+  document.getElementById('objLabScoreBtn').disabled = true;
+  document.getElementById('objLabScoreBtn').style.opacity = '0.5';
+  objLabScore().finally(function(){
+    document.getElementById('objLabScoreBtn').disabled = false;
+    document.getElementById('objLabScoreBtn').style.opacity = '1';
+  });
+});
 document.getElementById('objLabTryAgain').addEventListener('click', objLabStartArena);
 document.getElementById('objLabNewObj').addEventListener('click', function(){
   document.getElementById('objLabFeedback').classList.remove('show');
