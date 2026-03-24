@@ -238,7 +238,7 @@ textarea:disabled{opacity:.4}
 
 .hidden{display:none!important}
 /* SOLO DRILL */
-.drill-screen{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:22px;padding:28px;z-index:50;overflow-y:auto}
+.drill-screen{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:flex-start;flex-direction:column;gap:22px;padding:48px 28px 28px;z-index:50;overflow-y:auto}
 .drill-back{position:absolute;top:16px;left:16px;background:none;border:1px solid var(--border);border-radius:7px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:11px;padding:5px 11px;cursor:pointer}
 .drill-title{font-family:"Instrument Serif",serif;font-size:36px;background:linear-gradient(90deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
 .drill-sub{font-size:13px;color:var(--dim);text-align:center;max-width:420px;line-height:1.6}
@@ -1860,17 +1860,37 @@ async function drillScorePitch() {
   document.getElementById('overall').textContent = '...';
 
   var typeLabel = drill.type === 'opener' ? 'Opener Only (30-second drill)' : 'Full Pitch';
-  var systemPrompt = [
-    "You are an expert sales coach trained in the NEPQ and Justin Michael Method hybrid system.",
-    "The rep recorded a solo pitch drill with no prospect. Score honestly. Respond ONLY with valid JSON.",
-    "Drill type: " + typeLabel + ". Product: " + drill.product,
-    "OPEN + CONNECT (0-100): Did the rep sound natural and establish why they are calling without sounding like a script? Did they create enough comfort to keep someone on the line?",
-    "DISCOVERY + SITUATION (0-100): Did they ask questions to understand the prospect before pitching? Did they uncover real pain or need?",
-    "CONSEQUENCE OF INACTION (0-100): Did they help the prospect feel the cost of doing nothing? Did they make inaction feel real and personal?",
-    "OBJECTION HANDLING (0-100): Did they preemptively address resistance with curiosity rather than defensiveness? Did they redirect rather than fight?",
-    "COMMITMENT + CLOSE (0-100): Did they attempt a natural close that flowed from the conversation? Did they earn it or just pitch and hope?",
-    'Return exactly: {"overall":72,"categories":[{"label":"Open + Connect","score":80},{"label":"Discovery","score":65},{"label":"Consequence","score":55},{"label":"Objections","score":70},{"label":"Commitment","score":60}],"feedback":"3-4 sentences specific to what they said and what to change."}'
-  ].join("\n");
+
+  var systemPrompt;
+  if (drill.type === 'opener') {
+    systemPrompt = [
+      "You are an expert sales coach trained in the NEPQ and Justin Michael Method hybrid system.",
+      "The rep recorded a 30-SECOND OPENER DRILL — no prospect present. Score ONLY on opener quality. Respond ONLY with valid JSON.",
+      "Product: " + drill.product,
+      "",
+      "IMPORTANT: This is a 30-second opener. Do NOT penalize for missing discovery, consequence, objection handling, or closing. Those do not belong in an opener.",
+      "",
+      "PATTERN INTERRUPT (0-100): Did they avoid 'Hi my name is X calling from Y'? Did they sound like a peer, not a vendor? Did they say something the prospect has not heard before?",
+      "REASON FOR CALL (0-100): Did they establish a clear, specific reason for calling? Did they reference something relevant — a request, a trigger, a situation — that earns the next 10 seconds?",
+      "FIRST QUESTION (0-100): Did they land a question that creates a fork — something the prospect has to answer? Was it natural and conversational, not scripted?",
+      "",
+      "FEEDBACK: Quote exact words from the transcript. What worked, what to sharpen. 2-3 sentences max.",
+      "",
+      'Return exactly: {"overall":75,"categories":[{"label":"Pattern Interrupt","score":80},{"label":"Reason for Call","score":72},{"label":"First Question","score":70}],"feedback":"2-3 sentences quoting exact rep words."}'
+    ].join("\n");
+  } else {
+    systemPrompt = [
+      "You are an expert sales coach trained in the NEPQ and Justin Michael Method hybrid system.",
+      "The rep recorded a solo pitch drill with no prospect. Score honestly. Respond ONLY with valid JSON.",
+      "Drill type: Full Pitch. Product: " + drill.product,
+      "OPEN + CONNECT (0-100): Did the rep sound natural and establish why they are calling without sounding like a script? Did they create enough comfort to keep someone on the line?",
+      "DISCOVERY + SITUATION (0-100): Did they ask questions to understand the prospect before pitching? Did they uncover real pain or need?",
+      "CONSEQUENCE OF INACTION (0-100): Did they help the prospect feel the cost of doing nothing? Did they make inaction feel real and personal?",
+      "OBJECTION HANDLING (0-100): Did they preemptively address resistance with curiosity rather than defensiveness? Did they redirect rather than fight?",
+      "COMMITMENT + CLOSE (0-100): Did they attempt a natural close that flowed from the conversation? Did they earn it or just pitch and hope?",
+      'Return exactly: {"overall":72,"categories":[{"label":"Open + Connect","score":80},{"label":"Discovery","score":65},{"label":"Consequence","score":55},{"label":"Objections","score":70},{"label":"Commitment","score":60}],"feedback":"3-4 sentences specific to what they said and what to change."}'
+    ].join("\n");
+  }
 
   try {
     var res = await fetchWithTimeout('/api/chat', {
@@ -2193,7 +2213,7 @@ async function objLabScore() { // returns promise
   var signals = {
     acknowledged: ['not a problem', 'totally', 'makes sense', 'i hear you', 'i get it', 'i get that', 'got it', 'fair enough', 'completely understand', 'understand that', 'i understand', 'thats fair', 'thats not a problem', 'of course', 'no problem', 'absolutely', 'i appreciate that', 'i respect that', 'thats valid', 'thats a good point', 'youre right', 'i can see that', 'that makes sense', 'i dont blame you', 'cant blame you', 'fair point', 'sure'],
     cost_aside:   ['cost aside', 'setting the cost', 'price aside', 'money aside', 'finances aside', 'budget aside', 'setting the price', 'setting the money', 'setting money', 'putting cost aside', 'putting the cost', 'putting price aside', 'forget about the cost', 'forget about the price', 'regardless of cost', 'regardless of price', 'ignoring the cost', 'ignoring the price'],
-    emotional:    ['feel like', 'right answer', 'right move', 'right fit', 'right solution', 'right decision', 'right for', 'makes sense for', 'feel this is', 'feel like this is', 'what would that mean', 'what would that look like', 'how would that affect', 'how would your family', 'what matters most', 'what does that mean for', 'mean for your family', 'what happens to your', 'who else gets affected', 'who else is affected', 'what would your family', 'feel confident', 'feel good about', 'feel comfortable', 'peace of mind', 'sleep at night', 'right thing', 'right choice'],
+    emotional:    ['feel like', 'right answer', 'right move', 'right fit', 'right solution', 'right decision', 'right for', 'makes sense for', 'feel this is', 'feel like this is', 'what would that mean', 'what would that look like', 'how would that affect', 'how would your family', 'what matters most', 'what does that mean for', 'mean for your family', 'what happens to your', 'who else gets affected', 'who else is affected', 'what would your family', 'feel confident', 'feel good about', 'feel comfortable', 'peace of mind', 'sleep at night', 'right thing', 'right choice', 'heavy is the head', 'wears the crown', 'leader in your life', 'dictates your results', 'who is the leader', 'who dictates', 'responsibility of being', 'responsibilities bestowed', 'result was guaranteed', 'magic wand', 'what becomes possible', 'cost of staying', 'cost of doing nothing', 'what does another', 'what would your life look like'],
     curiosity:    ['what would', 'what needs', 'what specifically', 'what do you', 'what would need', 'what makes', 'what happened', 'what changed', 'how so', 'walk me through', 'tell me more', 'help me understand', 'out of curiosity', 'what is it', 'what part', 'what questions', 'what is the', 'what are the', 'when was the last', 'when is the last', 'whens the last', 'why do you', 'why is that', 'why would', 'how do you', 'how would', 'how does', 'what do they', 'what would they', 'what would he', 'what would she', 'what prompted', 'what brought', 'what made you', 'what is behind', 'whats behind', 'what is really', 'whats really', 'what is the biggest', 'what is the one', 'whats the one', 'what is your biggest', 'what boxes', 'what number', 'does that make sense', 'is it more about', 'is that because', 'can you tell me', 'can you walk me', 'have you ever', 'has he actually', 'has she actually', 'who is the leader', 'who is the decision', 'what did they say', 'what would it take', 'what is stopping', 'whats stopping', 'what is holding', 'whats holding', 'what would change', 'what would need to change', 'what would have to be', 'what would have to change', 'compared to what'],
     no_fight:     true, // always true unless they argue
     fighting:     ['you should', 'but the price', 'actually its', 'let me explain why', 'you need to understand', 'youre wrong', 'thats not true', 'you dont understand', 'thats incorrect', 'no youre', 'you have to', 'you need to realize', 'the thing is', 'but you have to'],
