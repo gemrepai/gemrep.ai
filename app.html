@@ -508,6 +508,7 @@ textarea:disabled{opacity:.4}
         <button class="objlab-rec-btn idle" id="objLabRecBtn">&#127908;</button>
         <div class="objlab-response-box" id="objLabResponseBox">Tap the mic and respond...</div>
       </div>
+      <div id="objLabRecHint" style="font-size:10px;color:var(--dim);text-align:center;width:100%;opacity:0.7">Speak your full response, then tap the mic to stop</div>
       <!-- SEND HOLD BAR -->
       <div id="objLabSendHold" style="display:none;width:100%;background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.2);border-radius:10px;padding:12px 14px;display:none;align-items:center;justify-content:space-between;gap:10px">
         <span style="font-size:12px;color:var(--green)">Ready to send</span>
@@ -2060,6 +2061,9 @@ function objLabStartRecording() {
   objLab.recording=true; objLab.transcript='';
   var btn=document.getElementById('objLabRecBtn');
   btn.className='objlab-rec-btn recording'; btn.innerHTML='&#9632;';
+  // Prevent accidental early stop — disable for 1.5s
+  btn.disabled=true; btn.style.opacity='0.4';
+  setTimeout(function(){ btn.disabled=false; btn.style.opacity='1'; }, 1500);
   document.getElementById('objLabResponseBox').textContent='Listening...';
   document.getElementById('objLabSendHold').style.display='none';
   document.getElementById('objLabScoreBtn').classList.remove('show');
@@ -2122,64 +2126,54 @@ async function objLabScore() { // returns promise
 
   var barNapkin = {
     insurance: {
-      'think about':    "Thats not a problem. Setting the cost aside — do you feel like this is the right answer for your family? What would need to be in place for this to feel like the right move?",
-      'talk to my husband': "Thats not a problem. If he were on this call right now — whats the one thing hed want to know before saying yes?",
-      'talk to my wife':    "Thats not a problem. If she were on this call right now — whats the one thing shed want to know before saying yes?",
-      'talk to my spouse':  "Thats not a problem. If they were on this call right now — whats the one thing theyd want to know before saying yes?",
-      'run this by':        "Thats not a problem. If they were on this call right now — whats the one thing theyd want to know before saying yes?",
-      'discuss with':       "Thats not a problem. If they were on this call right now — whats the one thing theyd want to know before saying yes?",
-      'already have coverage': "I totally get that. Whens the last time someone actually reviewed that policy to make sure it still fits where you are today?",
+      'think about':    "Setting the cost aside — do you feel like this is the right answer for your family?",
+      'talk to my husband': "Thats not a problem. If they were here right now, what do you think they would ask me? If you put this in place today and your family knew they were protected — what do you think they would say?",
+      'talk to my wife':    "Thats not a problem. If they were here right now, what do you think they would ask me? If you put this in place today and your family knew they were protected — what do you think they would say?",
+      'talk to my spouse':  "Thats not a problem. If they were here right now, what do you think they would ask me? If you put this in place today and your family knew they were protected — what do you think they would say?",
+      'run this by':        "Thats not a problem. If they were here right now, what do you think they would ask me? If you put this in place today and your family knew they were protected — what do you think they would say?",
+      'already have coverage': "Thats not a problem. When was the last time you reviewed what that coverage actually does for you? If something happened tomorrow, are you 100% confident it fully protects your family?",
       'afford':             "Setting the cost aside — do you feel like this is something your family needs? If we agree on that we can usually find something that works.",
-      'send me':            "Happy to. Before I do — what specifically would you be looking for to help you make a decision?",
-      'just checking':      "Thats totally fine. What made you decide to look into this now versus six months ago?",
-      'son will handle':    "Has he actually said that or is that your hope? Most adult kids want to help — they just dont want a $10,000 surprise in the middle of their grief.",
-      'banking info':       "Is it more about privacy or are you just not sure yet if this is the right move?",
-      'not comfortable':    "Is it more about privacy or are you just not sure yet if this is the right move?",
+      'banking info':       "Is it more about privacy, or are you just not sure yet if this is the right move? Setting the cost aside — do you feel like this is the right answer for your family?",
+      'not comfortable':    "Is it more about privacy, or are you just not sure yet if this is the right move? Setting the cost aside — do you feel like this is the right answer for your family?",
+      'too busy':           "Got it. Do you even have 1 min just to see if it even makes sense for me to call you back?",
     },
     b2b: {
-      'think about':        "Thats not a problem. What specifically would you need to see or know to feel confident moving forward?",
-      'think it over':      "Thats not a problem. What specifically would you need to see or know to feel confident moving forward?",
-      'think it through':   "Thats not a problem. What specifically would you need to see or know to feel confident moving forward?",
-      'need some time':     "Thats not a problem. What specifically would you need to see or know to feel confident moving forward?",
-      'already have a vendor': "Completely get that. What would that vendor need to stop doing for you to consider making a switch?",
-      'budget':             "Is the budget the issue or is it that youre not yet sure the ROI is there? Those are two different conversations.",
-      'loop someone':       "Of course. If they were on this call right now — whatd they ask me?",
-      'send me':            "Happy to. What decision would that info need to help you make?",
-      'tried':              "What specifically didnt work — the product, the timing, or the rollout? That changes everything.",
-      'not the right time': "I hear you. Is it a budget thing, a priority thing, or something else? What would need to change for the timing to be right?",
-      'timing':             "I hear you. Is it a budget thing, a priority thing, or something else? What would need to change for the timing to be right?",
+      'already have a vendor': "I hear you. Whens the last time you reviewed whether its actually solving the problem? Would it make sense to hop on a quick 15 min Zoom to see side-by-side if were a step up or just more of the same?",
+      'send me':            "Totally fair — before I do that, is this just bad timing, or do you feel were probably not a fit?",
+      'not the right time': "I hear you. Is it a budget thing, a priority thing, or something else? What would need to change?",
+      'timing':             "I hear you. Is it a budget thing, a priority thing, or something else? What would need to change?",
+      'loop someone':       "Thats not a problem. If they were on this call right now, what do you think they would ask?",
     },
     cold: {
-      'not interested':     "Thats fair. What would have to be true for this to be worth 5 minutes of your time?",
+      'not interested':     "Fair enough. Is it the timing, or is the problem just not a priority right now?",
       'too busy':           "Got it. Do you even have 1 min just to see if it even makes sense for me to call you back?",
       'already have':       "Makes sense. What would have to be missing from what youve got for you to at least take a look?",
       'call me back':       "Before I let you go — is timing the only thing or is there something about what I said that didnt land right?",
-      'how did you get':    "Fair question — Ill be straight with you. I reached out because [reason]. Does that make sense?",
     },
     highticket: {
-      'think about':        "Setting the cost aside — does this feel like the right answer for where you want to go?",
-      'think it over':      "Setting the cost aside — does this feel like the right answer for where you want to go?",
-      'think it through':   "Setting the cost aside — does this feel like the right answer for where you want to go?",
-      'need some time':     "Setting the cost aside — does this feel like the right answer for where you want to go?",
-      'talk to my spouse':  "Thats not a problem. Have you heard the term heavy is the head that wears the crown? Its not heavy from the jewels — its the responsibilities bestowed on the leader. Who is the leader in your life?",
-      'talk to my partner': "Thats not a problem. Have you heard the term heavy is the head that wears the crown? Its not heavy from the jewels — its the responsibilities bestowed on the leader. Who is the leader in your life?",
-      'run this by':        "Thats not a problem. Have you heard the term heavy is the head that wears the crown? Its not heavy from the jewels — its the responsibilities bestowed on the leader. Who is the leader in your life?",
-      'too expensive':      "Compared to what — staying where you are? If the result was guaranteed would the investment make sense?",
-      'too much':           "Compared to what — staying where you are? If the result was guaranteed would the investment make sense?",
-      'tried':              "What specifically didnt work — the program, the timing, or the commitment? What is different now?",
-      'tried before':       "What specifically didnt work — the program, the timing, or the commitment? What is different now?",
+      'think about':        "Setting the cost aside — does this feel like the right answer for where you want to go? If yes: 1-10, what would make it a 10? If no: What needs to be in place?",
+      'think it over':      "Setting the cost aside — does this feel like the right answer for where you want to go? If yes: 1-10, what would make it a 10? If no: What needs to be in place?",
+      'think it through':   "Setting the cost aside — does this feel like the right answer for where you want to go? If yes: 1-10, what would make it a 10? If no: What needs to be in place?",
+      'need some time':     "Setting the cost aside — does this feel like the right answer for where you want to go? If yes: 1-10, what would make it a 10? If no: What needs to be in place?",
+      'talk to my spouse':  "Thats not a problem. Have you heard the term heavy is the head that wears the crown? Its not heavy from the jewels — its the responsibilities bestowed on the leader. Who is the leader in your life? Who dictates your results?",
+      'talk to my partner': "Thats not a problem. Have you heard the term heavy is the head that wears the crown? Its not heavy from the jewels — its the responsibilities bestowed on the leader. Who is the leader in your life? Who dictates your results?",
+      'run this by':        "Thats not a problem. Have you heard the term heavy is the head that wears the crown? Its not heavy from the jewels — its the responsibilities bestowed on the leader. Who is the leader in your life? Who dictates your results?",
+      'too expensive':      "Compared to what — staying where you are? If the result was guaranteed, would the investment make sense?",
+      'too much':           "Compared to what — staying where you are? If the result was guaranteed, would the investment make sense?",
+      'tried':              "What specifically didnt work? Was it the program, timing, or commitment? Whats different now?",
+      'tried before':       "What specifically didnt work? Was it the program, timing, or commitment? Whats different now?",
     },
     auto: {
-      'just looking':       "Thats not a problem. What is your dream car or truck? What boxes does it need to tick?",
-      'just browsing':      "Thats not a problem. What is your dream car or truck? What boxes does it need to tick?",
-      'talk to my spouse':  "Thats not a problem. If they were on this call right now what would they ask me?",
-      'talk to my wife':    "Thats not a problem. If she were on this call right now what would she ask me?",
-      'bring my wife':      "Thats not a problem. If she were on this call right now what would she ask me?",
-      'talk to my husband': "Thats not a problem. If he were on this call right now what would he ask me?",
-      'payment':            "Thats not a problem. Does the payment just feel like a lot or is it way out of the budget? What number makes sense?",
-      'too high':           "Thats not a problem. Does the payment just feel like a lot or is it way out of the budget? What number makes sense?",
-      'cheaper online':     "I totally get it. But do you love this one? Those online deals fall apart — hidden fees, sketchy condition, zero local support. Would you take it home today?",
-      'less online':        "I totally get it. But do you love this one? Those online deals fall apart — hidden fees, sketchy condition, zero local support. Would you take it home today?",
+      'just looking':       "Thats not a problem. Whats your dream car or truck? What boxes does it need to tick?",
+      'just browsing':      "Thats not a problem. Whats your dream car or truck? What boxes does it need to tick?",
+      'talk to my spouse':  "Thats not a problem. If they were on this call right now, what would they ask me? What is the one thing they would want to know before saying yes?",
+      'talk to my wife':    "Thats not a problem. If she were on this call right now, what would she ask me? What is the one thing she would want to know before saying yes?",
+      'bring my wife':      "Thats not a problem. If she were on this call right now, what would she ask me? What is the one thing she would want to know before saying yes?",
+      'talk to my husband': "Thats not a problem. If he were on this call right now, what would he ask me? What is the one thing he would want to know before saying yes?",
+      'payment':            "Thats not a problem. Does the payment just feel like a lot, or is it way out of the budget? What number makes sense before you feel its doable?",
+      'too high':           "Thats not a problem. Does the payment just feel like a lot, or is it way out of the budget? What number makes sense before you feel its doable?",
+      'cheaper online':     "I totally get it. But do you love this one? Those online deals fall apart — hidden fees, sketchy condition, zero local support. You drive this home today fully inspected. If we make the numbers work — would you take it home right now?",
+      'less online':        "I totally get it. But do you love this one? Those online deals fall apart — hidden fees, sketchy condition, zero local support. You drive this home today fully inspected. If we make the numbers work — would you take it home right now?",
     },
   };
 
