@@ -1220,31 +1220,6 @@ async function scoreCall() {
       headers:authHeaders(),
       body: JSON.stringify({max_tokens:900, system:(function() {
   var vertical = state.vertical || 'insurance';
-  var objectionGuide = {
-    insurance: {
-      'need to think about it': 'That is not a problem. If price was completely off the table — is this something you feel would help you and your family? What would need to be in place for this to feel like the right move?',
-      'need to talk to spouse': 'That is not a problem. If they were on this call right now, what is the one thing they would want to know before saying yes?',
-      'already have coverage': 'I totally understand. Out of curiosity — when was the last time someone actually reviewed that policy with you to make sure it still fits where you are today?',
-      'cant afford it': 'I hear you. Setting the cost aside for a second — do you feel like this is something your family needs? Because if we agree on that, we can usually find something that works.',
-      'send me info': 'Happy to. Before I do — what specifically would you be looking for in that info to help you make a decision?',
-    },
-    b2b: {
-      'need to think about it': 'That is not a problem. What specifically would you need to see or know to feel confident moving forward?',
-      'need to talk to someone': 'Of course. If they were on this call right now, what would they ask me?',
-      'already have a vendor': 'Completely understand. What would that vendor need to stop doing — or what would we need to do — for you to consider making a switch?',
-      'not in the budget': 'I hear you. Is the budget the issue or is it that you are not yet sure the ROI is there? Because those are two different conversations.',
-      'send me info': 'Happy to send something over. What decision would that info need to help you make?',
-    },
-    cold: {
-      'not interested': 'That is fair. Out of curiosity — what would have to be true for this to be worth 5 minutes of your time?',
-      'too busy': 'I get it. I will be quick — what is the biggest thing on your plate right now that something like this might actually help with?',
-      'already have something': 'Makes sense. What would have to be missing from what you have for you to at least take a look?',
-      'send me info': 'I can do that. What specifically should I include so it is actually worth opening?',
-      'call me back': 'Of course. Before I let you go — is timing the only thing, or is there something about what I said that did not land right?',
-    }
-  };
-  var guide = objectionGuide[vertical] || objectionGuide.insurance;
-  var guideText = Object.entries(guide).map(function(e){ return 'If they say "' + e[0] + '": ' + e[1]; }).join('\n');
 
   var reframes = {
     insurance: [
@@ -1322,7 +1297,9 @@ async function scoreCall() {
     var data = await res.json();
     var raw = (data.content && data.content[0]) ? data.content[0].text : '{}';
     raw = raw.replace(/```json|```/g,'').trim();
-    var sc = JSON.parse(raw);
+    var jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('No JSON found in response');
+    var sc = JSON.parse(jsonMatch[0]);
     var col = sc.overall>=75?'#00e676':sc.overall>=55?'#ffd600':'#ff1744';
     document.getElementById('overall').textContent = sc.overall+'/100';
     document.getElementById('overall').style.color = col;
@@ -1830,8 +1807,20 @@ function drillStartRecording() {
     if (e.error !== 'no-speech' && e.error !== 'aborted') showToast('Mic error — tap stop and try again.');
   };
   r.onend = function() {
-    if (drill.recording) drillStopRecording();
+    // If still recording, browser killed the mic — restart like Objection Lab
+    if (drill.recording) {
+      try { r.start(); } catch(e) { drillStopRecording(); }
+    }
   };
+  // Session counter — Chrome SpeechRecognition degrades after many cycles
+  if (!window._drillRecCount) window._drillRecCount = 0;
+  window._drillRecCount++;
+  if (window._drillRecCount > 15) {
+    if (confirm('Heavy session — refreshing to keep the mic reliable.')) {
+      location.reload();
+    }
+    window._drillRecCount = 0;
+  }
   drill.recognition = r;
   try { r.start(); } catch(e) { showToast('Could not start mic — try again.'); }
 }
@@ -1870,7 +1859,6 @@ async function drillScorePitch() {
   document.getElementById('overall').textContent = '...';
 
   var typeLabel = drill.type === 'opener' ? 'Opener Only (30-second drill)' : 'Full Pitch';
-  var typeLabel = drill.type === 'opener' ? 'Opener Only (30-second drill)' : 'Full Pitch';
   var systemPrompt = [
     "You are an expert sales coach trained in the NEPQ and Justin Michael Method hybrid system.",
     "The rep recorded a solo pitch drill with no prospect. Score honestly. Respond ONLY with valid JSON.",
@@ -1896,7 +1884,9 @@ async function drillScorePitch() {
     var data = await res.json();
     var raw = (data.content && data.content[0]) ? data.content[0].text : '{}';
     raw = raw.replace(/```json|```/g, '').trim();
-    var sc = JSON.parse(raw);
+    var jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('No JSON found in response');
+    var sc = JSON.parse(jsonMatch[0]);
     var col = sc.overall >= 75 ? '#00e676' : sc.overall >= 55 ? '#ffd600' : '#ff1744';
     document.getElementById('overall').textContent = sc.overall + '/100';
     document.getElementById('overall').style.color = col;
@@ -2195,16 +2185,16 @@ async function objLabScore() { // returns promise
 
   // ── RULE-BASED SCORING ─────────────────────────────────────────────────
   // No AI — score purely on whether the rep hit the key signals
-  var rep = response.toLowerCase();
+  var rep = response.toLowerCase().replace(/['\u2019\u02BC]/g, '');
 
   // Signal groups — hit any one in a group = credit for that group
   var signals = {
-    acknowledged: ['not a problem', 'totally', 'makes sense', 'i hear you', 'i get it', 'got it', 'fair enough', 'completely understand', 'understand that'],
-    cost_aside:   ['cost aside', 'setting the cost', 'price aside', 'money aside', 'finances aside', 'budget aside'],
-    emotional:    ['feel like', 'right answer', 'right move', 'right fit', 'right solution', 'right decision', 'right for', 'makes sense for', 'feel this is'],
-    curiosity:    ['what would', 'what needs', 'what specifically', 'what do you', 'what would need', 'what makes', 'what happened', 'what changed', 'how so', 'walk me through', 'tell me more', 'help me understand', 'out of curiosity', 'what is it', 'what part'],
+    acknowledged: ['not a problem', 'totally', 'makes sense', 'i hear you', 'i get it', 'i get that', 'got it', 'fair enough', 'completely understand', 'understand that', 'i understand', 'thats fair', 'thats not a problem', 'of course', 'no problem', 'absolutely', 'i appreciate that', 'i respect that', 'thats valid', 'thats a good point', 'youre right', 'i can see that', 'that makes sense', 'i dont blame you', 'cant blame you', 'fair point', 'sure'],
+    cost_aside:   ['cost aside', 'setting the cost', 'price aside', 'money aside', 'finances aside', 'budget aside', 'setting the price', 'setting the money', 'setting money', 'putting cost aside', 'putting the cost', 'putting price aside', 'forget about the cost', 'forget about the price', 'regardless of cost', 'regardless of price', 'ignoring the cost', 'ignoring the price'],
+    emotional:    ['feel like', 'right answer', 'right move', 'right fit', 'right solution', 'right decision', 'right for', 'makes sense for', 'feel this is', 'feel like this is', 'what would that mean', 'what would that look like', 'how would that affect', 'how would your family', 'what matters most', 'what does that mean for', 'mean for your family', 'what happens to your', 'who else gets affected', 'who else is affected', 'what would your family', 'feel confident', 'feel good about', 'feel comfortable', 'peace of mind', 'sleep at night', 'right thing', 'right choice'],
+    curiosity:    ['what would', 'what needs', 'what specifically', 'what do you', 'what would need', 'what makes', 'what happened', 'what changed', 'how so', 'walk me through', 'tell me more', 'help me understand', 'out of curiosity', 'what is it', 'what part', 'what questions', 'what is the', 'what are the', 'when was the last', 'when is the last', 'whens the last', 'why do you', 'why is that', 'why would', 'how do you', 'how would', 'how does', 'what do they', 'what would they', 'what would he', 'what would she', 'what prompted', 'what brought', 'what made you', 'what is behind', 'whats behind', 'what is really', 'whats really', 'what is the biggest', 'what is the one', 'whats the one', 'what is your biggest', 'what boxes', 'what number', 'does that make sense', 'is it more about', 'is that because', 'can you tell me', 'can you walk me', 'have you ever', 'has he actually', 'has she actually', 'who is the leader', 'who is the decision', 'what did they say', 'what would it take', 'what is stopping', 'whats stopping', 'what is holding', 'whats holding', 'what would change', 'what would need to change', 'what would have to be', 'what would have to change', 'compared to what'],
     no_fight:     true, // always true unless they argue
-    fighting:     ['you should', 'but the price', 'actually its', 'let me explain why', 'you need to understand', 'youre wrong', 'thats not true'],
+    fighting:     ['you should', 'but the price', 'actually its', 'let me explain why', 'you need to understand', 'youre wrong', 'thats not true', 'you dont understand', 'thats incorrect', 'no youre', 'you have to', 'you need to realize', 'the thing is', 'but you have to'],
   };
 
   var hit = {
@@ -2240,9 +2230,6 @@ async function objLabScore() { // returns promise
       : costIsRelevant
         ? 'Strong execution. You acknowledged and redirected to the emotional core. For maximum impact, explicitly set the cost aside before the emotional question.'
         : 'Strong execution. You acknowledged and redirected to the emotional core. Keep the redirect tight and let the question do the work.';
-  } else {
-    score = 55;
-    feedback = 'Partial execution. Make sure you are both acknowledging the objection AND redirecting with a question toward the emotional core.';
   }
 
   // Display score
