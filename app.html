@@ -2261,6 +2261,34 @@ async function objLabScore() { // returns promise
     fighting:     signals.fighting.some(function(s){ return rep.indexOf(s) > -1; }),
   };
 
+  // ── LOOSE PATTERN MATCHING ──────────────────────────────────────────────
+  // Catches good responses that use natural language instead of bar napkin phrases.
+  // Only grants credit if strict arrays missed it. Never overrides fighting.
+  if (!hit.fighting) {
+
+    // Curiosity fallback: any genuine question = redirecting with curiosity
+    if (!hit.curiosity && rep.indexOf('?') > -1) {
+      // Must have at least 15 chars before the question mark (not just "what?" or "huh?")
+      var qIdx = rep.indexOf('?');
+      if (qIdx >= 15) {
+        hit.curiosity = true;
+      }
+    }
+
+    // Acknowledged fallback: starts with a soft landing in the first ~60 chars before pivoting
+    if (!hit.acknowledged) {
+      var softStarts = ['yeah', 'yep', 'sure', 'look', 'listen', 'hey', 'okay', 'ok ', 'right', 'i respect', 'i appreciate', 'i can see', 'no worries', 'all good', 'thats fine', 'fair', 'valid', 'understood', 'i get where'];
+      var firstChunk = rep.substring(0, 60);
+      hit.acknowledged = softStarts.some(function(s){ return firstChunk.indexOf(s) > -1; });
+    }
+
+    // Emotional fallback: mentions personal/emotional stakes + asks a question
+    if (!hit.emotional && rep.indexOf('?') > -1) {
+      var emotionalWords = ['family', 'kids', 'wife', 'husband', 'spouse', 'children', 'future', 'life', 'situation', 'decision', 'protect', 'security', 'legacy', 'burden', 'grief', 'worry', 'fear', 'dream', 'goal', 'vision', 'result', 'outcome', 'impact', 'cost you', 'losing', 'risk', 'consequences', 'personal', 'important to you', 'matters to you', 'means to you'];
+      hit.emotional = emotionalWords.some(function(s){ return rep.indexOf(s) > -1; });
+    }
+  }
+
   var score, feedback;
 
   if (hit.fighting) {
