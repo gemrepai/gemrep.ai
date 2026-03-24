@@ -1,12 +1,17 @@
 // api/chat.js
 import { createClient } from '@supabase/supabase-js';
-
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
-
 const MASTER_EMAIL = 'tomcrowhurst@proton.me';
+
+// Allowed models — only these can be requested from the client
+const ALLOWED_MODELS = {
+  'claude-haiku-4-5-20251001': true,
+  'claude-sonnet-4-20250514': true,
+};
+const DEFAULT_MODEL = 'claude-haiku-4-5-20251001';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -16,7 +21,6 @@ export default async function handler(req, res) {
   if (!authHeader?.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'unauthorized' });
   }
-
   const token = authHeader.replace('Bearer ', '');
   const { data: { user }, error: authError } = await supabase.auth.getUser(token);
   if (authError || !user) {
@@ -25,7 +29,6 @@ export default async function handler(req, res) {
 
   // ── 2. Master account bypass ───────────────────────────────────────────
   const isMaster = user.email === MASTER_EMAIL;
-
   if (!isMaster) {
     // Load profile + check limits for non-master users
     const { data: profile, error: profileError } = await supabase
@@ -62,6 +65,23 @@ export default async function handler(req, res) {
 
   // ── 3. Proxy to Anthropic ──────────────────────────────────────────────
   const body = req.body;
+
+  // Model: use client-requested model if it's in the allowlist, otherwise default
+  const requestedModel = body.model && ALLOWED_MODELS[body.model] ? body.model : DEFAULT_MODEL;
+
+  // Build Anthropic request — pass through temperature if provided
+  const anthropicBody = {
+    model: requestedModel,
+    max_tokens: body.max_tokens || 400,
+    system: body.system,
+    messages: body.messages,
+  };
+
+  // Only include temperature if explicitly set (Anthropic default is 1.0)
+  if (typeof body.temperature === 'number') {
+    anthropicBody.temperature = body.temperature;
+  }
+
   let response;
   try {
     response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -71,12 +91,7 @@ export default async function handler(req, res) {
         'x-api-key': process.env.ANTHROPIC_API_KEY,
         'anthropic-version': '2023-06-01',
       },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: body.max_tokens || 400,
-        system: body.system,
-        messages: body.messages,
-      }),
+      body: JSON.stringify(anthropicBody),
     });
   } catch (err) {
     console.error('Anthropic fetch error:', err);
