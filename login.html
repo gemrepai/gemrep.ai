@@ -7,19 +7,17 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/favicon-192x192.png">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#ff4d1c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="GemRep">
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:#0a0a0a;color:#e8e9ec;font-family:'DM Sans',system-ui,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+body{background:#0a0a0a;color:#e8e9ec;font-family:'DM Sans',system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
 .card{background:#16181c;border:1px solid #2a2d35;border-radius:16px;padding:40px 36px;width:100%;max-width:400px;text-align:center}
 .logo{font-size:32px;font-weight:700;letter-spacing:4px;color:#fff;margin-bottom:6px}
 .tag{font-size:11px;letter-spacing:2px;color:#ff4d1c;text-transform:uppercase;margin-bottom:32px}
@@ -32,6 +30,11 @@ input:focus{border-color:#ff4d1c}
 .msg{font-size:13px;margin-top:16px;min-height:20px;color:#8a8d9a}
 .msg.success{color:#00e676}
 .msg.error{color:#ff1744}
+.terms{font-size:11px;color:#72747d;margin-top:14px;line-height:1.6}
+.terms a{color:#8a8d9a;text-decoration:underline;text-underline-offset:2px;transition:color .15s}
+.terms a:hover{color:#e8e9ec}
+.back-link{margin-top:20px;font-size:12px;color:#72747d;transition:color .15s;text-decoration:none}
+.back-link:hover{color:#e8e9ec}
 </style>
 </head>
 <body>
@@ -41,11 +44,13 @@ input:focus{border-color:#ff4d1c}
   <label class="label">Enter your email to get a login link</label>
   <input type="email" id="emailInput" placeholder="you@email.com" />
   <button class="btn" id="loginBtn">SEND MAGIC LINK</button>
-<div id="iosBanner" style="display:none;margin-top:14px;background:rgba(255,214,0,.08);border:1px solid rgba(255,214,0,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:#ffd600;text-align:center;line-height:1.5">
-  &#9888; For best results, use GemRep on desktop Chrome or Edge. iOS voice support is in beta.
-</div>
+  <div id="iosBanner" style="display:none;margin-top:14px;background:rgba(255,214,0,.08);border:1px solid rgba(255,214,0,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:#ffd600;text-align:center;line-height:1.5">
+    &#9888; For best results, use GemRep on desktop Chrome or Edge. iOS voice support is limited.
+  </div>
   <div class="msg" id="msg"></div>
+  <div class="terms">By continuing you agree to our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a>.</div>
 </div>
+<a href="/" class="back-link">&larr; Back to gemrep.ai</a>
 
 <script>
 const SUPABASE_URL = 'https://emcakiwlyztkvlncykzq.supabase.co';
