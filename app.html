@@ -2097,6 +2097,14 @@ function objLabStopRecording() {
 
 async function objLabScore() { // returns promise
   var response = objLab.transcript.trim();
+  // Fallback — use whatever is displayed if transcript missed finals
+  if (!response) {
+    var displayed = document.getElementById('objLabResponseBox').textContent.trim();
+    if (displayed && displayed !== 'Tap the mic and respond...' && displayed !== 'Listening...' && displayed !== 'Nothing captured — tap to try again.') {
+      response = displayed;
+      objLab.transcript = displayed;
+    }
+  }
   if (!response) { showToast('Nothing recorded yet.'); return; }
   if (!_authToken) {
     var _s = await _sb.auth.getSession();
@@ -2263,12 +2271,19 @@ document.querySelectorAll('.objlab-vert').forEach(function(b) {
 });
 document.getElementById('objLabRecBtn').addEventListener('click', function(){
   if (objLab.recording) {
-    // Manual stop — show send-hold bar
+    // Manual stop — capture display text (includes interim that transcript may have missed)
     objLab.recording=false;
     if (objLab.recognition) { try { objLab.recognition.stop(); } catch(e) {} }
     var btn=document.getElementById('objLabRecBtn');
     btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
-    if (objLab.transcript.trim()) {
+    var displayed = document.getElementById('objLabResponseBox').textContent.trim();
+    if (displayed && displayed !== 'Tap the mic and respond...' && displayed !== 'Listening...') {
+      // Always use displayed text — it includes interim that finals may not have caught
+      if (!objLab.transcript.trim() || displayed.length > objLab.transcript.trim().length) {
+        objLab.transcript = displayed;
+      }
+      document.getElementById('objLabSendHold').style.display='flex';
+    } else if (objLab.transcript.trim()) {
       document.getElementById('objLabSendHold').style.display='flex';
     } else {
       document.getElementById('objLabResponseBox').textContent='Nothing captured — tap to try again.';
