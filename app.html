@@ -1219,7 +1219,7 @@ async function scoreCall() {
     var res = await fetchWithTimeout('/api/chat', {
       method:'POST',
       headers:authHeaders(),
-      body: JSON.stringify({max_tokens:900, temperature:0, system:(function() {
+      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:900, temperature:0, system:(function() {
   var vertical = state.vertical || 'insurance';
 
   var reframes = {
@@ -1930,6 +1930,7 @@ async function drillScorePitch() {
       method: 'POST',
       headers: authHeaders(),
       body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
         max_tokens: 600,
         temperature: 0,
         system: systemPrompt,
