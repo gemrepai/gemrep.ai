@@ -5,8 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GemRep &mdash; Cut. Polish. Close.</title>
 <meta name="description" content="AI-powered sales training. Practice on realistic prospects, get scored, close more deals.">
+<!-- Open Graph -->
+<meta property="og:title" content="GemRep — AI Sales Training">
+<meta property="og:description" content="Stop practicing on real prospects. GemRep puts you on the phone with AI prospects who fight back, go cold, and hang up — just like the real thing.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://gemrep.ai">
+<meta property="og:image" content="https://gemrep.ai/favicon-512x512.png">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GemRep — AI Sales Training">
+<meta name="twitter:description" content="Practice on AI prospects that fight back. Get scored. Close more.">
+<meta name="twitter:image" content="https://gemrep.ai/favicon-512x512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/favicon-192x192.png">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--black:#080809;--dark:#0e0f11;--panel:#141518;--border:#222428;--muted:#2e3038;--text:#eeeef0;--dim:#72747d;--accent:#ff4d1c;--accent2:#ff8c00}
@@ -23,6 +37,11 @@ nav.scrolled{background:rgba(8,8,9,.95);border-bottom:1px solid var(--border);ba
 .nav-links a{color:var(--dim);font-size:14px;transition:color .2s}
 .nav-links a:hover{color:var(--text)}
 .nav-cta{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:8px;color:white;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;padding:9px 20px;cursor:pointer;display:inline-block}
+.mob-menu-btn{display:none;background:none;border:1px solid var(--border);border-radius:7px;color:var(--dim);font-size:18px;width:36px;height:36px;cursor:pointer;align-items:center;justify-content:center}
+.mob-nav{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(8,8,9,.98);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);padding:16px 24px;z-index:99;flex-direction:column;gap:12px}
+.mob-nav.open{display:flex}
+.mob-nav a{color:var(--dim);font-size:15px;padding:8px 0;transition:color .2s}
+.mob-nav a:hover{color:var(--text)}
 
 /* HERO */
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 24px 80px;text-align:center;position:relative}
@@ -41,6 +60,10 @@ nav.scrolled{background:rgba(8,8,9,.95);border-bottom:1px solid var(--border);ba
 .stat-num{font-family:"Instrument Serif",serif;font-size:36px;background:linear-gradient(135deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
 .stat-label{font-size:12px;color:var(--dim);margin-top:4px}
 
+/* BROWSER NOTICE */
+.browser-note{display:inline-flex;align-items:center;gap:8px;background:rgba(255,214,0,.06);border:1px solid rgba(255,214,0,.18);border-radius:8px;padding:8px 16px;font-size:12px;color:#ffd600;margin-top:28px;max-width:480px}
+.browser-note svg{flex-shrink:0}
+
 /* SECTIONS */
 section{padding:96px 24px;position:relative}
 .alt{background:var(--dark)}
@@ -51,6 +74,14 @@ section{padding:96px 24px;position:relative}
 .sec-sub{font-size:17px;color:var(--dim);max-width:500px;line-height:1.7;font-weight:300}
 .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
 
+/* DATA PROOF */
+.data-proof{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:52px;border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.dp{background:var(--panel);padding:28px 22px;text-align:center}
+.dp:hover{background:#1a1c20}
+.dp-num{font-family:"Instrument Serif",serif;font-size:34px;background:linear-gradient(135deg,#ff4d1c,#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:8px}
+.dp-label{font-size:12px;color:var(--dim);line-height:1.5}
+.dp-src{font-size:9px;color:var(--muted);margin-top:6px;font-family:"DM Mono",monospace}
+
 /* STEPS */
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2px;margin-top:56px;border:1px solid var(--border);border-radius:16px;overflow:hidden}
 .step{background:var(--panel);padding:32px 28px}
@@ -60,14 +91,16 @@ section{padding:96px 24px;position:relative}
 .step-title{font-size:16px;font-weight:600;margin-bottom:8px}
 .step-desc{font-size:13px;color:var(--dim);line-height:1.65}
 
-/* ARCH GRID */
-.arch-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:48px}
-.arch-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;transition:all .2s}
-.arch-card:hover{border-color:rgba(255,77,28,.4);transform:translateY(-3px)}
-.arch-vert{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#ff4d1c;margin-bottom:6px;font-weight:500}
-.arch-emoji{font-size:22px;margin-bottom:9px}
-.arch-name{font-size:13px;font-weight:600;margin-bottom:3px}
-.arch-label{font-size:11px;color:var(--dim);margin-bottom:9px}
+/* ARCH LIST */
+.arch-list{display:flex;flex-direction:column;margin-top:32px;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.arch-row{display:flex;align-items:center;gap:14px;padding:14px 20px;text-decoration:none;color:inherit;border-bottom:1px solid var(--border);transition:background .15s}
+.arch-row:last-child{border-bottom:none}
+.arch-row:hover{background:var(--panel)}
+.arch-row-vert{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);min-width:64px}
+.arch-row-emoji{font-size:20px;min-width:28px;text-align:center}
+.arch-row-name{font-weight:600;font-size:14px;min-width:160px}
+.arch-row-label{font-size:12px;color:var(--dim)}
+.arch-row-more{justify-content:center;padding:12px}
 .diff{display:flex;gap:3px}
 .pip{width:12px;height:4px;border-radius:2px}
 
@@ -78,12 +111,12 @@ section{padding:96px 24px;position:relative}
 .feat-icon{width:42px;height:42px;border-radius:10px;background:rgba(255,77,28,.1);border:1px solid rgba(255,77,28,.2);display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:14px}
 .feat-title{font-size:15px;font-weight:600;margin-bottom:7px}
 .feat-desc{font-size:13px;color:var(--dim);line-height:1.65}
+.feat-soon{display:inline-block;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#ffd600;background:rgba(255,214,0,.1);border:1px solid rgba(255,214,0,.2);border-radius:4px;padding:2px 6px;margin-left:6px;vertical-align:middle}
 
 /* TESTIMONIALS */
 .testis{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px;margin-top:52px}
 .testi{background:var(--panel);border:1px solid var(--border);border-left:3px solid #ff4d1c;border-radius:14px;padding:26px}
 .testi-q{font-size:15px;line-height:1.7;margin-bottom:18px;padding-top:4px}
-.testi-q::before{display:none}
 .testi-author{display:flex;align-items:center;gap:11px}
 .testi-av{width:36px;height:36px;border-radius:9px;background:var(--muted);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px}
 .testi-name{font-size:13px;font-weight:600}
@@ -107,14 +140,15 @@ section{padding:96px 24px;position:relative}
 .pbtn-secondary:hover{border-color:#ff4d1c;color:var(--text)}
 
 /* WAITLIST */
-.waitlist-wrap{max-width:540px;margin:0 auto;text-align:center;padding:96px 24px}
-.wform{display:flex;gap:10px;margin-top:30px;flex-wrap:wrap;justify-content:center}
 .winput{flex:1;min-width:210px;background:var(--dark);border:1px solid var(--border);border-radius:10px;padding:12px 17px;color:var(--text);font-family:"DM Sans",sans-serif;font-size:14px;outline:none;transition:border-color .2s}
 .winput:focus{border-color:#ff4d1c}
 .winput::placeholder{color:var(--dim)}
 .wbtn{background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:500;padding:12px 26px;cursor:pointer;transition:all .2s;white-space:nowrap}
 .wbtn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(255,77,28,.4)}
 .wnote{font-size:12px;color:var(--dim);margin-top:13px}
+.qbtn{background:var(--panel);border:1px solid var(--border);border-radius:8px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:13px;padding:8px 16px;cursor:pointer;transition:all .15s}
+.qbtn:hover{border-color:#ff4d1c;color:var(--text)}
+.qbtn.selected{background:rgba(255,77,28,.1);border-color:#ff4d1c;color:var(--text)}
 
 /* FOOTER */
 footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
@@ -125,44 +159,24 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
 .foot-links a{font-size:12px;color:var(--dim);transition:color .2s}
 .foot-links a:hover{color:var(--text)}
 
-@media(max-width:900px){.pricing{grid-template-columns:repeat(2,1fr)!important}}
-@media(max-width:560px){.pricing{grid-template-columns:1fr!important}}
+@media(max-width:900px){.pricing{grid-template-columns:repeat(2,1fr)!important}.data-proof{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.pricing{grid-template-columns:1fr!important}.data-proof{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){
   nav{padding:0 20px}
   .nav-links{display:none}
+  .mob-menu-btn{display:flex}
   footer{flex-direction:column;padding:28px 20px}
-  .pricing{grid-template-columns:1fr!important}
-  .price-card.featured{margin-top:0}
-  .popular{font-size:9px;padding:3px 10px}
   .hero-title{letter-spacing:-1px}
   .stats{gap:24px}
   .stat-num{font-size:28px}
   section{padding:64px 20px}
-  .sgrid2{grid-template-columns:repeat(2,1fr)!important}
-  .arch-grid{grid-template-columns:repeat(2,1fr)!important}
+  .arch-list .arch-row-label{display:none}
+  .arch-list .arch-row-name{min-width:unset}
   .features{grid-template-columns:1fr}
   .testis{grid-template-columns:1fr}
 }
-
-.qbtn{background:var(--panel);border:1px solid var(--border);border-radius:8px;color:var(--dim);font-family:"DM Sans",sans-serif;font-size:13px;padding:8px 16px;cursor:pointer;transition:all .15s}
-.qbtn:hover{border-color:#ff4d1c;color:var(--text)}
-.qbtn.selected{background:rgba(255,77,28,.1);border-color:#ff4d1c;color:var(--text)}
-
-
-.arch-list{display:flex;flex-direction:column;margin-top:32px;border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.arch-row{display:flex;align-items:center;gap:14px;padding:14px 20px;text-decoration:none;color:inherit;border-bottom:1px solid var(--border);transition:background .15s}
-.arch-row:last-child{border-bottom:none}
-.arch-row:hover{background:var(--panel)}
-.arch-row-vert{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);min-width:64px}
-.arch-row-emoji{font-size:20px;min-width:28px;text-align:center}
-.arch-row-name{font-weight:600;font-size:14px;min-width:160px}
-.arch-row-label{font-size:12px;color:var(--dim)}
-.arch-row-more{justify-content:center;padding:12px}
-@media(max-width:560px){.arch-row-label{display:none}.arch-row-name{min-width:unset}}
 </style>
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/favicon-192x192.png"></head>
+</head>
 <body>
 
 <nav id="nav">
@@ -175,8 +189,17 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
     <a href="#archetypes">Prospects</a>
     <a href="#pricing">Pricing</a>
   </div>
+  <button class="mob-menu-btn" id="mobMenuBtn" aria-label="Menu">&#9776;</button>
   <a href="#waitlist" class="nav-cta">Join Waitlist</a>
 </nav>
+
+<!-- MOBILE NAV -->
+<div class="mob-nav" id="mobNav">
+  <a href="#how" onclick="document.getElementById('mobNav').classList.remove('open')">How It Works</a>
+  <a href="#archetypes" onclick="document.getElementById('mobNav').classList.remove('open')">Prospects</a>
+  <a href="#pricing" onclick="document.getElementById('mobNav').classList.remove('open')">Pricing</a>
+  <a href="#waitlist" onclick="document.getElementById('mobNav').classList.remove('open')">Join Waitlist</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -184,29 +207,50 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
   <h1 class="hero-title">Stop practicing<br>on <em>real</em> prospects.</h1>
   <p class="hero-sub">GemRep puts you on the phone with AI prospects who fight back, go cold, and hang up &mdash; just like the real thing. Get scored. Get better. Close more.</p>
   <div class="hero-btns">
-    <a href="/app" class="btn-primary">Join the Waitlist</a>
-    <a href="/app" class="btn-secondary">See How It Works &rarr;</a>
+    <a href="#waitlist" class="btn-primary">Join the Waitlist</a>
+    <a href="#how" class="btn-secondary">See How It Works &rarr;</a>
   </div>
   <div class="stats">
-    <div><div class="stat-num">17</div><div class="stat-label">Prospect Archetypes</div></div>
-    <div><div class="stat-num">3</div><div class="stat-label">Sales Verticals</div></div>
+    <div><div class="stat-num">13</div><div class="stat-label">Prospect Archetypes</div></div>
+    <div><div class="stat-num">4</div><div class="stat-label">Sales Verticals</div></div>
     <div><div class="stat-num">&infin;</div><div class="stat-label">Practice Reps</div></div>
     <div><div class="stat-num">0</div><div class="stat-label">Real Deals Burned</div></div>
+  </div>
+  <div class="browser-note">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#ffd600" stroke-width="1.5"/><line x1="8" y1="5" x2="8" y2="9" stroke="#ffd600" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.8" fill="#ffd600"/></svg>
+    GemRep works best on Chrome or Edge desktop browsers. Voice features may not work reliably on iPhone or iPad due to iOS browser limitations.
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WHY TRAINING -->
+<section>
+  <div class="container">
+    <div class="sec-label">The Problem</div>
+    <h2 class="sec-title">Most reps practice<br>on <em>live deals.</em></h2>
+    <p class="sec-sub">They lose real money learning what they should have learned in practice. The data is clear &mdash; training works, but only if reps actually do it.</p>
+    <div class="data-proof">
+      <div class="dp"><div class="dp-num">353%</div><div class="dp-label">Average ROI from sales training investment</div><div class="dp-src">Myers Barnes / SPOTIO</div></div>
+      <div class="dp"><div class="dp-num">84%</div><div class="dp-label">Of training forgotten within 3 months without practice</div><div class="dp-src">Qwilr 2024</div></div>
+      <div class="dp"><div class="dp-num">28%</div><div class="dp-label">Higher win rates with dynamic coaching programs</div><div class="dp-src">Valuecore / CSO Insights</div></div>
+      <div class="dp"><div class="dp-num">50%</div><div class="dp-label">Higher net sales per rep with continuous training</div><div class="dp-src">SPOTIO 2026</div></div>
+    </div>
   </div>
 </section>
 
 <div class="divider"></div>
 
 <!-- HOW IT WORKS -->
-<section id="how">
+<section id="how" class="alt">
   <div class="container">
     <div class="sec-label">How It Works</div>
     <h2 class="sec-title">Train like a pro.<br><em>Close like one.</em></h2>
     <p class="sec-sub">Four steps from opening your laptop to a sharper closer.</p>
     <div class="steps">
-      <div class="step"><div class="step-num">01</div><div class="step-icon">&#127919;</div><div class="step-title">Pick Your Prospect</div><div class="step-desc">Choose from 17 archetypes across B2B, insurance, and cold calling. Each one fights differently.</div></div>
+      <div class="step"><div class="step-num">01</div><div class="step-icon">&#127919;</div><div class="step-title">Pick Your Prospect</div><div class="step-desc">Choose from 13 archetypes across B2B, insurance, and cold calling &mdash; plus build your own custom prospect. Each one fights differently.</div></div>
       <div class="step"><div class="step-num">02</div><div class="step-icon">&#127897;&#65039;</div><div class="step-title">Run the Call</div><div class="step-desc">The AI plays the prospect in real time. It objects, goes cold, hangs up. You have to earn it.</div></div>
-      <div class="step"><div class="step-num">03</div><div class="step-icon">&#128202;</div><div class="step-title">Get Your Score</div><div class="step-desc">Every call scored on opener, discovery, objection handling, and tonality with specific coaching notes.</div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-icon">&#128202;</div><div class="step-title">Get Your Score</div><div class="step-desc">Every call scored on opener, discovery, objection handling, consequence, and commitment &mdash; with specific coaching notes.</div></div>
       <div class="step"><div class="step-num">04</div><div class="step-icon">&#128142;</div><div class="step-title">Get Sharp</div><div class="step-desc">Run it again. A harder archetype. Until closing feels like breathing.</div></div>
     </div>
   </div>
@@ -215,22 +259,25 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
 <div class="divider"></div>
 
 <!-- ARCHETYPES -->
-<section id="archetypes" class="alt">
+<section id="archetypes">
   <div class="container">
     <div class="sec-label">Prospect Library</div>
-    <h2 class="sec-title">17 prospects.<br><em>Every personality.</em></h2>
-    <p class="sec-sub">From hopeful first-timers to furious gatekeepers — if you can close our AI, you can close anyone.</p>
+    <h2 class="sec-title">13 prospects.<br><em>Every personality.</em></h2>
+    <p class="sec-sub">From hopeful first-timers to furious gatekeepers &mdash; if you can close our AI, you can close anyone.</p>
     <div class="arch-list">
-      <a href="/app" class="arch-row"><span class="arch-row-vert">B2B</span><span class="arch-row-emoji">&#128105;&#8205;&#128188;</span><span class="arch-row-name">Decisive Danielle</span><span class="arch-row-label">Driver / Commander</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#2e3038"></div></div></a>
-      <a href="/app" class="arch-row"><span class="arch-row-vert">B2B</span><span class="arch-row-emoji">&#129309;</span><span class="arch-row-name">Consensus Claire</span><span class="arch-row-label">Amiable / Collaborative</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div></div></a>
-      <a href="/app" class="arch-row"><span class="arch-row-vert">B2B</span><span class="arch-row-emoji">&#129488;</span><span class="arch-row-name">Skeptical Steve</span><span class="arch-row-label">Analytical / Cynical</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div></div></a>
-      <a href="/app" class="arch-row"><span class="arch-row-vert">B2B</span><span class="arch-row-emoji">&#128161;</span><span class="arch-row-name">Innovator Irene</span><span class="arch-row-label">Visionary / Early Adopter</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div></div></a>
-      <a href="/app" class="arch-row"><span class="arch-row-vert">Insurance</span><span class="arch-row-emoji">&#128543;</span><span class="arch-row-name">Fearful Frank</span><span class="arch-row-label">Fearful Protector</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div></div></a>
-      <a href="/app" class="arch-row"><span class="arch-row-vert">Insurance</span><span class="arch-row-emoji">&#128548;</span><span class="arch-row-name">Burned Bob</span><span class="arch-row-label">Burned &amp; Skeptical</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div></div></a>
-      <a href="/app" class="arch-row"><span class="arch-row-vert">Insurance</span><span class="arch-row-emoji">&#127752;</span><span class="arch-row-name">Hopeful Helen</span><span class="arch-row-label">Hopeful Guardian</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div></div></a>
-      <a href="/app" class="arch-row"><span class="arch-row-vert">Cold Call</span><span class="arch-row-emoji">&#129315;</span><span class="arch-row-name">Furious Frank</span><span class="arch-row-label">Hostile &amp; Angry</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div></div></a>
-      <a href="/app" class="arch-row"><span class="arch-row-vert">Cold Call</span><span class="arch-row-emoji">&#129399;</span><span class="arch-row-name">Ninja Nancy</span><span class="arch-row-label">Polite Deflector</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#2e3038"></div></div></a>
-      <a href="/app" class="arch-row arch-row-more"><span style="color:var(--dim);font-size:13px">+ 8 more inside the app &rarr;</span></a>
+      <a href="#waitlist" class="arch-row"><span class="arch-row-vert">B2B</span><span class="arch-row-emoji">&#128105;&#8205;&#128188;</span><span class="arch-row-name">Decisive Danielle</span><span class="arch-row-label">Driver / Commander</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#2e3038"></div></div></a>
+      <a href="#waitlist" class="arch-row"><span class="arch-row-vert">B2B</span><span class="arch-row-emoji">&#129309;</span><span class="arch-row-name">Consensus Claire</span><span class="arch-row-label">Amiable / Collaborative</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div></div></a>
+      <a href="#waitlist" class="arch-row"><span class="arch-row-vert">B2B</span><span class="arch-row-emoji">&#129488;</span><span class="arch-row-name">Skeptical Steve</span><span class="arch-row-label">Analytical / Cynical</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div></div></a>
+      <a href="#waitlist" class="arch-row"><span class="arch-row-vert">B2B</span><span class="arch-row-emoji">&#128161;</span><span class="arch-row-name">Innovator Irene</span><span class="arch-row-label">Visionary / Early Adopter</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div></div></a>
+      <a href="#waitlist" class="arch-row"><span class="arch-row-vert">Insurance</span><span class="arch-row-emoji">&#128543;</span><span class="arch-row-name">Fearful Frank</span><span class="arch-row-label">Fearful Protector</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div></div></a>
+      <a href="#waitlist" class="arch-row"><span class="arch-row-vert">Insurance</span><span class="arch-row-emoji">&#128548;</span><span class="arch-row-name">Burned Bob</span><span class="arch-row-label">Burned &amp; Skeptical</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div></div></a>
+      <a href="#waitlist" class="arch-row"><span class="arch-row-vert">Insurance</span><span class="arch-row-emoji">&#127752;</span><span class="arch-row-name">Hopeful Helen</span><span class="arch-row-label">Hopeful Guardian</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div></div></a>
+      <a href="#waitlist" class="arch-row"><span class="arch-row-vert">Insurance</span><span class="arch-row-emoji">&#128117;</span><span class="arch-row-name">Confused Dorothy</span><span class="arch-row-label">Medicare Confused</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#00e676"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div><div class="pip" style="background:#2e3038"></div></div></a>
+      <a href="#waitlist" class="arch-row"><span class="arch-row-vert">Cold Call</span><span class="arch-row-emoji">&#128548;</span><span class="arch-row-name">Busy Mike</span><span class="arch-row-label">Skeptical Gatekeeper</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#2e3038"></div></div></a>
+      <a href="#waitlist" class="arch-row"><span class="arch-row-vert">Cold Call</span><span class="arch-row-emoji">&#129315;</span><span class="arch-row-name">Furious Frank</span><span class="arch-row-label">Hostile &amp; Angry</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div></div></a>
+      <a href="#waitlist" class="arch-row"><span class="arch-row-vert">Cold Call</span><span class="arch-row-emoji">&#128203;</span><span class="arch-row-name">Gatekeeping Gloria</span><span class="arch-row-label">Executive Assistant</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#2e3038"></div></div></a>
+      <a href="#waitlist" class="arch-row"><span class="arch-row-vert">Cold Call</span><span class="arch-row-emoji">&#129399;</span><span class="arch-row-name">Ninja Nancy</span><span class="arch-row-label">Polite Deflector</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#ff1744"></div><div class="pip" style="background:#2e3038"></div></div></a>
+      <a href="#waitlist" class="arch-row"><span class="arch-row-vert">Custom</span><span class="arch-row-emoji">&#127775;</span><span class="arch-row-name">Build Your Own</span><span class="arch-row-label">Any Industry &middot; Any Personality</span><div class="diff" style="margin-left:auto"><div class="pip" style="background:var(--dim)"></div><div class="pip" style="background:var(--dim)"></div><div class="pip" style="background:var(--dim)"></div><div class="pip" style="background:var(--dim)"></div><div class="pip" style="background:var(--dim)"></div></div></a>
     </div>
   </div>
 </section>
@@ -238,17 +285,17 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
 <div class="divider"></div>
 
 <!-- FEATURES -->
-<section id="features">
+<section id="features" class="alt">
   <div class="container">
     <div class="sec-label">Features</div>
     <h2 class="sec-title">Built for reps<br>who want to <em>win.</em></h2>
     <div class="features">
       <div class="feat"><div class="feat-icon">&#127917;</div><div class="feat-title">Deeply Human Prospects</div><div class="feat-desc">Each archetype has a core emotion, unique objection patterns, and specific tells when warming up. Not chatbots &mdash; characters.</div></div>
-      <div class="feat"><div class="feat-icon">&#128202;</div><div class="feat-title">Instant Call Scoring</div><div class="feat-desc">Every session scored on Opener, Discovery, Objection Handling, and Tonality. Specific coaching notes after every call.</div></div>
-      <div class="feat"><div class="feat-icon">&#127908;</div><div class="feat-title">Solo Drill — Pitch Scoring</div><div class="feat-desc">Record your full pitch with no prospect. Get scored on structure, discovery, and consequence. Find your weak spots before a real call does.</div></div>
-      <div class="feat"><div class="feat-icon">&#127970;</div><div class="feat-title">Team Dashboards</div><div class="feat-desc">Managers see rep progress, call scores, and weak spots across the whole team. Know exactly who needs coaching and on what.</div></div>
-      <div class="feat"><div class="feat-icon">&#128737;&#65039;</div><div class="feat-title">Insurance Specialized</div><div class="feat-desc">Medicare, life insurance, and ACA archetypes built by someone who actually sells insurance. Vertical-specific, not generic.</div></div>
-      <div class="feat"><div class="feat-icon">&#9889;</div><div class="feat-title">Practice Anytime</div><div class="feat-desc">No scheduling. No roleplay partner. Just open GemRep and run a call. Your AI prospect is always available and always difficult.</div></div>
+      <div class="feat"><div class="feat-icon">&#128202;</div><div class="feat-title">Instant Call Scoring</div><div class="feat-desc">Every session scored on Opener, Discovery, Consequence, Objection Handling, and Commitment. Specific coaching notes after every call.</div></div>
+      <div class="feat"><div class="feat-icon">&#9889;</div><div class="feat-title">Objection Lab &mdash; Free</div><div class="feat-desc">Get hit with a real objection. Handle it. Get scored instantly on whether you acknowledged, redirected with curiosity, or fought it. Free on every plan, unlimited reps.</div></div>
+      <div class="feat"><div class="feat-icon">&#127908;</div><div class="feat-title">Solo Drill</div><div class="feat-desc">Record your full pitch with no prospect. Get scored on structure, discovery, and consequence. Find your weak spots before a real call does.</div></div>
+      <div class="feat"><div class="feat-icon">&#128737;&#65039;</div><div class="feat-title">Insurance Specialized</div><div class="feat-desc">Medicare, Final Expense, and Life Insurance archetypes built by someone who actually sells insurance. Vertical-specific, not generic.</div></div>
+      <div class="feat"><div class="feat-icon">&#127970;</div><div class="feat-title">Team Dashboards<span class="feat-soon">Coming Soon</span></div><div class="feat-desc">Managers will see rep progress, call scores, and weak spots across the whole team. Know exactly who needs coaching and on what.</div></div>
     </div>
   </div>
 </section>
@@ -256,7 +303,7 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
 <div class="divider"></div>
 
 <!-- TESTIMONIALS -->
-<section class="alt">
+<section>
   <div class="container">
     <div class="sec-label">Early Feedback</div>
     <h2 class="sec-title">What reps are <em>saying.</em></h2>
@@ -271,7 +318,7 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
 <div class="divider"></div>
 
 <!-- PRICING -->
-<section id="pricing">
+<section id="pricing" class="alt">
   <div class="container">
     <div class="sec-label">Pricing</div>
     <h2 class="sec-title">Simple pricing.<br><em>No surprises.</em></h2>
@@ -283,22 +330,23 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
         <div class="price-period">No credit card needed</div>
         <ul class="price-feats">
           <li>5 practice calls per month</li>
+          <li>5 roleplay calls per month</li>
           <li>3 prospect archetypes</li>
-          <li>Conversation-based scoring</li>
-          <li>Text sessions only</li>
+          <li>Unlimited Objection Lab</li>
+          <li>Basic call scoring</li>
         </ul>
-        <a href="/app" class="pbtn pbtn-secondary">Try It Free</a>
+        <a href="#waitlist" class="pbtn pbtn-secondary">Get Early Access</a>
       </div>
       <div class="price-card">
         <div class="price-name">Individual</div>
         <div class="price-amt"><span>$</span>24</div>
         <div class="price-period">per month</div>
         <ul class="price-feats">
-          <li>100 practice calls per month</li>
-          <li>All 17 archetypes</li>
-          <li>Full conversation scoring</li>
-          <li>Text sessions</li>
-          <li>Call history</li>
+          <li>100 roleplay calls per month</li>
+          <li>All 13 archetypes + custom</li>
+          <li>Unlimited Objection Lab</li>
+          <li>Solo Drill with AI scoring</li>
+          <li>Full call scoring + coaching</li>
         </ul>
         <a href="#waitlist" class="pbtn pbtn-secondary">Get Early Access</a>
       </div>
@@ -308,19 +356,19 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
         <div class="price-amt"><span>$</span>49</div>
         <div class="price-period">per month</div>
         <ul class="price-feats">
-          <li>Unlimited practice calls</li>
-          <li>All 17 archetypes</li>
-          <li>Advanced conversation scoring</li>
-          <li>Text &amp; voice sessions</li>
-          <li>Analytics &amp; progress tracking</li>
-          <li>New archetypes monthly</li>
+          <li>Unlimited roleplay calls</li>
+          <li>All 13 archetypes + custom</li>
+          <li>Unlimited Objection Lab</li>
+          <li>Solo Drill with AI scoring</li>
+          <li>ElevenLabs voice prospects</li>
+          <li>Analytics + progress tracking</li>
         </ul>
-        <a href="/app" class="pbtn pbtn-primary">Try The Demo</a>
+        <a href="#waitlist" class="pbtn pbtn-primary">Get Early Access</a>
       </div>
     </div>
     <div style="text-align:center;margin-top:18px">
       <p style="font-size:13px;color:var(--dim);margin-bottom:10px">Need seats for your whole team?</p>
-      <a href="/cdn-cgi/l/email-protection#b0d8d5dcdcdff0d7d5ddc2d5c09ed1d9" style="display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid var(--border);border-radius:9px;color:var(--dim);font-size:13px;padding:9px 22px;transition:all .2s" onmouseover="this.style.borderColor='#ff4d1c';this.style.color='#eeeef0'" onmouseout="this.style.borderColor='#222428';this.style.color='#72747d'">&#9993; Contact us for Enterprise pricing</a>
+      <a href="mailto:hello@gemrep.ai" style="display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid var(--border);border-radius:9px;color:var(--dim);font-size:13px;padding:9px 22px;transition:all .2s" onmouseover="this.style.borderColor='#ff4d1c';this.style.color='#eeeef0'" onmouseout="this.style.borderColor='#222428';this.style.color='#72747d'">&#9993; Contact us for Enterprise pricing</a>
     </div>
   </div>
 </section>
@@ -328,7 +376,7 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
 <div class="divider"></div>
 
 <!-- LEAD MAGNET + QUIZ -->
-<section id="waitlist" class="alt">
+<section id="waitlist">
   <div style="max-width:680px;margin:0 auto;text-align:center;padding:0 20px">
 
     <!-- STEP 1: Lead Magnet -->
@@ -337,27 +385,27 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
         &#127381; Free Download
       </div>
       <h2 class="sec-title" style="text-align:center">The Bar Napkin<br><em>Sales Strategy.</em></h2>
-      <p style="font-size:16px;color:var(--dim);line-height:1.7;font-weight:300;margin:14px auto 32px;max-width:480px">You're at the airport bar and you bump into a $100k a month closer. He writes you his million dollar strategy on a napkin. This is that napkin. Free.</p>
+      <p style="font-size:16px;color:var(--dim);line-height:1.7;font-weight:300;margin:14px auto 32px;max-width:480px">You are at the airport bar and you bump into a $100k/month closer. He writes you his million dollar strategy on a napkin. This is that napkin. Free.</p>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:480px;margin:0 auto 32px;text-align:left">
         <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px">
-          <div style="font-size:18px;margin-bottom:6px">&#128247;</div>
-          <div style="font-size:12px;font-weight:600;margin-bottom:3px">&#9889; Pattern Interrupt Openers</div>
+          <div style="font-size:18px;margin-bottom:6px">&#9889;</div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:3px">Pattern Interrupt Openers</div>
           <div style="font-size:11px;color:var(--dim)">Pattern interrupt openers that actually get a response</div>
         </div>
         <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px">
           <div style="font-size:18px;margin-bottom:6px">&#129488;</div>
-          <div style="font-size:12px;font-weight:600;margin-bottom:3px">&#9889; 5 Consequence Questions</div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:3px">5 Consequence Questions</div>
           <div style="font-size:11px;color:var(--dim)">Make them feel the cost of doing nothing</div>
         </div>
         <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px">
           <div style="font-size:18px;margin-bottom:6px">&#128142;</div>
-          <div style="font-size:12px;font-weight:600;margin-bottom:3px">&#128737;&#65039; Top 3 Objection Rebuttals</div>
-          <div style="font-size:11px;color:var(--dim)">Think about it, need to talk to my spouse, already have something</div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:3px">Top Objection Rebuttals</div>
+          <div style="font-size:11px;color:var(--dim)">Think about it, talk to my spouse, already have something</div>
         </div>
         <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px">
           <div style="font-size:18px;margin-bottom:6px">&#127919;</div>
-          <div style="font-size:12px;font-weight:600;margin-bottom:3px">&#127919; The Commitment Close</div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:3px">The Commitment Close</div>
           <div style="font-size:11px;color:var(--dim)">Get emotional buy-in before you ever talk price</div>
         </div>
       </div>
@@ -377,17 +425,16 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
         <input type="hidden" name="source" value="bar-napkin-download">
         <button class="wbtn" type="submit" style="width:100%;font-size:15px;padding:14px">&#128196; Send Me The Bar Napkin Strategy</button>
       </form>
-      <p class="wnote" id="wnote">Your bar napkin strategy to millions — straight to your inbox.</p>
+      <p class="wnote" id="wnote">Your bar napkin strategy to millions &mdash; straight to your inbox.</p>
     </div>
 
     <!-- STEP 2: Onboarding Quiz -->
     <div id="step2" style="display:none">
       <div style="font-size:32px;margin-bottom:12px">&#127881;</div>
       <h2 class="sec-title" style="text-align:center;margin-bottom:8px">It is on its way!</h2>
-      <p style="font-size:15px;color:var(--dim);margin-bottom:32px">One more thing — let us build your custom training plan.</p>
+      <p style="font-size:15px;color:var(--dim);margin-bottom:32px">One more thing &mdash; let us build your custom training plan.</p>
 
       <div style="text-align:left;max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:20px">
-
         <div>
           <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:10px">What is your monthly income target?</div>
           <div style="display:flex;flex-wrap:wrap;gap:8px" id="incomeQ">
@@ -397,7 +444,6 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
             <button class="qbtn" data-q="income" data-v="over20k">$20k+</button>
           </div>
         </div>
-
         <div>
           <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:10px">What is your experience level?</div>
           <div style="display:flex;flex-wrap:wrap;gap:8px" id="expQ">
@@ -407,7 +453,6 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
             <button class="qbtn" data-q="exp" data-v="manager">Sales manager</button>
           </div>
         </div>
-
         <div>
           <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-bottom:10px">What is your primary vertical?</div>
           <div style="display:flex;flex-wrap:wrap;gap:8px" id="vertQ">
@@ -417,7 +462,6 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
             <button class="qbtn" data-q="vert" data-v="mixed">Mixed</button>
           </div>
         </div>
-
         <button id="getPlanBtn" style="width:100%;background:linear-gradient(135deg,#ff4d1c,#ff8c00);border:none;border-radius:10px;color:white;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;padding:14px;cursor:pointer;opacity:.4;transition:all .2s" disabled>Build My Training Plan &rarr;</button>
       </div>
     </div>
@@ -440,17 +484,20 @@ footer{padding:40px 48px;border-top:1px solid var(--border);display:flex;align-i
   </div>
   <div class="foot-copy">&copy; 2026 GemRep. All rights reserved.</div>
   <div class="foot-links">
-  <a href="/privacy.html">Privacy</a>
-  <a href="/terms.html">Terms</a>
-    <a href="/cdn-cgi/l/email-protection#1f777a7373705f787a726d7a6f317e76">Contact</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+    <a href="mailto:hello@gemrep.ai">Contact</a>
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 <script>
-var quizAnswers = {};
+// Mobile nav toggle
+document.getElementById('mobMenuBtn').addEventListener('click', function() {
+  document.getElementById('mobNav').classList.toggle('open');
+});
 
-// Quiz button selection
+// Quiz logic
+var quizAnswers = {};
 document.querySelectorAll('.qbtn').forEach(function(b){
   b.addEventListener('click', function(){
     var q = this.getAttribute('data-q');
@@ -458,7 +505,6 @@ document.querySelectorAll('.qbtn').forEach(function(b){
     quizAnswers[q] = v;
     document.querySelectorAll('[data-q="'+q+'"]').forEach(function(x){x.classList.remove('selected');});
     this.classList.add('selected');
-    // Enable plan button when all 3 answered
     if(quizAnswers.income && quizAnswers.exp && quizAnswers.vert){
       document.getElementById('getPlanBtn').disabled = false;
       document.getElementById('getPlanBtn').style.opacity = '1';
@@ -470,19 +516,15 @@ document.querySelectorAll('.qbtn').forEach(function(b){
 document.getElementById('getPlanBtn').addEventListener('click', function(){
   document.getElementById('step2').style.display = 'none';
   document.getElementById('step3').style.display = 'block';
-
   var exp = quizAnswers.exp;
   var vert = quizAnswers.vert;
   var income = quizAnswers.income;
-
   var steps = [];
 
-  // Step 1 always bar napkin for new/some
   if(exp === 'new' || exp === 'some'){
-    steps.push({icon:'&#128196;',title:'Week 1 &mdash; Master the Bar Napkin Strategy',desc:'Read the guide. Memorize the 5 consequence questions. Practice the money aside close out loud until it feels natural. Do not touch the AI trainer yet.'});
+    steps.push({icon:'&#128196;',title:'Week 1 &mdash; Master the Bar Napkin Strategy',desc:'Read the guide. Memorize the 5 consequence questions. Practice the commitment close out loud until it feels natural. Do not touch the AI trainer yet.'});
   }
 
-  // Archetype recommendation based on vertical
   if(vert === 'insurance'){
     if(exp === 'new' || exp === 'some'){
       steps.push({icon:'&#127752;',title:'Week 2 &mdash; Start with Hopeful Helen',desc:'She is the easiest insurance prospect. Warm, ready to buy, just needs guidance. Build your confidence here before moving to harder archetypes.'});
@@ -490,53 +532,80 @@ document.getElementById('getPlanBtn').addEventListener('click', function(){
       steps.push({icon:'&#128548;',title:'Week 4+ &mdash; Burned Bob',desc:'The hardest insurance prospect. Do not go here until you can handle Frank without flinching. Bob will test everything you have.'});
     } else {
       steps.push({icon:'&#128548;',title:'Start Here &mdash; Burned Bob',desc:'You already know the basics. Go straight to the hardest prospect. If you can handle Bob you can handle anyone on a real call.'});
-      steps.push({icon:'&#128117;',title:'Then &mdash; Confused Dorothy',desc:'Medicare objection handling. Practice the Medicare number refusal rebuttal and keeping your cool when she loops back to the same confusion.'});
+      steps.push({icon:'&#128117;',title:'Then &mdash; Confused Dorothy',desc:'Medicare objection handling. Practice keeping your cool when she loops back to the same confusion three times in a row.'});
     }
   } else if(vert === 'b2b'){
     if(exp === 'new' || exp === 'some'){
-      steps.push({icon:'&#128161;',title:'Week 2 &mdash; Start with Innovator Irene',desc:'Easy B2B prospect, open-minded and excited. Practice your pattern interrupt opener and building vision together before moving to harder archetypes.'});
-      steps.push({icon:'&#128105;&#8205;&#128188;',title:'Week 3 &mdash; Decisive Danielle',desc:'Practice being direct and brief. Lead with outcomes, not process. Get comfortable with silence — she is testing whether you can keep up.'});
-      steps.push({icon:'&#129488;',title:'Week 4+ &mdash; Skeptical Steve',desc:'The hardest B2B prospect. Every claim gets challenged. Practice your consequence questions: what happens to your pipeline if this does not get resolved?'});
+      steps.push({icon:'&#128161;',title:'Week 2 &mdash; Start with Innovator Irene',desc:'Easy B2B prospect, open-minded and excited. Practice your pattern interrupt opener and building vision together.'});
+      steps.push({icon:'&#128105;&#8205;&#128188;',title:'Week 3 &mdash; Decisive Danielle',desc:'Practice being direct and brief. Lead with outcomes, not process. Get comfortable with silence.'});
+      steps.push({icon:'&#129488;',title:'Week 4+ &mdash; Skeptical Steve',desc:'The hardest B2B prospect. Every claim gets challenged. Practice consequence questions: what happens to your pipeline if this does not get resolved?'});
     } else {
-      steps.push({icon:'&#129488;',title:'Start Here &mdash; Skeptical Steve',desc:'Go straight to the hardest. Practice leading with triggers, consequence questions, and never fighting skepticism — get curious about what is behind it.'});
+      steps.push({icon:'&#129488;',title:'Start Here &mdash; Skeptical Steve',desc:'Go straight to the hardest. Practice leading with triggers, consequence questions, and never fighting skepticism.'});
     }
   } else if(vert === 'cold'){
     if(exp === 'new' || exp === 'some'){
-      steps.push({icon:'&#129337;',title:'Week 2 &mdash; Start with Multitasking Mark',desc:'Polite but distracted. Practice pattern interrupt openers and getting his attention in 8 seconds. Low stakes, builds opener muscle memory.'});
-      steps.push({icon:'&#128548;',title:'Week 3 &mdash; Busy Mike',desc:'15 seconds of patience. No company name, no pitch — just a trigger and a question. Practice until your opener is under 10 words.'});
-      steps.push({icon:'&#129315;',title:'Week 4+ &mdash; Furious Frank',desc:'The composure test. Your only job is to stay calm and curious. Do not apologize more than once. This is where Disciplined Self beats Default Self.'});
+      steps.push({icon:'&#128548;',title:'Week 2 &mdash; Start with Busy Mike',desc:'15 seconds of patience. No company name, no pitch &mdash; just a trigger and a question. Practice until your opener is under 10 words.'});
+      steps.push({icon:'&#129315;',title:'Week 3 &mdash; Furious Frank',desc:'The composure test. Your only job is to stay calm and curious. Do not apologize more than once. Disciplined Self beats Default Self.'});
+      steps.push({icon:'&#129399;',title:'Week 4+ &mdash; Ninja Nancy',desc:'The polite deflector. 15 years of brushing people off. Practice calling out the pattern with confidence and making her laugh.'});
     } else {
       steps.push({icon:'&#129315;',title:'Start Here &mdash; Furious Frank',desc:'Composure under fire. If you pass this test every other cold call feels easy.'});
-      steps.push({icon:'&#129399;',title:'Then &mdash; Ninja Nancy',desc:'The polite deflector. 15 years of brushing people off without being rude. Practice calling out the pattern with confidence and making her laugh.'});
+      steps.push({icon:'&#129399;',title:'Then &mdash; Ninja Nancy',desc:'The polite deflector. Practice calling out the pattern with confidence and making her laugh.'});
     }
   } else {
     steps.push({icon:'&#127775;',title:'Build a Custom Prospect',desc:'Use the Custom vertical in the trainer. Describe the exact person you are calling tomorrow and practice that specific call today.'});
   }
 
-  // Income-based intensity
   if(income === 'over20k' || income === '10to20k'){
-    steps.push({icon:'&#9889;',title:'Daily Minimum &mdash; 3 Practice Sessions Before You Dial',desc:'At your income target you need reps like an athlete needs practice. Run 3 AI sessions every morning before your first real call. Score every session. Track your improvement.'});
+    steps.push({icon:'&#9889;',title:'Daily Minimum &mdash; 3 Practice Sessions Before You Dial',desc:'At your income target you need reps like an athlete needs practice. Run 3 AI sessions every morning before your first real call.'});
   } else {
     steps.push({icon:'&#128197;',title:'Weekly Cadence &mdash; 5 Sessions Per Week',desc:'One session per day before you start dialing. Review your score. Identify your weakest category. Focus your next session there.'});
   }
 
-  // Manager path
   if(exp === 'manager'){
-    steps.unshift({icon:'&#127970;',title:'Manager Path &mdash; Assign Archetypes to Your Reps',desc:'Send your team to GemRep before their first real call. Assign Hopeful Helen to new reps, Burned Bob to your veterans. Review their scores in the team dashboard (coming soon).'});
+    steps.unshift({icon:'&#127970;',title:'Manager Path &mdash; Assign Archetypes to Your Reps',desc:'Send your team to GemRep before their first real call. Assign Hopeful Helen to new reps, Burned Bob to your veterans. Team dashboard coming soon.'});
   }
 
-  var html = steps.map(function(s,i){
+  var html = steps.map(function(s){
     return '<div style="background:var(--panel);border:1px solid var(--border);border-left:3px solid #ff4d1c;border-radius:10px;padding:16px 18px"><div style="display:flex;align-items:flex-start;gap:12px"><div style="font-size:22px;flex-shrink:0">'+s.icon+'</div><div><div style="font-size:14px;font-weight:600;margin-bottom:5px">'+s.title+'</div><div style="font-size:12px;color:var(--dim);line-height:1.6">'+s.desc+'</div></div></div></div>';
   }).join('');
-
   document.getElementById('planOutput').innerHTML = html;
 });
 
+// Nav scroll
 window.addEventListener('scroll',function(){
   document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);
 });
 
-document.getElementById('wform').addEventListener('submit',function(e){
+// Form submit — fixed handler
+document.getElementById('wform').addEventListener('submit', function(e) {
   e.preventDefault();
-  var note=document.getElementById('wnote');
-  fetch(this.action,{method:'POST',body:new FormData(this)
+  var form = this;
+  var note = document.getElementById('wnote');
+  var btn = form.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  fetch(form.action, {
+    method: 'POST',
+    body: new FormData(form),
+    headers: { 'Accept': 'application/json' }
+  }).then(function(res) {
+    if (res.ok) {
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('step2').style.display = 'block';
+    } else {
+      note.textContent = 'Something went wrong — please try again.';
+      note.style.color = '#ff1744';
+      btn.disabled = false;
+      btn.textContent = '\uD83D\uDCC4 Send Me The Bar Napkin Strategy';
+    }
+  }).catch(function() {
+    note.textContent = 'Connection error — please try again.';
+    note.style.color = '#ff1744';
+    btn.disabled = false;
+    btn.textContent = '\uD83D\uDCC4 Send Me The Bar Napkin Strategy';
+  });
+});
+</script>
+</body>
+</html>
