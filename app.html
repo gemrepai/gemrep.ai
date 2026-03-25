@@ -1866,11 +1866,31 @@ async function drillScorePitch() {
       "",
       "IMPORTANT: This is a 30-second opener. Do NOT penalize for missing discovery, consequence, objection handling, or closing. Those do not belong in an opener.",
       "",
-      "PATTERN INTERRUPT (0-100): Did they avoid 'Hi my name is X calling from Y'? Did they sound like a peer, not a vendor? Did they say something the prospect has not heard before?",
-      "REASON FOR CALL (0-100): Did they establish a clear, specific reason for calling? Did they reference something relevant — a request, a trigger, a situation — that earns the next 10 seconds?",
-      "FIRST QUESTION (0-100): Did they land a question that creates a fork — something the prospect has to answer? Was it natural and conversational, not scripted?",
+      "PATTERN INTERRUPT (0-100):",
+      "CRITICAL — what counts as a pattern interrupt depends on the call type:",
+      "COLD CALL / B2B: Leading with a direct question like 'who is the best person on your end who handles X' IS a pattern interrupt. It sounds like an internal referral, not a sales pitch. Score 75+. The JMM Direct Opener and Trigger Opener are both pattern interrupts even though they start with a question.",
+      "INSURANCE INBOUND: Referencing their request ('I saw you put in a request for info on life insurance') IS a pattern interrupt for inbound leads because it establishes context immediately. Score 70+.",
+      "What is NOT a pattern interrupt: 'Hi my name is X calling from Y about our product.' Corporate intros. Company name before value. Pitching in the first sentence.",
+      "Score based on: Does it sound like a peer or a vendor? Would the prospect pause and engage, or mentally check out?",
       "",
-      "FEEDBACK: Quote exact words from the transcript. What worked, what to sharpen. 2-3 sentences max.",
+      "REASON FOR CALL (0-100): Did they establish why they are calling in a way that earns the next 10 seconds? For cold calls, the question itself can serve as the reason. For insurance, referencing the lead request is the reason. The rep does not need a separate 'the reason I am calling' statement if the opener already establishes it.",
+      "",
+      "FIRST QUESTION (0-100): Did they land a question that creates a fork — something the prospect has to answer? Was it natural and conversational? For cold calls, 'who handles X' counts. For insurance, 'was this for yourself or a loved one' is a clean fork.",
+      "",
+      "BAR NAPKIN OPENERS FOR REFERENCE — if the rep said anything close to these, score Pattern Interrupt 75+:",
+      (function() {
+        var openerExamples = {
+          'Final Expense': 'Hey [Name], just [Your Name] here — I saw you put in a request for info on life insurance. Was this for yourself or a loved one?',
+          'Medicare Supplement': 'Hey [Name], I am a licensed Medicare agent in [state]. So whats happening with your Medicare that has you calling in?',
+          'Life Insurance': 'Hey [Name], just [Your Name] here — I saw you put in a request for info on life insurance. Was this for yourself or a loved one?',
+          'B2B SaaS': 'Hey [Name] — who is the best person on your end at [company] who handles [xyz]? OR: Saw you just [trigger]. Most [title] at that stage are dealing with [problem]. Is that something you feel is true or no?',
+          'Cold Call': 'Hey [Name] — who is the best person on your end at [company] who handles [xyz]? OR: [Name], noticed [trigger]. Most [role] I talk to say [pain]. Is that something you are navigating right now?',
+          'High Ticket': 'Before I tell you anything about what I do — I want to understand where you are right now. What brought you here today?',
+        };
+        return openerExamples[drill.product] || openerExamples['Cold Call'];
+      })(),
+      "",
+      "FEEDBACK: Quote exact words from the transcript. What worked, what to sharpen. 2-3 sentences max. If the rep used a bar napkin opener, confirm it was correct and suggest one refinement.",
       "",
       'Return exactly: {"overall":75,"categories":[{"label":"Pattern Interrupt","score":80},{"label":"Reason for Call","score":72},{"label":"First Question","score":70}],"feedback":"2-3 sentences quoting exact rep words."}'
     ].join("\n");
