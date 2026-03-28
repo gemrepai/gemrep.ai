@@ -845,7 +845,6 @@ var VERTS = [
   {id:'b2b', label:'&#128188; B2B'},
   {id:'insurance', label:'&#128737;&#65039; Insurance'},
   {id:'cold', label:'&#128222; Cold Call'},
-  {id:'custom', label:'&#127775; Custom'},
 ];
 
 // ═══════════════════════════════════════════
@@ -1812,8 +1811,8 @@ function drillStartRecording() {
   // Session counter — Chrome SpeechRecognition degrades after many cycles
   if (!window._drillRecCount) window._drillRecCount = 0;
   window._drillRecCount++;
-  if (window._drillRecCount > 15) {
-    if (confirm('Heavy session — refreshing to keep the mic reliable.')) {
+  if (window._drillRecCount > 50) {
+    if (confirm('50 drills — solid session. Refresh to keep things clean?')) {
       location.reload();
     }
     window._drillRecCount = 0;
@@ -2070,7 +2069,6 @@ var OBJECTIONS = {
 };
 
 var objLab = { vert:null, objection:null, transcript:'', recording:false, recognition:null, mediaRecorder:null, mediaStream:null, audioChunks:[], audioBlob:null };
-var _objLabSessionCount = 0;
 
 function objLabReset() {
   objLab.vert=null; objLab.objection=null; objLab.transcript=''; objLab.recording=false;
@@ -2128,8 +2126,8 @@ function objLabStartArena() {
 var _objLabRecCount = 0;
 function objLabStartRecording() {
   _objLabRecCount++;
-  if (_objLabRecCount > 30) {
-    if (confirm('Heavy session — refreshing to keep things reliable.')) {
+  if (_objLabRecCount > 100) {
+    if (confirm('100 reps — solid session. Refresh to keep things clean?')) {
       location.reload();
     }
     _objLabRecCount = 0;
@@ -2290,6 +2288,10 @@ async function objLabScore() { // returns promise
       'not the right time': "I hear you. Is it a budget thing, a priority thing, or something else? What would need to change?",
       'timing':             "I hear you. Is it a budget thing, a priority thing, or something else? What would need to change?",
       'loop someone':       "Thats not a problem. If they were on this call right now, what do you think they would ask?",
+      'tried':              "What specifically didnt work — the product, the timing, or the rollout? That changes everything.",
+      'similar':            "What specifically didnt work — the product, the timing, or the rollout? That changes everything.",
+      'didnt work':         "What specifically didnt work — the product, the timing, or the rollout? That changes everything.",
+      'didnt really work':  "What specifically didnt work — the product, the timing, or the rollout? That changes everything.",
     },
     cold: {
       'not interested':     "Fair enough. Is it the timing, or is the problem just not a priority right now?",
@@ -2309,6 +2311,9 @@ async function objLabScore() { // returns promise
       'too much':           "Compared to what — staying where you are? If the result was guaranteed, would the investment make sense?",
       'tried':              "What specifically didnt work? Was it the program, timing, or commitment? Whats different now?",
       'tried before':       "What specifically didnt work? Was it the program, timing, or commitment? Whats different now?",
+      'invested in':        "What specifically didnt work? Was it the program, timing, or commitment? Whats different now?",
+      'didnt work':         "What specifically didnt work? Was it the program, timing, or commitment? Whats different now?",
+      'didnt really work':  "What specifically didnt work? Was it the program, timing, or commitment? Whats different now?",
     },
     auto: {
       'just looking':       "Thats not a problem. Whats your dream car or truck? What boxes does it need to tick?",
@@ -2420,6 +2425,12 @@ async function objLabScore() { // returns promise
       // Decision / comparison
       'compared to what', 'does that make sense', 'is it more about', 'is that because',
       'who is the leader', 'who is the decision', 'would you say', 'would you mind',
+      // Stall isolation — isolating the real objection
+      'is it timing', 'is it budget', 'is it the timing', 'is it the budget', 'is it the price',
+      'or something else', 'whats the main thing', 'what is the main thing',
+      'whats really holding', 'what is really holding', 'whats really behind',
+      'is it that youre not sure', 'is it that you dont', 'or is it something else',
+      'timing or', 'budget or', 'priority or',
     ],
     no_fight: true,
     fighting: [
@@ -2484,10 +2495,15 @@ async function objLabScore() { // returns promise
     score = 78;
     feedback = 'Solid — you acknowledged and redirected with curiosity. To push into the 85+ range, tie the question to the emotional core — do they feel this is the right answer, what would need to be in place.';
   } else if (hit.acknowledged && (hit.curiosity || hit.emotional)) {
-    score = hit.cost_aside ? 92 : 85;
+    // 92: all three signals (ack + curiosity + emotional) OR ack + emotional + cost_aside
+    // 85: ack + emotional OR ack + curiosity (two of three)
+    var fullMove = (hit.curiosity && hit.emotional) || hit.cost_aside;
+    score = fullMove ? 92 : 85;
     var costIsRelevant = reframe && reframe.indexOf('cost aside') > -1;
-    feedback = hit.cost_aside
-      ? 'Clean execution. You acknowledged, set the cost aside, and redirected to the emotional core. That is the full move.'
+    feedback = fullMove
+      ? (hit.cost_aside
+        ? 'Clean execution. You acknowledged, set the cost aside, and redirected to the emotional core. That is the full move.'
+        : 'Clean execution. You acknowledged, redirected with curiosity, and tied it to the emotional core. That is the full move.')
       : costIsRelevant
         ? 'Strong execution. You acknowledged and redirected to the emotional core. For maximum impact, explicitly set the cost aside before the emotional question.'
         : 'Strong execution. You acknowledged and redirected to the emotional core. Keep the redirect tight and let the question do the work.';
@@ -2497,16 +2513,6 @@ async function objLabScore() { // returns promise
   var col = score >= 80 ? '#00e676' : score >= 60 ? '#ffd600' : '#ff1744';
   document.getElementById('objLabScoreNum').textContent = score + '/100';
   document.getElementById('objLabScoreNum').style.color = col;
-
-  // Session counter — Chrome SpeechRecognition degrades after ~12-15 cycles
-  _objLabSessionCount++;
-  if (_objLabSessionCount >= 13) {
-    setTimeout(function() {
-      if (confirm('Heavy practice session detected — refreshing to keep the mic reliable. Tap OK to refresh.')) {
-        location.reload();
-      }
-    }, 1500);
-  }
 
   var fullFeedback = feedback;
   if (reframe) fullFeedback += ' | Bar napkin: ' + reframe;
