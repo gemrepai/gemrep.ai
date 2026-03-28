@@ -70,7 +70,7 @@ footer{text-align:center;padding:32px;border-top:1px solid var(--border);color:v
     </ul>
     <h3>Voice and Speech Data</h3>
     <div class="highlight">
-      <p>GemRep uses your device microphone during live role-play, Solo Drill, and Objection Lab sessions. Your voice is processed by your browser's built-in speech recognition engine. On Chrome and Edge, your browser may transmit audio to its speech recognition provider (e.g., Google) for transcription — this is handled by the browser, not by GemRep. We do not separately record, store, or transmit your audio. Transcribed text may be sent to our AI model to generate responses and scoring — it is not retained after the session ends.</p>
+      <p>GemRep uses your device microphone during live role-play, Solo Drill, and Objection Lab sessions. During Objection Lab and Solo Drill sessions, your audio is recorded temporarily in your browser and sent to Deepgram (our speech-to-text provider) for accurate transcription. Deepgram processes the audio and returns a text transcript — audio is not stored by Deepgram after processing. During live role-play sessions, your browser's built-in speech recognition may transmit audio to its speech recognition provider (e.g., Google for Chrome) for real-time transcription. GemRep does not permanently store your audio recordings. Transcribed text may be sent to our AI model to generate responses and scoring — it is not retained after the session ends.</p>
     </div>
     <h3>Cookies and Browser Storage</h3>
     <p>We use essential cookies and browser local storage for authentication session management. Cloudflare may set cookies for security and performance purposes. We do not use tracking cookies, advertising pixels, or third-party analytics trackers beyond Cloudflare Web Analytics.</p>
@@ -96,6 +96,7 @@ footer{text-align:center;padding:32px;border-top:1px solid var(--border);color:v
       <li><strong style="color:var(--text)">Supabase</strong> — authentication and database storage</li>
       <li><strong style="color:var(--text)">Anthropic</strong> — AI model powering prospect responses and scoring</li>
       <li><strong style="color:var(--text)">ElevenLabs</strong> — text-to-speech for prospect voices</li>
+      <li><strong style="color:var(--text)">Deepgram</strong> — speech-to-text transcription for training sessions</li>
       <li><strong style="color:var(--text)">Stripe</strong> — payment processing and subscription management</li>
       <li><strong style="color:var(--text)">Vercel</strong> — hosting and deployment infrastructure</li>
       <li><strong style="color:var(--text)">Cloudflare</strong> — DNS, CDN, security, and web analytics</li>
