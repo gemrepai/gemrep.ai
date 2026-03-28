@@ -2069,12 +2069,15 @@ var OBJECTIONS = {
   ],
 };
 
-var objLab = { vert:null, objection:null, transcript:'', recording:false, recognition:null };
+var objLab = { vert:null, objection:null, transcript:'', recording:false, recognition:null, mediaRecorder:null, mediaStream:null, audioChunks:[], audioBlob:null };
 var _objLabSessionCount = 0;
 
 function objLabReset() {
   objLab.vert=null; objLab.objection=null; objLab.transcript=''; objLab.recording=false;
   if (objLab.recognition) { try { objLab.recognition.abort(); } catch(e) {} objLab.recognition=null; }
+  if (objLab.mediaRecorder && objLab.mediaRecorder.state !== 'inactive') { try { objLab.mediaRecorder.stop(); } catch(e) {} }
+  if (objLab.mediaStream) { objLab.mediaStream.getTracks().forEach(function(t){ t.stop(); }); }
+  objLab.mediaRecorder=null; objLab.mediaStream=null; objLab.audioChunks=[]; objLab.audioBlob=null;
   document.getElementById('objLabStep1').style.display='block';
   document.getElementById('objLabStep2').style.display='none';
   document.getElementById('objLabStep3').style.display='none';
@@ -2124,16 +2127,14 @@ function objLabStartArena() {
 
 var _objLabRecCount = 0;
 function objLabStartRecording() {
-  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if (!SR) { showToast('Voice needs Chrome or Safari.'); return; }
   _objLabRecCount++;
-  if (_objLabRecCount > 15) {
-    if (confirm('Heavy session detected — refreshing to keep the mic reliable. Your progress is saved.')) {
+  if (_objLabRecCount > 30) {
+    if (confirm('Heavy session — refreshing to keep things reliable.')) {
       location.reload();
     }
     _objLabRecCount = 0;
   }
-  objLab.recording=true; objLab.transcript='';
+  objLab.recording=true; objLab.transcript=''; objLab.audioBlob=null;
   var btn=document.getElementById('objLabRecBtn');
   btn.className='objlab-rec-btn recording'; btn.innerHTML='&#9632;';
   // Prevent accidental early stop — disable for 1.5s
@@ -2142,39 +2143,95 @@ function objLabStartRecording() {
   document.getElementById('objLabResponseBox').textContent='Listening...';
   document.getElementById('objLabSendHold').style.display='none';
   document.getElementById('objLabScoreBtn').classList.remove('show');
-  if (objLab.recognition) { try { objLab.recognition.abort(); } catch(e) {} }
-  var _accumulated='';
-  // Use continuous=true so it never auto-stops
-  var r=new SR(); r.continuous=true; r.interimResults=true; r.lang='en-US';
-  r.onresult=function(e) {
-    var interim='';
-    for (var i=e.resultIndex;i<e.results.length;i++) {
-      if (e.results[i].isFinal) _accumulated+=e.results[i][0].transcript+' ';
-      else interim=e.results[i][0].transcript;
-    }
-    // Show everything live — accumulated finals + current interim
-    var display=(_accumulated+interim).trim();
-    document.getElementById('objLabResponseBox').textContent=display;
-    // Only save finals to transcript
-    objLab.transcript=_accumulated.trim();
-  };
-  r.onerror=function(e){ if(e.error==='no-speech') showToast('Nothing captured — tap mic and try again.'); else if(e.error!=='aborted') showToast('Speech dropped (Chrome quirk) — try again or refresh if it persists.'); };
-  r.onend=function(){
-    // If still recording (browser killed it), restart
-    if (objLab.recording) { try { r.start(); } catch(e){} }
-  };
-  objLab.recognition=r;
-  try { r.start(); } catch(e) { showToast('Could not start mic.'); }
+
+  // ── MediaRecorder: capture audio blob for Deepgram ──
+  if (objLab.mediaRecorder) { try { objLab.mediaRecorder.stop(); } catch(e){} }
+  objLab.audioChunks = [];
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    objLab.mediaStream = stream;
+    var mr = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+    mr.ondataavailable = function(e) {
+      if (e.data.size > 0) objLab.audioChunks.push(e.data);
+    };
+    mr.onstop = function() {
+      objLab.audioBlob = new Blob(objLab.audioChunks, { type: 'audio/webm' });
+      // Stop all mic tracks
+      if (objLab.mediaStream) {
+        objLab.mediaStream.getTracks().forEach(function(t){ t.stop(); });
+      }
+    };
+    objLab.mediaRecorder = mr;
+    mr.start();
+  }).catch(function(err) {
+    showToast('Could not access microphone.');
+    console.error('MediaRecorder error:', err);
+  });
+
+  // ── SpeechRecognition: live display text while recording ──
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SR) {
+    if (objLab.recognition) { try { objLab.recognition.abort(); } catch(e) {} }
+    var _accumulated='';
+    var r=new SR(); r.continuous=true; r.interimResults=true; r.lang='en-US';
+    r.onresult=function(e) {
+      var interim='';
+      for (var i=e.resultIndex;i<e.results.length;i++) {
+        if (e.results[i].isFinal) _accumulated+=e.results[i][0].transcript+' ';
+        else interim=e.results[i][0].transcript;
+      }
+      var display=(_accumulated+interim).trim();
+      document.getElementById('objLabResponseBox').textContent=display;
+      objLab.transcript=_accumulated.trim();
+    };
+    r.onerror=function(e){
+      // SpeechRecognition errors are non-fatal — MediaRecorder still captures audio
+      if(e.error==='no-speech') { /* ignore */ }
+    };
+    r.onend=function(){
+      if (objLab.recording) { try { r.start(); } catch(e){} }
+    };
+    objLab.recognition=r;
+    try { r.start(); } catch(e) { /* SpeechRecognition failed — Deepgram will handle it */ }
+  }
 }
 
 function objLabStopRecording() {
   objLab.recording=false;
   if (objLab.recognition) { try { objLab.recognition.stop(); } catch(e) {} }
+  if (objLab.mediaRecorder && objLab.mediaRecorder.state !== 'inactive') {
+    try { objLab.mediaRecorder.stop(); } catch(e) {}
+  }
   var btn=document.getElementById('objLabRecBtn');
   btn.className='objlab-rec-btn idle'; btn.innerHTML='&#127908;';
 }
 
+// Send audio to Deepgram for accurate transcript
+async function objLabTranscribe() {
+  if (!objLab.audioBlob || objLab.audioBlob.size === 0) return null;
+  try {
+    // Convert blob to base64
+    var base64 = await new Promise(function(resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function() { resolve(reader.result.split(',')[1]); };
+      reader.onerror = function() { reject(new Error('Read failed')); };
+      reader.readAsDataURL(objLab.audioBlob);
+    });
+    var res = await fetchWithTimeout('/api/stt', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ audio: base64, mimetype: 'audio/webm' })
+    }, 15000);
+    if (!res.ok) return null;
+    var data = await res.json();
+    return data.transcript || null;
+  } catch(e) {
+    console.warn('Deepgram transcription failed, falling back to browser:', e);
+    return null;
+  }
+}
+
 async function objLabScore() { // returns promise
+  // Try Deepgram first for accurate transcript, fall back to browser SpeechRecognition
   var response = objLab.transcript.trim();
   // Fallback — use whatever is displayed if transcript missed finals
   if (!response) {
@@ -2184,7 +2241,9 @@ async function objLabScore() { // returns promise
       objLab.transcript = displayed;
     }
   }
-  if (!response) { showToast('Nothing recorded yet.'); return; }
+  if (!response && (!objLab.audioBlob || objLab.audioBlob.size === 0)) {
+    showToast('Nothing recorded yet.'); return;
+  }
   if (!_authToken) {
     var _s = await _sb.auth.getSession();
     if (_s.data.session) _authToken = _s.data.session.access_token;
@@ -2195,6 +2254,19 @@ async function objLabScore() { // returns promise
   var fb = document.getElementById('objLabFeedback');
   fb.classList.add('show');
   document.getElementById('objLabScoreNum').textContent = '...';
+  document.getElementById('objLabFeedbackText').textContent = 'Transcribing...';
+
+  // ── Deepgram transcription — accurate transcript for scoring ──
+  var dgTranscript = await objLabTranscribe();
+  if (dgTranscript && dgTranscript.trim()) {
+    response = dgTranscript.trim();
+    objLab.transcript = response;
+    // Update display with accurate transcript
+    document.getElementById('objLabResponseBox').textContent = response;
+  }
+
+  if (!response) { showToast('Nothing captured — try again.'); fb.classList.remove('show'); return; }
+
   document.getElementById('objLabFeedbackText').textContent = 'Scoring...';
 
   var objLine = objLab.objection.line || objLab.objection.label;
@@ -2266,12 +2338,96 @@ async function objLabScore() { // returns promise
 
   // Signal groups — hit any one in a group = credit for that group
   var signals = {
-    acknowledged: ['not a problem', 'totally', 'makes sense', 'i hear you', 'i get it', 'i get that', 'got it', 'fair enough', 'completely understand', 'understand that', 'i understand', 'thats fair', 'thats not a problem', 'of course', 'no problem', 'absolutely', 'i appreciate that', 'i respect that', 'thats valid', 'thats a good point', 'youre right', 'i can see that', 'that makes sense', 'i dont blame you', 'cant blame you', 'fair point', 'sure'],
-    cost_aside:   ['cost aside', 'setting the cost', 'price aside', 'money aside', 'finances aside', 'budget aside', 'setting the price', 'setting the money', 'setting money', 'putting cost aside', 'putting the cost', 'putting price aside', 'forget about the cost', 'forget about the price', 'regardless of cost', 'regardless of price', 'ignoring the cost', 'ignoring the price'],
-    emotional:    ['feel like', 'right answer', 'right move', 'right fit', 'right solution', 'right decision', 'right for', 'makes sense for', 'feel this is', 'feel like this is', 'what would that mean', 'what would that look like', 'how would that affect', 'how would your family', 'what matters most', 'what does that mean for', 'mean for your family', 'what happens to your', 'who else gets affected', 'who else is affected', 'what would your family', 'feel confident', 'feel good about', 'feel comfortable', 'peace of mind', 'sleep at night', 'right thing', 'right choice', 'heavy is the head', 'wears the crown', 'leader in your life', 'dictates your results', 'who is the leader', 'who dictates', 'responsibility of being', 'responsibilities bestowed', 'result was guaranteed', 'magic wand', 'what becomes possible', 'cost of staying', 'cost of doing nothing', 'what does another', 'what would your life look like'],
-    curiosity:    ['what would', 'what needs', 'what specifically', 'what do you', 'what would need', 'what makes', 'what happened', 'what changed', 'how so', 'walk me through', 'tell me more', 'help me understand', 'out of curiosity', 'what is it', 'what part', 'what questions', 'what is the', 'what are the', 'when was the last', 'when is the last', 'whens the last', 'why do you', 'why is that', 'why would', 'how do you', 'how would', 'how does', 'what do they', 'what would they', 'what would he', 'what would she', 'what prompted', 'what brought', 'what made you', 'what is behind', 'whats behind', 'what is really', 'whats really', 'what is the biggest', 'what is the one', 'whats the one', 'what is your biggest', 'what boxes', 'what number', 'does that make sense', 'is it more about', 'is that because', 'can you tell me', 'can you walk me', 'have you ever', 'has he actually', 'has she actually', 'who is the leader', 'who is the decision', 'what did they say', 'what would it take', 'what is stopping', 'whats stopping', 'what is holding', 'whats holding', 'what would change', 'what would need to change', 'what would have to be', 'what would have to change', 'compared to what'],
-    no_fight:     true, // always true unless they argue
-    fighting:     ['you should', 'but the price', 'actually its', 'let me explain why', 'you need to understand', 'youre wrong', 'thats not true', 'you dont understand', 'thats incorrect', 'no youre', 'you have to', 'you need to realize', 'the thing is', 'but you have to'],
+    acknowledged: [
+      // Direct acknowledgments
+      'not a problem', 'no problem', 'totally', 'absolutely', 'of course', 'sure', 'fair enough', 'fair point',
+      // Understanding phrases
+      'makes sense', 'that makes sense', 'i hear you', 'i get it', 'i get that', 'got it', 'i understand',
+      'completely understand', 'understand that', 'i can see that', 'i can appreciate',
+      // Validation phrases
+      'thats fair', 'thats valid', 'thats a good point', 'thats a great point', 'thats smart',
+      'thats not a problem', 'youre right', 'good question', 'great question',
+      // Empathy phrases
+      'i appreciate that', 'i respect that', 'i dont blame you', 'cant blame you',
+      'i would too', 'most people feel that way', 'youre not the first', 'i wouldnt expect anything less',
+      'a lot of people say that', 'i get where youre coming from', 'that makes total sense',
+      // Casual softeners
+      'no doubt', 'hundred percent', 'for sure', 'no worries', 'all good', 'thats fine',
+      'hey look', 'you know what',
+    ],
+    cost_aside: [
+      'cost aside', 'setting the cost', 'price aside', 'money aside', 'finances aside', 'budget aside',
+      'setting the price', 'setting the money', 'setting money', 'putting cost aside', 'putting the cost',
+      'putting price aside', 'forget about the cost', 'forget about the price', 'regardless of cost',
+      'regardless of price', 'ignoring the cost', 'ignoring the price', 'take money off the table',
+      'take price off the table', 'if money wasnt', 'if cost wasnt', 'if price wasnt',
+    ],
+    emotional: [
+      // Feel-based phrases
+      'feel like', 'do you feel', 'you feel', 'feel this is', 'feel like this is', 'how do you feel',
+      'feel confident', 'feel good about', 'feel comfortable',
+      // Right answer / right move variations
+      'right answer', 'right move', 'right fit', 'right solution', 'right decision', 'right for',
+      'right thing', 'right choice', 'right vehicle', 'right plan', 'right coverage', 'right program',
+      'right investment', 'right direction', 'right step', 'right path',
+      // Makes sense for
+      'makes sense for',
+      // Emotional impact questions
+      'what would that mean', 'what would that look like', 'what does that look like',
+      'how would that affect', 'how would your family', 'what matters most', 'what does that mean for',
+      'mean for your family', 'what happens to your', 'what would your family',
+      'who else gets affected', 'who else is affected',
+      // Personal stakes
+      'important to you', 'matters to you', 'means to you', 'what keeps you up', 'what worries you',
+      'what scares you', 'what excites you', 'hoping for', 'looking for in', 'want for your',
+      'best for your', 'protect your', 'take care of your', 'need from this',
+      // Consequence language
+      'what happens if', 'what does that cost', 'where does that leave', 'who handles', 'who pays',
+      'who steps up', 'who takes care', 'what does another', 'cost of staying', 'cost of doing nothing',
+      'what becomes possible', 'what would your life look like',
+      // Comfort / peace
+      'peace of mind', 'sleep at night',
+      // High ticket specific
+      'heavy is the head', 'wears the crown', 'leader in your life', 'dictates your results',
+      'who is the leader', 'who dictates', 'responsibility of being', 'responsibilities bestowed',
+      'result was guaranteed', 'magic wand',
+    ],
+    curiosity: [
+      // What questions
+      'what would', 'what needs', 'what specifically', 'what specific', 'what do you', 'what would need',
+      'what makes', 'what happened', 'what changed', 'what part', 'what questions', 'what is it',
+      'what is the', 'what are the', 'what is behind', 'whats behind', 'what is really', 'whats really',
+      'what is the biggest', 'what is the one', 'whats the one', 'what is your biggest',
+      'what boxes', 'what number', 'what kind of', 'what do they', 'what would they',
+      'what would he', 'what would she', 'what prompted', 'what brought', 'what made you',
+      'what did they say', 'what would it take', 'what is stopping', 'whats stopping',
+      'what is holding', 'whats holding', 'what would change', 'what would need to change',
+      'what would have to be', 'what would have to change',
+      // When / where / why questions
+      'when was the last', 'when is the last', 'whens the last', 'why do you', 'why is that', 'why would',
+      // How questions
+      'how so', 'how do you', 'how would', 'how does', 'how come', 'how long',
+      // Invitation to share
+      'walk me through', 'tell me more', 'help me understand', 'out of curiosity', 'just curious',
+      'im curious', 'i wonder', 'can you tell me', 'can you walk me',
+      // Prospect-referencing questions
+      'would they ask', 'would he ask', 'would she ask', 'want to know from', 'want to know before',
+      'has he actually', 'has she actually', 'have you ever',
+      // Conditional redirects
+      'if they were here', 'if he were here', 'if she were here', 'if they were on this call',
+      'if i could show you', 'if there was a way', 'if you could', 'if you had to',
+      'if i asked you', 'let me ask you', 'one question', 'quick question',
+      // Decision / comparison
+      'compared to what', 'does that make sense', 'is it more about', 'is that because',
+      'who is the leader', 'who is the decision', 'would you say', 'would you mind',
+    ],
+    no_fight: true,
+    fighting: [
+      'you should', 'but the price', 'actually its', 'let me explain why', 'you need to understand',
+      'youre wrong', 'thats not true', 'you dont understand', 'thats incorrect', 'no youre',
+      'you have to', 'you need to realize', 'the thing is', 'but you have to',
+      'listen to me', 'youre not listening', 'thats not how it works', 'youre making a mistake',
+    ],
   };
 
   var hit = {
